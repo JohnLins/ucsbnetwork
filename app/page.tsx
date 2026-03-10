@@ -1,32 +1,146 @@
 import { ApplicationForm } from "@/components/application-form";
-import { FilterBar } from "@/components/filter-bar";
-import { Hero } from "@/components/hero";
-import { MemberDirectory } from "@/components/member-directory";
+import { KeyboardNav } from "@/components/keyboard-nav";
+import { ShaderBackground } from "@/components/shader-background";
 import { SiteHeader } from "@/components/site-header";
-import { getDirectoryPageData } from "@/lib/data/public";
-import { parseDirectoryFilters } from "@/lib/utils/filters";
+import { getPublicTags } from "@/lib/data/public";
 
-type PageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-};
-
-export default async function HomePage({ searchParams }: PageProps) {
-  const resolvedSearchParams = searchParams ? await searchParams : {};
-  const filters = parseDirectoryFilters(resolvedSearchParams);
-  const { members, tags, usingFallbackData } = await getDirectoryPageData(filters);
+export default async function HomePage() {
+  const tags = await getPublicTags();
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="bg-paper text-ink">
+      <KeyboardNav />
       <SiteHeader />
-      <Hero />
-      <main className="mx-auto max-w-7xl space-y-8 px-6 py-10 lg:px-10 lg:py-14">
-        <FilterBar filters={filters} tags={tags} />
-        <MemberDirectory members={members} usingFallbackData={usingFallbackData} />
-        <ApplicationForm tags={tags} />
-      </main>
-      <footer className="border-t border-line/30 px-6 py-6 text-center text-xs text-muted lg:px-10">
+
+      {/* ── Hero ── */}
+      <section
+        data-section
+        className="snap-section relative flex min-h-[100dvh] items-center justify-center overflow-hidden"
+      >
+        <ShaderBackground />
+        <div className="relative z-10 px-6 text-center">
+          <h1 className="text-6xl font-bold tracking-tight text-white sm:text-7xl lg:text-8xl">
+            ucsb.network
+          </h1>
+          <p className="mt-5 text-base tracking-wide text-white/60 sm:text-lg">
+            founders. builders. the cracked.
+          </p>
+        </div>
+        <div className="absolute bottom-10 z-10 flex w-full justify-center">
+          <a
+            href="#about"
+            className="animate-float-down text-white/30 transition hover:text-white/60"
+            aria-label="Scroll down"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
+      {/* ── About ── */}
+      <section
+        id="about"
+        data-section
+        className="snap-section flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
+      >
+        <div className="mx-auto max-w-xl text-center">
+          <p className="text-lg leading-relaxed text-ink sm:text-xl">
+            A curated group of founders, builders, and engineers affiliated with
+            UCSB.
+          </p>
+          <p className="mt-4 text-lg leading-relaxed text-muted sm:text-xl">
+            We host VC and builder events, and meet often to build, talk, and
+            network.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Events ── */}
+      <section
+        id="events"
+        data-section
+        className="snap-section flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
+      >
+        <div className="mx-auto w-full max-w-2xl">
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            What happens.
+          </h2>
+          <div className="mt-16 divide-y divide-line/20">
+            <EventRow num="01" title="Build Nights" desc="Ship together, every week." />
+            <EventRow num="02" title="Pitch Nights" desc="Share what you're working on." />
+            <EventRow num="03" title="Competitions" desc="Win Cursor & Codex credits." />
+          </div>
+        </div>
+      </section>
+
+      {/* ── VC & Alumni ── */}
+      <section
+        id="network"
+        data-section
+        className="snap-section flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
+      >
+        <div className="mx-auto w-full max-w-lg text-center">
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            Beyond campus.
+          </h2>
+          <p className="mt-5 text-sm leading-relaxed text-muted">
+            VCs, alumni, and operators who back our builders.
+          </p>
+          <div className="mt-14">
+            <span className="inline-flex rounded-lg border border-line/30 px-5 py-2.5 text-xs tracking-wide text-muted">
+              Coming soon
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Apply ── */}
+      <section
+        id="apply"
+        data-section
+        className="snap-section flex min-h-[100dvh] items-start justify-center border-t border-line/10 px-6 py-24"
+      >
+        <div className="mx-auto w-full max-w-2xl">
+          <ApplicationForm tags={tags} />
+        </div>
+      </section>
+
+      <footer className="border-t border-line/10 px-6 py-8 text-center text-xs text-muted">
         ucsb.network
       </footer>
+    </div>
+  );
+}
+
+/* ---------- helper components ---------- */
+
+function EventRow({
+  num,
+  title,
+  desc
+}: {
+  num: string;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="flex items-baseline gap-6 py-8 first:pt-0 last:pb-0">
+      <span className="font-mono text-xs text-muted/40">{num}</span>
+      <div>
+        <h3 className="text-lg font-medium text-ink">{title}</h3>
+        <p className="mt-1.5 text-sm text-muted">{desc}</p>
+      </div>
     </div>
   );
 }

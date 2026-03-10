@@ -5,7 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ucsb.network",
-  description: "A curated network of UCSB builders, founders, operators, and investors."
+  description: "Founders, builders, and the cracked — from UCSB."
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

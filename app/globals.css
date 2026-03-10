@@ -26,6 +26,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
 }
 
 body {
@@ -39,4 +40,17 @@ body {
 
 ::selection {
   background: rgba(var(--color-accent), 0.2);
+}
+
+.snap-section {
+  scroll-snap-align: start;
+}
+
+@keyframes float-down {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+.animate-float-down {
+  animation: float-down 2.5s ease-in-out infinite;
 }

@@ -78,6 +78,21 @@ function hydrateMembers(
   });
 }
 
+export async function getPublicTags(): Promise<Tag[]> {
+  const supabase = getSupabaseServiceClient();
+
+  if (!supabase) {
+    return fallbackTags;
+  }
+
+  const { data: tags } = await supabase
+    .from("tags")
+    .select("id, name, slug, tag_type, is_active")
+    .eq("is_active", true);
+
+  return (tags ?? []).map(formatTag);
+}
+
 export async function getDirectoryPageData(filters: DirectoryFilters) {
   const supabase = getSupabaseServiceClient();
 

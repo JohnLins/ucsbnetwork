@@ -6,10 +6,6 @@ import { defaultDomainOptions, defaultRoleOptions, ucsbAffiliationOptions } from
 import type { ApplicationInput, Tag } from "@/lib/types";
 import { slugify } from "@/lib/utils/slug";
 
-type ApplicationFormProps = {
-  tags: Tag[];
-};
-
 type SubmissionState =
   | { status: "idle" }
   | { status: "loading" }
@@ -18,9 +14,7 @@ type SubmissionState =
 
 function tagsByType(tags: Tag[], tagType: Tag["tagType"], fallback: readonly string[]) {
   const matching = tags.filter((tag) => tag.tagType === tagType);
-  if (matching.length > 0) {
-    return matching;
-  }
+  if (matching.length > 0) return matching;
 
   return fallback.map((name, index) => ({
     id: `${tagType}-${index}`,
@@ -31,7 +25,7 @@ function tagsByType(tags: Tag[], tagType: Tag["tagType"], fallback: readonly str
   }));
 }
 
-export function ApplicationForm({ tags }: ApplicationFormProps) {
+export function ApplicationForm({ tags }: { tags: Tag[] }) {
   const roleOptions = tagsByType(tags, "role", defaultRoleOptions);
   const domainOptions = tagsByType(tags, "domain", defaultDomainOptions);
   const [submission, setSubmission] = useState<SubmissionState>({ status: "idle" });
@@ -73,11 +67,7 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
       const nextValues = current[key].includes(value)
         ? current[key].filter((entry) => entry !== value)
         : [...current[key], value];
-
-      return {
-        ...current,
-        [key]: nextValues
-      };
+      return { ...current, [key]: nextValues };
     });
   }
 
@@ -95,18 +85,13 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
 
     const response = await fetch("/api/applications", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
       const data = (await response.json().catch(() => null)) as { error?: string } | null;
-      setSubmission({
-        status: "error",
-        message: data?.error ?? "Unable to submit right now."
-      });
+      setSubmission({ status: "error", message: data?.error ?? "Unable to submit." });
       return;
     }
 
@@ -141,32 +126,54 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
     }));
   }
 
-  return (
-    <section id="apply" className="rounded-2xl border border-line/40 bg-panel/60 p-5 lg:p-7">
-      <h2 className="text-2xl font-semibold tracking-tight text-ink">Apply</h2>
+  if (submission.status === "success") {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <div className="text-center">
+          <p className="text-2xl font-medium text-ink">Received.</p>
+          <p className="mt-2 text-sm text-muted">We&apos;ll be in touch.</p>
+        </div>
+      </div>
+    );
+  }
 
-      <form className="mt-8 space-y-8" onSubmit={handleSubmit}>
+  return (
+    <div>
+      <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Apply.</h2>
+
+      <form className="mt-10 space-y-5" onSubmit={handleSubmit}>
         <input
           type="text"
           value={form.honeypot}
-          onChange={(event) => updateField("honeypot", event.target.value)}
+          onChange={(e) => updateField("honeypot", e.target.value)}
           className="hidden"
           tabIndex={-1}
           autoComplete="off"
           aria-hidden="true"
         />
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field label="Full name" required>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Name *">
             <input value={form.fullName} onChange={(e) => updateField("fullName", e.target.value)} className={inputClass} />
           </Field>
-          <Field label="Email" required>
+          <Field label="Email *">
             <input type="email" value={form.email} onChange={(e) => updateField("email", e.target.value)} className={inputClass} />
           </Field>
-          <Field label="Phone">
-            <input value={form.phone ?? ""} onChange={(e) => updateField("phone", e.target.value)} className={inputClass} />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Field label="UCSB status">
+            <select
+              value={form.ucsbAffiliationType}
+              onChange={(e) => updateField("ucsbAffiliationType", e.target.value)}
+              className={inputClass}
+            >
+              {ucsbAffiliationOptions.map((o) => (
+                <option key={o} value={o}>{o}</option>
+              ))}
+            </select>
           </Field>
-          <Field label="Graduation year">
+          <Field label="Year">
             <input
               type="number"
               value={form.graduationYear ?? ""}
@@ -174,213 +181,113 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
               className={inputClass}
             />
           </Field>
-          <Field label="UCSB affiliation" required>
-            <select
-              value={form.ucsbAffiliationType}
-              onChange={(e) => updateField("ucsbAffiliationType", e.target.value)}
-              className={inputClass}
-            >
-              {ucsbAffiliationOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Affiliation detail" required>
+          <Field label="Major *">
             <input
               value={form.ucsbAffiliationDetail}
               onChange={(e) => updateField("ucsbAffiliationDetail", e.target.value)}
-              placeholder="e.g. Class of 2022, Computer Engineering"
               className={inputClass}
             />
           </Field>
-          <Field label="Current title" required>
-            <input value={form.currentTitle} onChange={(e) => updateField("currentTitle", e.target.value)} className={inputClass} />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="What you do *">
+            <input
+              value={form.currentTitle}
+              onChange={(e) => updateField("currentTitle", e.target.value)}
+              placeholder="e.g. founder, engineer"
+              className={inputClass}
+            />
           </Field>
-          <Field label="Company / org">
-            <input value={form.companyOrOrg ?? ""} onChange={(e) => updateField("companyOrOrg", e.target.value)} className={inputClass} />
-          </Field>
-          <Field label="Location">
-            <input value={form.location ?? ""} onChange={(e) => updateField("location", e.target.value)} className={inputClass} />
-          </Field>
-          <Field label="Website">
-            <input value={form.websiteUrl ?? ""} onChange={(e) => updateField("websiteUrl", e.target.value)} className={inputClass} />
-          </Field>
-          <Field label="LinkedIn">
-            <input value={form.linkedinUrl ?? ""} onChange={(e) => updateField("linkedinUrl", e.target.value)} className={inputClass} />
-          </Field>
-          <Field label="GitHub / X">
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <input value={form.githubUrl ?? ""} onChange={(e) => updateField("githubUrl", e.target.value)} className={inputClass} placeholder="GitHub" />
-              <input value={form.xUrl ?? ""} onChange={(e) => updateField("xUrl", e.target.value)} className={inputClass} placeholder="X" />
-            </div>
+          <Field label="Company">
+            <input
+              value={form.companyOrOrg ?? ""}
+              onChange={(e) => updateField("companyOrOrg", e.target.value)}
+              className={inputClass}
+            />
           </Field>
         </div>
 
-        <Field label="Bio" required>
-          <textarea value={form.bio} onChange={(e) => updateField("bio", e.target.value)} rows={4} className={textareaClass} />
-        </Field>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <MultiSelectGroup
+        <div className="grid gap-6 sm:grid-cols-2">
+          <ChipGroup
             title="Roles"
             items={roleOptions}
-            activeValues={form.roles}
-            onToggle={(value) => toggleValue("roles", value)}
+            active={form.roles}
+            onToggle={(v) => toggleValue("roles", v)}
           />
-          <MultiSelectGroup
+          <ChipGroup
             title="Domains"
             items={domainOptions}
-            activeValues={form.domains}
-            onToggle={(value) => toggleValue("domains", value)}
+            active={form.domains}
+            onToggle={(v) => toggleValue("domains", v)}
           />
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field label="Custom roles">
-            <input
-              value={(form.customRoles ?? []).join(", ")}
-              onChange={(e) => updateField("customRoles", tokenize(e.target.value))}
-              placeholder="e.g. angel investor, product lead"
-              className={inputClass}
-            />
-          </Field>
-          <Field label="Custom domains">
-            <input
-              value={(form.customDomains ?? []).join(", ")}
-              onChange={(e) => updateField("customDomains", tokenize(e.target.value))}
-              placeholder="e.g. supply chain, mobility"
-              className={inputClass}
-            />
-          </Field>
-        </div>
-
-        <Field label="Keywords">
-          <input
-            value={form.keywords.join(", ")}
-            onChange={(e) => updateField("keywords", tokenize(e.target.value))}
-            placeholder="e.g. vc, fintech, climate, infra"
-            className={inputClass}
+        <Field label="What are you building? *">
+          <textarea
+            value={form.bio}
+            onChange={(e) => updateField("bio", e.target.value)}
+            rows={3}
+            className={textareaClass}
           />
         </Field>
 
-        <Field label="Additional links">
-          <div className="space-y-3">
-            {form.additionalLinks?.map((link, index) => (
-              <div key={`${link.linkType}-${index}`} className="grid gap-3 md:grid-cols-[0.7fr_0.9fr_2fr_auto]">
-                <select
-                  value={link.linkType}
-                  onChange={(e) =>
-                    updateLink(index, {
-                      ...link,
-                      linkType: e.target.value as typeof link.linkType
-                    })
-                  }
-                  className={inputClass}
-                >
-                  <option value="other">Other</option>
-                  <option value="website">Website</option>
-                  <option value="linkedin">LinkedIn</option>
-                  <option value="github">GitHub</option>
-                  <option value="x">X</option>
-                </select>
-                <input
-                  value={link.label ?? ""}
-                  onChange={(e) => updateLink(index, { ...link, label: e.target.value })}
-                  placeholder="Label"
-                  className={inputClass}
-                />
-                <input
-                  value={link.url}
-                  onChange={(e) => updateLink(index, { ...link, url: e.target.value })}
-                  placeholder="URL"
-                  className={inputClass}
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    updateField(
-                      "additionalLinks",
-                      (form.additionalLinks ?? []).filter((_, linkIndex) => linkIndex !== index)
-                    )
-                  }
-                  className="rounded-lg border border-line/50 px-3 py-1.5 text-xs text-muted transition hover:text-ink"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() =>
-                updateField("additionalLinks", [
-                  ...(form.additionalLinks ?? []),
-                  { linkType: "other", label: "", url: "" }
-                ])
-              }
-              className="rounded-lg border border-line/50 px-3 py-1.5 text-xs text-muted transition hover:border-line hover:text-ink"
-            >
-              + Add link
-            </button>
-          </div>
+        <Field label="What is one opinion you hold that you think most people miss? *">
+          <textarea
+            value={form.whyJoin}
+            onChange={(e) => updateField("whyJoin", e.target.value)}
+            rows={3}
+            className={textareaClass}
+          />
         </Field>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field label="What you can help with">
-            <textarea
-              value={form.whatYouCanHelpWith ?? ""}
-              onChange={(e) => updateField("whatYouCanHelpWith", e.target.value)}
-              rows={3}
-              className={textareaClass}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="LinkedIn">
+            <input
+              value={form.linkedinUrl ?? ""}
+              onChange={(e) => updateField("linkedinUrl", e.target.value)}
+              placeholder="https://linkedin.com/in/..."
+              className={inputClass}
             />
           </Field>
-          <Field label="What you are looking for">
-            <textarea
-              value={form.whatYouAreLookingFor ?? ""}
-              onChange={(e) => updateField("whatYouAreLookingFor", e.target.value)}
-              rows={3}
-              className={textareaClass}
+          <Field label="GitHub">
+            <input
+              value={form.githubUrl ?? ""}
+              onChange={(e) => updateField("githubUrl", e.target.value)}
+              placeholder="https://github.com/..."
+              className={inputClass}
             />
           </Field>
         </div>
 
-        <Field label="Why do you want to join?" required>
-          <textarea value={form.whyJoin} onChange={(e) => updateField("whyJoin", e.target.value)} rows={4} className={textareaClass} />
-        </Field>
-
-        <label className="flex items-start gap-3 rounded-lg border border-line/40 bg-paper/60 p-4 text-sm text-muted">
+        <label className="flex items-start gap-3 text-sm text-muted">
           <input
             type="checkbox"
             checked={form.consentToPublishSelectedProfileFields}
             onChange={(e) => updateField("consentToPublishSelectedProfileFields", e.target.checked)}
             className="mt-0.5 h-4 w-4 accent-[rgb(var(--color-accent))]"
           />
-          <span>
-            I consent to selected profile fields being published if approved.
-          </span>
+          <span>I consent to selected profile fields being published if approved.</span>
         </label>
 
-        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+        <div className="flex items-center gap-4">
           <button
             type="submit"
             disabled={submission.status === "loading"}
-            className="rounded-xl bg-accent px-6 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
+            className="rounded-xl bg-ink px-6 py-3 text-sm font-medium text-paper transition hover:opacity-90 disabled:opacity-50"
           >
             {submission.status === "loading" ? "Submitting…" : "Submit"}
           </button>
-          <StatusMessage submission={submission} />
+          {submission.status === "error" && (
+            <p className="text-sm text-red-400">{submission.message}</p>
+          )}
         </div>
       </form>
-    </section>
+    </div>
   );
-
-  function updateLink(index: number, nextLink: NonNullable<ApplicationInput["additionalLinks"]>[number]) {
-    const links = [...(form.additionalLinks ?? [])];
-    links[index] = nextLink;
-    updateField("additionalLinks", links);
-  }
 }
+
+/* ---------- helpers ---------- */
 
 function tokenize(value: string) {
   return value
@@ -389,43 +296,32 @@ function tokenize(value: string) {
     .filter(Boolean);
 }
 
-function Field({
-  label,
-  required,
-  children
-}: {
-  label: string;
-  required?: boolean;
-  children: React.ReactNode;
-}) {
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className="block space-y-2">
-      <span className="text-xs font-medium text-muted">
-        {label}
-        {required ? " *" : ""}
-      </span>
+    <label className="block space-y-1.5">
+      <span className="text-xs font-medium text-muted">{label}</span>
       {children}
     </label>
   );
 }
 
-function MultiSelectGroup({
+function ChipGroup({
   title,
   items,
-  activeValues,
+  active,
   onToggle
 }: {
   title: string;
   items: Tag[];
-  activeValues: string[];
+  active: string[];
   onToggle: (slug: string) => void;
 }) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <p className="text-xs font-medium text-muted">{title}</p>
       <div className="flex flex-wrap gap-1.5">
         {items.map((item) => {
-          const isActive = activeValues.includes(item.slug);
+          const isActive = active.includes(item.slug);
           return (
             <button
               key={item.id}
@@ -433,8 +329,8 @@ function MultiSelectGroup({
               onClick={() => onToggle(item.slug)}
               className={`rounded-lg border px-3 py-1.5 text-xs transition ${
                 isActive
-                  ? "border-accent/60 bg-accent/10 text-ink"
-                  : "border-line/50 text-muted hover:border-line hover:text-ink"
+                  ? "border-ink/40 bg-ink/10 text-ink"
+                  : "border-line/40 text-muted hover:border-line hover:text-ink"
               }`}
             >
               {item.name}
@@ -446,20 +342,8 @@ function MultiSelectGroup({
   );
 }
 
-function StatusMessage({ submission }: { submission: SubmissionState }) {
-  if (submission.status === "success") {
-    return <p className="text-sm text-muted">Received. We&#39;ll be in touch.</p>;
-  }
-
-  if (submission.status === "error") {
-    return <p className="text-sm text-red-400">{submission.message}</p>;
-  }
-
-  return null;
-}
-
 const inputClass =
-  "h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-accent/50 focus:ring-1 focus:ring-accent/20";
+  "h-10 w-full rounded-lg border border-line/40 bg-paper px-3.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-ink/30 focus:ring-1 focus:ring-ink/10";
 
 const textareaClass =
-  "w-full rounded-lg border border-line/60 bg-paper px-4 py-3 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-accent/50 focus:ring-1 focus:ring-accent/20";
+  "w-full rounded-lg border border-line/40 bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-ink/30 focus:ring-1 focus:ring-ink/10";
