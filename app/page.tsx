@@ -1,5 +1,6 @@
 import { ApplicationForm } from "@/components/application-form";
 import { KeyboardNav } from "@/components/keyboard-nav";
+import { FadeIn, Reveal, TypingText } from "@/components/motion";
 import { ShaderBackground } from "@/components/shader-background";
 import { SiteHeader } from "@/components/site-header";
 import { getPublicTags } from "@/lib/data/public";
@@ -20,13 +21,15 @@ export default async function HomePage() {
         <ShaderBackground />
         <div className="relative z-10 px-6 text-center">
           <h1 className="text-6xl font-bold tracking-tight text-white sm:text-7xl lg:text-8xl">
-            ucsb.network
+            <TypingText text="ucsb.network" speed={85} />
           </h1>
-          <p className="mt-5 text-base tracking-wide text-white/60 sm:text-lg">
-            founders. builders. the cracked.
-          </p>
+          <FadeIn delay={1600}>
+            <p className="mt-5 text-base tracking-wide text-white/60 sm:text-lg">
+              founders. builders. the cracked.
+            </p>
+          </FadeIn>
         </div>
-        <div className="absolute bottom-10 z-10 flex w-full justify-center">
+        <FadeIn delay={2200} className="absolute bottom-10 z-10 flex w-full justify-center">
           <a
             href="#about"
             className="animate-float-down text-white/30 transition hover:text-white/60"
@@ -45,7 +48,7 @@ export default async function HomePage() {
               <polyline points="6 9 12 15 18 9" />
             </svg>
           </a>
-        </div>
+        </FadeIn>
       </section>
 
       {/* ── About ── */}
@@ -54,7 +57,7 @@ export default async function HomePage() {
         data-section
         className="snap-section flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
       >
-        <div className="mx-auto max-w-xl text-center">
+        <Reveal className="mx-auto max-w-xl text-center">
           <p className="text-lg leading-relaxed text-ink sm:text-xl">
             A curated group of founders, builders, and engineers affiliated with
             UCSB.
@@ -63,7 +66,7 @@ export default async function HomePage() {
             We host VC and builder events, and meet often to build, talk, and
             network.
           </p>
-        </div>
+        </Reveal>
       </section>
 
       {/* ── Events ── */}
@@ -73,13 +76,27 @@ export default async function HomePage() {
         className="snap-section flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
       >
         <div className="mx-auto w-full max-w-2xl">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            What happens.
-          </h2>
-          <div className="mt-16 divide-y divide-line/20">
-            <EventRow num="01" title="Build Nights" desc="Ship together, every week." />
-            <EventRow num="02" title="Pitch Nights" desc="Share what you're working on." />
-            <EventRow num="03" title="Competitions" desc="Win Cursor & Codex credits." />
+          <Reveal>
+            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              What happens.
+            </h2>
+          </Reveal>
+          <div className="mt-16 space-y-0">
+            <Reveal direction="left">
+              <div className="py-8">
+                <EventRow num="01" title="Build Nights" desc="Ship together, every week." />
+              </div>
+            </Reveal>
+            <Reveal direction="left">
+              <div className="border-t border-line/20 py-8">
+                <EventRow num="02" title="Pitch Nights" desc="Share what you're working on." />
+              </div>
+            </Reveal>
+            <Reveal direction="left">
+              <div className="border-t border-line/20 py-8">
+                <EventRow num="03" title="Competitions" desc="Win Cursor & Codex credits." />
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -90,7 +107,7 @@ export default async function HomePage() {
         data-section
         className="snap-section flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
       >
-        <div className="mx-auto w-full max-w-lg text-center">
+        <Reveal className="mx-auto w-full max-w-lg text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             Beyond campus.
           </h2>
@@ -102,7 +119,7 @@ export default async function HomePage() {
               Coming soon
             </span>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* ── Apply ── */}
@@ -111,9 +128,9 @@ export default async function HomePage() {
         data-section
         className="snap-section flex min-h-[100dvh] items-start justify-center border-t border-line/10 px-6 py-24"
       >
-        <div className="mx-auto w-full max-w-2xl">
+        <Reveal className="mx-auto w-full max-w-2xl">
           <ApplicationForm tags={tags} />
-        </div>
+        </Reveal>
       </section>
 
       <footer className="border-t border-line/10 px-6 py-8 text-center text-xs text-muted">
@@ -135,7 +152,7 @@ function EventRow({
   desc: string;
 }) {
   return (
-    <div className="flex items-baseline gap-6 py-8 first:pt-0 last:pb-0">
+    <div className="flex items-baseline gap-6">
       <span className="font-mono text-xs text-muted/40">{num}</span>
       <div>
         <h3 className="text-lg font-medium text-ink">{title}</h3>
