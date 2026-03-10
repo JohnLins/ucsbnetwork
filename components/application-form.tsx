@@ -53,7 +53,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
     whatYouCanHelpWith: "",
     whatYouAreLookingFor: "",
     whyJoin: "",
-    consentToPublishSelectedProfileFields: false,
+    consentToPublishSelectedProfileFields: true,
     formStartedAt: Date.now(),
     honeypot: ""
   });
@@ -120,7 +120,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
       whatYouCanHelpWith: "",
       whatYouAreLookingFor: "",
       whyJoin: "",
-      consentToPublishSelectedProfileFields: false,
+      consentToPublishSelectedProfileFields: true,
       formStartedAt: Date.now(),
       honeypot: ""
     }));
@@ -259,16 +259,6 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
             />
           </Field>
         </div>
-
-        <label className="flex items-start gap-3 text-sm text-muted">
-          <input
-            type="checkbox"
-            checked={form.consentToPublishSelectedProfileFields}
-            onChange={(e) => updateField("consentToPublishSelectedProfileFields", e.target.checked)}
-            className="mt-0.5 h-4 w-4 accent-[rgb(var(--color-accent))]"
-          />
-          <span>I consent to selected profile fields being published if approved.</span>
-        </label>
 
         <div className="flex items-center gap-4">
           <button
