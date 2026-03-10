@@ -15,7 +15,7 @@ export function AdminShell({
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
           <div>
             <p className="text-xs uppercase tracking-[0.38em] text-accent">{eyebrow}</p>
-            <h1 className="mt-2 font-display text-4xl text-ink">{title}</h1>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">{title}</h1>
           </div>
           <nav className="flex items-center gap-3 text-sm text-muted">
             <Link href="/" className="transition hover:text-ink">

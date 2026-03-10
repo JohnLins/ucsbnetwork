@@ -18,15 +18,21 @@ const config: Config = {
         panel: "rgb(var(--color-panel) / <alpha-value>)"
       },
       boxShadow: {
-        halo: "0 18px 80px rgba(0, 0, 0, 0.32)"
+        subtle: "0 2px 12px rgba(0, 0, 0, 0.08)"
       },
       fontFamily: {
-        display: ["var(--font-display)"],
-        sans: ["var(--font-sans)"]
-      },
-      backgroundImage: {
-        "hero-grid":
-          "linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)"
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "SF Pro Display",
+          "SF Pro Text",
+          "Inter",
+          "Segoe UI",
+          "Helvetica Neue",
+          "Helvetica",
+          "Arial",
+          "sans-serif"
+        ]
       }
     }
   },

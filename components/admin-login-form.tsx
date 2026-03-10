@@ -39,10 +39,9 @@ export function AdminLoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 rounded-[2rem] border border-line/80 bg-panel/80 p-8 shadow-halo">
+    <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-line/40 bg-panel/60 p-8">
       <div className="space-y-3">
-        <p className="text-xs uppercase tracking-[0.38em] text-accent">Admin access</p>
-        <h2 className="font-display text-4xl text-ink">Magic link sign-in</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-ink">Sign in</h2>
         <p className="text-sm leading-7 text-muted">
           Only the seeded admin email in Supabase should receive an authorized session.
         </p>
@@ -53,13 +52,13 @@ export function AdminLoginForm() {
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="h-12 w-full rounded-[1rem] border border-line/80 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/45"
+          className="h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20"
         />
       </label>
       <button
         type="submit"
         disabled={status === "loading"}
-        className="rounded-full border border-accent/45 bg-accent/10 px-6 py-3 text-xs uppercase tracking-[0.28em] text-ink transition hover:bg-accent/20 disabled:opacity-60"
+        className="rounded-xl bg-accent px-6 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
       >
         {status === "loading" ? "Sending..." : "Send magic link"}
       </button>

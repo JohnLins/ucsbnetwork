@@ -105,7 +105,7 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
       const data = (await response.json().catch(() => null)) as { error?: string } | null;
       setSubmission({
         status: "error",
-        message: data?.error ?? "Unable to submit the application right now."
+        message: data?.error ?? "Unable to submit right now."
       });
       return;
     }
@@ -142,17 +142,10 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
   }
 
   return (
-    <section id="apply" className="rounded-[2rem] border border-line/80 bg-panel/80 p-6 shadow-halo lg:p-8">
-      <div className="max-w-3xl">
-        <p className="text-xs uppercase tracking-[0.38em] text-accent">Apply to join</p>
-        <h2 className="mt-4 font-display text-4xl text-ink">A real network needs signal, context, and good people.</h2>
-        <p className="mt-4 text-sm leading-7 text-muted">
-          This form is designed to collect enough context for a thoughtful review and a credible public profile if
-          accepted.
-        </p>
-      </div>
+    <section id="apply" className="rounded-2xl border border-line/40 bg-panel/60 p-5 lg:p-7">
+      <h2 className="text-2xl font-semibold tracking-tight text-ink">Apply</h2>
 
-      <form className="mt-10 space-y-10" onSubmit={handleSubmit}>
+      <form className="mt-8 space-y-8" onSubmit={handleSubmit}>
         <input
           type="text"
           value={form.honeypot}
@@ -163,7 +156,7 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
           aria-hidden="true"
         />
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <Field label="Full name" required>
             <input value={form.fullName} onChange={(e) => updateField("fullName", e.target.value)} className={inputClass} />
           </Field>
@@ -198,14 +191,14 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
             <input
               value={form.ucsbAffiliationDetail}
               onChange={(e) => updateField("ucsbAffiliationDetail", e.target.value)}
-              placeholder="Example: Class of 2022, Computer Engineering"
+              placeholder="e.g. Class of 2022, Computer Engineering"
               className={inputClass}
             />
           </Field>
           <Field label="Current title" required>
             <input value={form.currentTitle} onChange={(e) => updateField("currentTitle", e.target.value)} className={inputClass} />
           </Field>
-          <Field label="Company or organization">
+          <Field label="Company / org">
             <input value={form.companyOrOrg ?? ""} onChange={(e) => updateField("companyOrOrg", e.target.value)} className={inputClass} />
           </Field>
           <Field label="Location">
@@ -226,10 +219,10 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
         </div>
 
         <Field label="Bio" required>
-          <textarea value={form.bio} onChange={(e) => updateField("bio", e.target.value)} rows={5} className={textareaClass} />
+          <textarea value={form.bio} onChange={(e) => updateField("bio", e.target.value)} rows={4} className={textareaClass} />
         </Field>
 
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
           <MultiSelectGroup
             title="Roles"
             items={roleOptions}
@@ -244,12 +237,12 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
           />
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <Field label="Custom roles">
             <input
               value={(form.customRoles ?? []).join(", ")}
               onChange={(e) => updateField("customRoles", tokenize(e.target.value))}
-              placeholder="Example: angel investor, product lead"
+              placeholder="e.g. angel investor, product lead"
               className={inputClass}
             />
           </Field>
@@ -257,7 +250,7 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
             <input
               value={(form.customDomains ?? []).join(", ")}
               onChange={(e) => updateField("customDomains", tokenize(e.target.value))}
-              placeholder="Example: supply chain, mobility"
+              placeholder="e.g. supply chain, mobility"
               className={inputClass}
             />
           </Field>
@@ -267,7 +260,7 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
           <input
             value={form.keywords.join(", ")}
             onChange={(e) => updateField("keywords", tokenize(e.target.value))}
-            placeholder="Example: vc, fintech, climate, infra"
+            placeholder="e.g. vc, fintech, climate, infra"
             className={inputClass}
           />
         </Field>
@@ -312,7 +305,7 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
                       (form.additionalLinks ?? []).filter((_, linkIndex) => linkIndex !== index)
                     )
                   }
-                  className="rounded-full border border-line/80 px-4 py-2 text-sm text-muted transition hover:text-ink"
+                  className="rounded-lg border border-line/50 px-3 py-1.5 text-xs text-muted transition hover:text-ink"
                 >
                   Remove
                 </button>
@@ -326,19 +319,19 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
                   { linkType: "other", label: "", url: "" }
                 ])
               }
-              className="rounded-full border border-line/80 px-4 py-2 text-xs uppercase tracking-[0.26em] text-muted transition hover:border-accent/45 hover:text-ink"
+              className="rounded-lg border border-line/50 px-3 py-1.5 text-xs text-muted transition hover:border-line hover:text-ink"
             >
-              Add link
+              + Add link
             </button>
           </div>
         </Field>
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <Field label="What you can help with">
             <textarea
               value={form.whatYouCanHelpWith ?? ""}
               onChange={(e) => updateField("whatYouCanHelpWith", e.target.value)}
-              rows={4}
+              rows={3}
               className={textareaClass}
             />
           </Field>
@@ -346,36 +339,35 @@ export function ApplicationForm({ tags }: ApplicationFormProps) {
             <textarea
               value={form.whatYouAreLookingFor ?? ""}
               onChange={(e) => updateField("whatYouAreLookingFor", e.target.value)}
-              rows={4}
+              rows={3}
               className={textareaClass}
             />
           </Field>
         </div>
 
         <Field label="Why do you want to join?" required>
-          <textarea value={form.whyJoin} onChange={(e) => updateField("whyJoin", e.target.value)} rows={5} className={textareaClass} />
+          <textarea value={form.whyJoin} onChange={(e) => updateField("whyJoin", e.target.value)} rows={4} className={textareaClass} />
         </Field>
 
-        <label className="flex items-start gap-3 rounded-[1.25rem] border border-line/80 bg-paper/60 p-4 text-sm leading-7 text-muted">
+        <label className="flex items-start gap-3 rounded-lg border border-line/40 bg-paper/60 p-4 text-sm text-muted">
           <input
             type="checkbox"
             checked={form.consentToPublishSelectedProfileFields}
             onChange={(e) => updateField("consentToPublishSelectedProfileFields", e.target.checked)}
-            className="mt-2 h-4 w-4 accent-[rgb(var(--color-accent))]"
+            className="mt-0.5 h-4 w-4 accent-[rgb(var(--color-accent))]"
           />
           <span>
-            I consent to the selected public profile fields being published on the directory if my application is
-            approved.
+            I consent to selected profile fields being published if approved.
           </span>
         </label>
 
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
           <button
             type="submit"
             disabled={submission.status === "loading"}
-            className="rounded-full border border-accent/45 bg-accent/10 px-6 py-4 text-xs uppercase tracking-[0.3em] text-ink transition hover:bg-accent/20 disabled:opacity-60"
+            className="rounded-xl bg-accent px-6 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
           >
-            {submission.status === "loading" ? "Submitting..." : "Submit application"}
+            {submission.status === "loading" ? "Submitting…" : "Submit"}
           </button>
           <StatusMessage submission={submission} />
         </div>
@@ -407,8 +399,8 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <label className="block space-y-3">
-      <span className="text-[11px] uppercase tracking-[0.32em] text-muted">
+    <label className="block space-y-2">
+      <span className="text-xs font-medium text-muted">
         {label}
         {required ? " *" : ""}
       </span>
@@ -429,9 +421,9 @@ function MultiSelectGroup({
   onToggle: (slug: string) => void;
 }) {
   return (
-    <div className="space-y-4">
-      <p className="text-[11px] uppercase tracking-[0.32em] text-muted">{title}</p>
-      <div className="flex flex-wrap gap-2">
+    <div className="space-y-3">
+      <p className="text-xs font-medium text-muted">{title}</p>
+      <div className="flex flex-wrap gap-1.5">
         {items.map((item) => {
           const isActive = activeValues.includes(item.slug);
           return (
@@ -439,10 +431,10 @@ function MultiSelectGroup({
               key={item.id}
               type="button"
               onClick={() => onToggle(item.slug)}
-              className={`rounded-full border px-4 py-2 text-sm transition ${
+              className={`rounded-lg border px-3 py-1.5 text-xs transition ${
                 isActive
-                  ? "border-accent bg-accent/12 text-ink"
-                  : "border-line/80 bg-paper/70 text-muted hover:border-accent/40 hover:text-ink"
+                  ? "border-accent/60 bg-accent/10 text-ink"
+                  : "border-line/50 text-muted hover:border-line hover:text-ink"
               }`}
             >
               {item.name}
@@ -456,18 +448,18 @@ function MultiSelectGroup({
 
 function StatusMessage({ submission }: { submission: SubmissionState }) {
   if (submission.status === "success") {
-    return <p className="text-sm text-muted">Application received. You should hear back after review.</p>;
+    return <p className="text-sm text-muted">Received. We&#39;ll be in touch.</p>;
   }
 
   if (submission.status === "error") {
     return <p className="text-sm text-red-400">{submission.message}</p>;
   }
 
-  return <p className="text-sm text-muted">You can include as much useful context as needed. Keep it plain text.</p>;
+  return null;
 }
 
 const inputClass =
-  "h-12 w-full rounded-[1rem] border border-line/80 bg-paper px-4 text-sm text-ink outline-none transition placeholder:text-muted focus:border-accent/45";
+  "h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-accent/50 focus:ring-1 focus:ring-accent/20";
 
 const textareaClass =
-  "w-full rounded-[1rem] border border-line/80 bg-paper px-4 py-3 text-sm text-ink outline-none transition placeholder:text-muted focus:border-accent/45";
+  "w-full rounded-lg border border-line/60 bg-paper px-4 py-3 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-accent/50 focus:ring-1 focus:ring-accent/20";

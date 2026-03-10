@@ -29,7 +29,7 @@ export default async function AdminApplicationsPage({ searchParams }: PageProps)
   return (
     <AdminShell eyebrow="Admin" title="Applications">
       <div className="grid gap-8 xl:grid-cols-[0.42fr_0.58fr]">
-        <aside className="space-y-3 rounded-[2rem] border border-line/80 bg-panel/80 p-4 shadow-halo">
+        <aside className="space-y-3 rounded-2xl border border-line/40 bg-panel/60 p-4">
           {applications.length === 0 ? (
             <p className="p-4 text-sm text-muted">No applications yet.</p>
           ) : (
@@ -44,7 +44,7 @@ export default async function AdminApplicationsPage({ searchParams }: PageProps)
                 }`}
               >
                 <p className="text-[11px] uppercase tracking-[0.32em] text-accent">{application.status}</p>
-                <h2 className="mt-2 font-display text-2xl text-ink">{application.fullName}</h2>
+                <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">{application.fullName}</h2>
                 <p className="mt-2 text-sm text-muted">
                   {application.currentTitle}
                   {application.companyOrOrg ? ` at ${application.companyOrOrg}` : ""}
@@ -57,7 +57,7 @@ export default async function AdminApplicationsPage({ searchParams }: PageProps)
           {selectedApplication ? (
             <AdminApplicationReview application={selectedApplication} tags={tags} />
           ) : (
-            <div className="rounded-[2rem] border border-line/80 bg-panel/80 p-6 text-sm text-muted shadow-halo">
+            <div className="rounded-2xl border border-line/40 bg-panel/60 p-6 text-sm text-muted">
               Select an application to review.
             </div>
           )}
@@ -69,7 +69,7 @@ export default async function AdminApplicationsPage({ searchParams }: PageProps)
 
 function SetupState() {
   return (
-    <div className="rounded-[2rem] border border-line/80 bg-panel/80 p-8 text-sm leading-7 text-muted shadow-halo">
+    <div className="rounded-2xl border border-line/40 bg-panel/60 p-8 text-sm leading-7 text-muted">
       Configure the Supabase environment variables from <code>.env.example</code>, run the SQL migrations, and seed
       the admin user before using the admin dashboard.
     </div>

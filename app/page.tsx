@@ -19,13 +19,13 @@ export default async function HomePage({ searchParams }: PageProps) {
     <div className="min-h-screen bg-paper text-ink">
       <SiteHeader />
       <Hero />
-      <main className="mx-auto max-w-7xl space-y-10 px-6 py-10 lg:px-10 lg:py-14">
+      <main className="mx-auto max-w-7xl space-y-8 px-6 py-10 lg:px-10 lg:py-14">
         <FilterBar filters={filters} tags={tags} />
         <MemberDirectory members={members} usingFallbackData={usingFallbackData} />
         <ApplicationForm tags={tags} />
       </main>
-      <footer className="border-t border-line/70 px-6 py-8 text-center text-xs uppercase tracking-[0.28em] text-muted lg:px-10">
-        ucsb.network · a focused directory for serious UCSB people
+      <footer className="border-t border-line/30 px-6 py-6 text-center text-xs text-muted lg:px-10">
+        ucsb.network
       </footer>
     </div>
   );

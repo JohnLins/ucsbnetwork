@@ -17,7 +17,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
   if (!hasServiceSupabaseEnv || !session.isConfigured) {
     return (
       <AdminShell eyebrow="Admin" title="Members">
-        <div className="rounded-[2rem] border border-line/80 bg-panel/80 p-8 text-sm leading-7 text-muted shadow-halo">
+        <div className="rounded-2xl border border-line/40 bg-panel/60 p-8 text-sm leading-7 text-muted">
           Configure Supabase before managing members.
         </div>
       </AdminShell>
@@ -31,7 +31,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
   return (
     <AdminShell eyebrow="Admin" title="Members">
       <div className="grid gap-8 xl:grid-cols-[0.38fr_0.62fr]">
-        <aside className="space-y-3 rounded-[2rem] border border-line/80 bg-panel/80 p-4 shadow-halo">
+        <aside className="space-y-3 rounded-2xl border border-line/40 bg-panel/60 p-4">
           <Link
             href="/admin/members"
             className={`block rounded-[1.3rem] border px-4 py-4 transition ${
@@ -39,7 +39,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
             }`}
           >
             <p className="text-[11px] uppercase tracking-[0.32em] text-accent">Create</p>
-            <h2 className="mt-2 font-display text-2xl text-ink">New member</h2>
+            <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">New member</h2>
           </Link>
           {members.map((member) => (
             <Link
@@ -54,7 +54,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
               <p className="text-[11px] uppercase tracking-[0.32em] text-accent">
                 {member.isPublished ? "Published" : "Draft"}
               </p>
-              <h2 className="mt-2 font-display text-2xl text-ink">{member.fullName}</h2>
+              <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">{member.fullName}</h2>
               {member.headline ? <p className="mt-2 text-sm text-muted">{member.headline}</p> : null}
             </Link>
           ))}

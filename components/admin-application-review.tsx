@@ -73,11 +73,11 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
   }
 
   return (
-    <div className="rounded-[2rem] border border-line/80 bg-panel/80 p-6 shadow-halo">
-      <div className="flex flex-col gap-4 border-b border-line/70 pb-6 lg:flex-row lg:items-end lg:justify-between">
+    <div className="rounded-2xl border border-line/40 bg-panel/60 p-6">
+      <div className="flex flex-col gap-4 border-b border-line/30 pb-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.38em] text-accent">{application.status}</p>
-          <h2 className="mt-3 font-display text-4xl text-ink">{application.fullName}</h2>
+          <p className="text-xs font-medium text-muted">{application.status}</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink">{application.fullName}</h2>
           <p className="mt-2 text-sm text-muted">
             {application.currentTitle}
             {application.companyOrOrg ? ` at ${application.companyOrOrg}` : ""}
@@ -127,7 +127,7 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
           <TokenField title="Roles" values={draft.roles} options={roles} onChange={(values) => setDraft({ ...draft, roles: values })} />
           <TokenField title="Domains" values={draft.domains} options={domains} onChange={(values) => setDraft({ ...draft, domains: values })} />
           <EditableField label="Private context">
-            <div className="rounded-[1.25rem] border border-line/80 bg-paper/60 p-4 text-sm leading-7 text-muted">
+            <div className="rounded-xl border border-line/40 bg-paper/60 p-4 text-sm leading-7 text-muted">
               <p><strong className="text-ink">Why join:</strong> {application.whyJoin}</p>
               {application.whatYouCanHelpWith ? (
                 <p className="mt-3"><strong className="text-ink">Can help with:</strong> {application.whatYouCanHelpWith}</p>
@@ -140,14 +140,14 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col gap-4 border-t border-line/70 pt-6 md:flex-row md:items-center md:justify-between">
-        <div className="text-sm text-muted">{status.message ?? "Review and curate the public-facing profile before approval."}</div>
+      <div className="mt-8 flex flex-col gap-4 border-t border-line/30 pt-5 md:flex-row md:items-center md:justify-between">
+        <div className="text-sm text-muted">{status.message ?? ""}</div>
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
             onClick={() => submit("reject")}
             disabled={status.kind === "loading"}
-            className="rounded-full border border-line/80 px-5 py-3 text-xs uppercase tracking-[0.28em] text-muted transition hover:text-ink disabled:opacity-60"
+            className="rounded-xl border border-line/50 px-5 py-2.5 text-sm text-muted transition hover:text-ink disabled:opacity-50"
           >
             Reject
           </button>
@@ -155,7 +155,7 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
             type="button"
             onClick={() => submit("approve")}
             disabled={status.kind === "loading"}
-            className="rounded-full border border-accent/45 bg-accent/10 px-5 py-3 text-xs uppercase tracking-[0.28em] text-ink transition hover:bg-accent/20 disabled:opacity-60"
+            className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
           >
             Approve and publish
           </button>
@@ -216,7 +216,7 @@ function TokenField({
 }
 
 const inputClass =
-  "h-12 w-full rounded-[1rem] border border-line/80 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/45";
+  "h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20";
 
 const textareaClass =
-  "w-full rounded-[1rem] border border-line/80 bg-paper px-4 py-3 text-sm text-ink outline-none transition focus:border-accent/45";
+  "w-full rounded-lg border border-line/60 bg-paper px-4 py-3 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20";

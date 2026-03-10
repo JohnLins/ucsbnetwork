@@ -56,12 +56,12 @@ export function AdminMemberEditor({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-[2rem] border border-line/80 bg-panel/80 p-6 shadow-halo">
-      <div className="space-y-3 border-b border-line/70 pb-6">
-        <p className="text-xs uppercase tracking-[0.38em] text-accent">
+    <form onSubmit={handleSubmit} className="rounded-2xl border border-line/40 bg-panel/60 p-6">
+      <div className="space-y-2 border-b border-line/30 pb-5">
+        <p className="text-xs font-medium text-muted">
           {selectedMember ? "Edit member" : "Create member"}
         </p>
-        <h2 className="font-display text-4xl text-ink">{selectedMember ? selectedMember.fullName : "New member"}</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-ink">{selectedMember ? selectedMember.fullName : "New member"}</h2>
       </div>
       <div className="mt-8 space-y-6">
         <Labeled title="Full name">
@@ -97,12 +97,12 @@ export function AdminMemberEditor({
           Publish this profile
         </label>
       </div>
-      <div className="mt-8 flex flex-col gap-4 border-t border-line/70 pt-6 md:flex-row md:items-center md:justify-between">
-        <p className="text-sm text-muted">{status.message ?? "Save curated member profiles directly to the public directory."}</p>
+      <div className="mt-8 flex flex-col gap-4 border-t border-line/30 pt-5 md:flex-row md:items-center md:justify-between">
+        <p className="text-sm text-muted">{status.message ?? ""}</p>
         <button
           type="submit"
           disabled={status.kind === "loading"}
-          className="rounded-full border border-accent/45 bg-accent/10 px-5 py-3 text-xs uppercase tracking-[0.28em] text-ink transition hover:bg-accent/20 disabled:opacity-60"
+          className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
         >
           {status.kind === "loading" ? "Saving..." : "Save member"}
         </button>
@@ -160,7 +160,7 @@ function TokenPicker({
 }
 
 const inputClass =
-  "h-12 w-full rounded-[1rem] border border-line/80 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/45";
+  "h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20";
 
 const textareaClass =
-  "w-full rounded-[1rem] border border-line/80 bg-paper px-4 py-3 text-sm text-ink outline-none transition focus:border-accent/45";
+  "w-full rounded-lg border border-line/60 bg-paper px-4 py-3 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20";

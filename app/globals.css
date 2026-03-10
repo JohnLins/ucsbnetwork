@@ -3,21 +3,21 @@
 @tailwind utilities;
 
 :root {
-  --color-paper: 246 241 232;
-  --color-panel: 255 252 247;
-  --color-ink: 29 24 18;
-  --color-muted: 103 95 84;
-  --color-line: 193 181 161;
-  --color-accent: 185 146 66;
+  --color-paper: 255 255 255;
+  --color-panel: 245 245 247;
+  --color-ink: 29 29 31;
+  --color-muted: 134 134 139;
+  --color-line: 210 210 215;
+  --color-accent: 0 113 227;
 }
 
 .dark {
-  --color-paper: 11 11 13;
-  --color-panel: 18 18 21;
-  --color-ink: 243 237 228;
-  --color-muted: 164 156 144;
-  --color-line: 57 54 48;
-  --color-accent: 189 154 79;
+  --color-paper: 0 0 0;
+  --color-panel: 28 28 30;
+  --color-ink: 245 245 247;
+  --color-muted: 134 134 139;
+  --color-line: 56 56 58;
+  --color-accent: 41 151 255;
 }
 
 * {
@@ -32,13 +32,11 @@ body {
   min-height: 100vh;
   background: rgb(var(--color-paper));
   color: rgb(var(--color-ink));
-  font-family: "Avenir Next", Avenir, "Segoe UI", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: rgba(var(--color-accent), 0.3);
-}
-
-.font-display {
-  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
+  background: rgba(var(--color-accent), 0.2);
 }

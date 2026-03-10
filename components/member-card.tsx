@@ -4,15 +4,15 @@ import type { MemberCard as Member } from "@/lib/types";
 
 export function MemberCard({ member }: { member: Member }) {
   return (
-    <article className="group rounded-[1.75rem] border border-line/80 bg-paper/70 p-6 transition hover:-translate-y-0.5 hover:border-accent/45 hover:bg-paper">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <h3 className="font-display text-3xl text-ink">{member.fullName}</h3>
-            {member.headline ? <p className="max-w-2xl text-sm leading-7 text-muted">{member.headline}</p> : null}
+    <article className="group rounded-xl border border-line/40 bg-paper p-5 transition hover:border-line">
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0 space-y-3">
+          <div className="space-y-1.5">
+            <h3 className="text-lg font-semibold tracking-tight text-ink">{member.fullName}</h3>
+            {member.headline ? <p className="text-sm text-muted">{member.headline}</p> : null}
           </div>
-          <p className="max-w-3xl text-sm leading-7 text-muted">{member.bio}</p>
-          <div className="flex flex-wrap gap-2">
+          <p className="max-w-2xl text-sm leading-relaxed text-muted">{member.bio}</p>
+          <div className="flex flex-wrap gap-1.5">
             {member.roles.map((tag) => (
               <TagPill key={tag.id}>{tag.name}</TagPill>
             ))}
@@ -25,22 +25,22 @@ export function MemberCard({ member }: { member: Member }) {
           </div>
         </div>
 
-        <div className="min-w-56 space-y-4 border-t border-line/70 pt-5 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+        <div className="min-w-48 space-y-3 border-t border-line/40 pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
           {member.companyOrOrg ? (
             <div>
-              <p className="text-[11px] uppercase tracking-[0.32em] text-muted">Organization</p>
-              <p className="mt-2 text-sm text-ink">{member.companyOrOrg}</p>
+              <p className="text-[11px] uppercase tracking-wider text-muted">Organization</p>
+              <p className="mt-1 text-sm text-ink">{member.companyOrOrg}</p>
             </div>
           ) : null}
           {member.location ? (
             <div>
-              <p className="text-[11px] uppercase tracking-[0.32em] text-muted">Location</p>
-              <p className="mt-2 text-sm text-ink">{member.location}</p>
+              <p className="text-[11px] uppercase tracking-wider text-muted">Location</p>
+              <p className="mt-1 text-sm text-ink">{member.location}</p>
             </div>
           ) : null}
-          <div className="space-y-2">
-            <p className="text-[11px] uppercase tracking-[0.32em] text-muted">Links</p>
-            <div className="flex flex-wrap gap-2">
+          <div className="space-y-1.5">
+            <p className="text-[11px] uppercase tracking-wider text-muted">Links</p>
+            <div className="flex flex-wrap gap-1.5">
               {member.websiteUrl ? (
                 <ExternalChip href={member.websiteUrl}>Site</ExternalChip>
               ) : null}
@@ -59,7 +59,7 @@ export function MemberCard({ member }: { member: Member }) {
 
 function TagPill({ children }: { children: string }) {
   return (
-    <span className="rounded-full border border-line/80 px-3 py-1 text-[11px] uppercase tracking-[0.26em] text-muted">
+    <span className="rounded-md border border-line/50 px-2.5 py-1 text-[11px] font-medium text-muted">
       {children}
     </span>
   );
@@ -71,7 +71,7 @@ function ExternalChip({ href, children }: { href: string; children: string }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center rounded-full border border-line/80 px-3 py-2 text-sm text-muted transition hover:border-accent/45 hover:text-ink"
+      className="inline-flex items-center rounded-lg border border-line/50 px-2.5 py-1.5 text-xs text-muted transition hover:border-accent/40 hover:text-ink"
     >
       {children}
     </Link>

@@ -10,15 +10,19 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex items-center gap-3 rounded-full border border-line/70 bg-panel/70 px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-muted transition hover:border-accent/50 hover:text-ink"
+      className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition hover:text-ink"
       aria-label="Toggle theme"
     >
-      <span className="text-[10px] text-accent">{isDark ? "Dark" : "Light"}</span>
-      <span className="relative block h-5 w-10 rounded-full bg-ink/10">
-        <span
-          className={`absolute top-1 h-3 w-3 rounded-full bg-accent transition ${isDark ? "left-1" : "left-6"}`}
-        />
-      </span>
+      {isDark ? (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="8" cy="8" r="3.5" />
+          <path d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.4 3.4l.7.7M11.9 11.9l.7.7M3.4 12.6l.7-.7M11.9 4.1l.7-.7" />
+        </svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M13.5 9.2A5.5 5.5 0 1 1 6.8 2.5a4.5 4.5 0 0 0 6.7 6.7Z" />
+        </svg>
+      )}
     </button>
   );
 }
