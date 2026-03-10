@@ -15,7 +15,7 @@ export default async function HomePage() {
       {/* ── Hero ── */}
       <section
         data-section
-        className="snap-section relative flex min-h-[100dvh] items-center justify-center overflow-hidden"
+        className="snap-section relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-black"
       >
         <ShaderBackground />
         <div className="relative z-10 px-6 text-center">

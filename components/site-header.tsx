@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-import { ThemeToggle } from "@/components/theme-toggle";
-
 export function SiteHeader() {
   return (
     <header className="fixed top-0 z-30 w-full border-b border-line/10 bg-paper/80 backdrop-blur-xl">
@@ -19,10 +17,9 @@ export function SiteHeader() {
           <a href="#network" className="hidden text-xs text-muted transition hover:text-ink md:inline-flex">
             Network
           </a>
-          <a href="#apply" className="hidden text-xs text-muted transition hover:text-ink md:inline-flex">
+          <a href="#apply" className="text-xs text-muted transition hover:text-ink">
             Apply
           </a>
-          <ThemeToggle />
         </nav>
       </div>
     </header>
