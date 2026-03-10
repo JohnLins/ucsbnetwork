@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-paper: 246 241 232;
+  --color-panel: 255 252 247;
+  --color-ink: 29 24 18;
+  --color-muted: 103 95 84;
+  --color-line: 193 181 161;
+  --color-accent: 185 146 66;
+}
+
+.dark {
+  --color-paper: 11 11 13;
+  --color-panel: 18 18 21;
+  --color-ink: 243 237 228;
+  --color-muted: 164 156 144;
+  --color-line: 57 54 48;
+  --color-accent: 189 154 79;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: rgb(var(--color-paper));
+  color: rgb(var(--color-ink));
+  font-family: "Avenir Next", Avenir, "Segoe UI", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+::selection {
+  background: rgba(var(--color-accent), 0.3);
+}
+
+.font-display {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
+}

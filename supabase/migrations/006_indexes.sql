@@ -1,0 +1,11 @@
+create index if not exists members_sort_name_idx on public.members (sort_name);
+create index if not exists members_published_idx on public.members (is_published, archived_at);
+create index if not exists members_name_trgm_idx on public.members using gin (full_name gin_trgm_ops);
+create index if not exists member_links_member_id_idx on public.member_links (member_id);
+create index if not exists member_tags_tag_id_idx on public.member_tags (tag_id);
+create index if not exists application_links_application_id_idx on public.application_links (application_id);
+create index if not exists application_tags_tag_id_idx on public.application_tags (tag_id);
+create index if not exists applications_status_idx on public.applications (status, submitted_at desc);
+create index if not exists submission_audit_email_hash_idx on public.submission_audit (email_hash, submitted_at desc);
+create index if not exists submission_audit_ip_hash_idx on public.submission_audit (ip_hash, submitted_at desc);
+create index if not exists tags_lookup_idx on public.tags (tag_type, slug, is_active);
