@@ -38,23 +38,29 @@ export function MemberCard({ member }: { member: Member }) {
               <p className="mt-1 text-sm text-ink">{member.location}</p>
             </div>
           ) : null}
-          {(member.websiteUrl || member.links.length > 0) ? (
-            <div className="space-y-1.5">
-              <p className="text-[11px] uppercase tracking-wider text-muted">Links</p>
-              <div className="flex items-center gap-2">
-                {member.websiteUrl ? (
-                  <LinkIcon href={member.websiteUrl} type="website" />
-                ) : null}
-                {member.links.map((link) => (
-                  <LinkIcon
-                    key={`${member.id}-${link.url}`}
-                    href={link.url}
-                    type={link.linkType}
-                  />
-                ))}
+          {(() => {
+            const hasWebsiteLinkInLinks = member.links.some((l) => l.linkType === "website");
+            const showWebsiteUrl = member.websiteUrl && !hasWebsiteLinkInLinks;
+            const hasAnyLinks = showWebsiteUrl || member.links.length > 0;
+            if (!hasAnyLinks) return null;
+            return (
+              <div className="space-y-1.5">
+                <p className="text-[11px] uppercase tracking-wider text-muted">Links</p>
+                <div className="flex items-center gap-2">
+                  {showWebsiteUrl ? (
+                    <LinkIcon href={member.websiteUrl!} type="website" />
+                  ) : null}
+                  {member.links.map((link) => (
+                    <LinkIcon
+                      key={`${member.id}-${link.url}`}
+                      href={link.url}
+                      type={link.linkType}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ) : null}
+            );
+          })()}
         </div>
       </div>
     </article>
