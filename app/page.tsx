@@ -2,7 +2,7 @@ import { ApplicationForm } from "@/components/application-form";
 import { KeyboardNav } from "@/components/keyboard-nav";
 import { FadeIn, Reveal, TypingText } from "@/components/motion";
 import { OrbDivider } from "@/components/orb-divider";
-import { ShaderBackground } from "@/components/shader-background";
+import { Globe } from "@/components/ui/globe";
 import { SiteHeader } from "@/components/site-header";
 import { getPublicTags } from "@/lib/data/public";
 
@@ -17,9 +17,14 @@ export default async function HomePage() {
       {/* ── Hero ── */}
       <section
         data-section
-        className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-navy"
+        className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-[#050a14]"
       >
-        <ShaderBackground />
+        {/* Globe behind text */}
+        <Globe className="top-1/2 -translate-y-1/2 opacity-70 max-w-[800px]" />
+
+        {/* Radial overlay for depth */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_30%,#050a14_80%)]" />
+
         <div className="relative z-10 px-6 text-center">
           <h1 className="text-6xl font-bold tracking-tight text-white sm:text-7xl lg:text-8xl">
             <TypingText text="ucsb.network" speed={85} />
