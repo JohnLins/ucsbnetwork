@@ -29,18 +29,18 @@ export function AdminShell({
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">{title}</h1>
           </div>
           <nav className="flex items-center gap-3 text-sm text-muted">
-            <Link href="/" className="transition hover:text-ink">
+            <Link href="/" className="transition hover:text-accent">
               Public site
             </Link>
-            <Link href="/admin/applications" className="transition hover:text-ink">
+            <Link href="/admin/applications" className="transition hover:text-accent">
               Applications
             </Link>
-            <Link href="/admin/members" className="transition hover:text-ink">
+            <Link href="/admin/members" className="transition hover:text-accent">
               Members
             </Link>
             <button
               onClick={handleLogout}
-              className="ml-2 rounded-lg border border-line/50 px-3 py-1.5 text-sm text-muted transition hover:text-ink"
+              className="ml-2 rounded-lg border border-line/50 px-3 py-1.5 text-sm text-muted transition hover:border-accent/40 hover:text-ink"
             >
               Logout
             </button>

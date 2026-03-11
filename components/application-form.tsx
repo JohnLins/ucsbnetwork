@@ -273,7 +273,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           <button
             type="submit"
             disabled={submission.status === "loading"}
-            className="rounded-xl bg-ink px-6 py-3 text-sm font-medium text-paper transition hover:opacity-90 disabled:opacity-50"
+            className="rounded-xl bg-accent px-6 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
           >
             {submission.status === "loading" ? "Submitting…" : "Submit"}
           </button>
@@ -328,8 +328,8 @@ function ChipGroup({
               onClick={() => onToggle(item.slug)}
               className={`rounded-lg border px-3 py-1.5 text-xs transition ${
                 isActive
-                  ? "border-ink/40 bg-ink/10 text-ink"
-                  : "border-line/40 text-muted hover:border-line hover:text-ink"
+                  ? "border-accent/50 bg-accent/10 text-accent"
+                  : "border-line/40 text-muted hover:border-accent/30 hover:text-ink"
               }`}
             >
               {item.name}
@@ -342,7 +342,7 @@ function ChipGroup({
 }
 
 const inputClass =
-  "h-10 w-full rounded-lg border border-line/40 bg-paper px-3.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-ink/30 focus:ring-1 focus:ring-ink/10";
+  "h-10 w-full rounded-lg border border-line/40 bg-paper px-3.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent/40 focus:ring-1 focus:ring-accent/15";
 
 const textareaClass =
-  "w-full rounded-lg border border-line/40 bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-ink/30 focus:ring-1 focus:ring-ink/10";
+  "w-full rounded-lg border border-line/40 bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent/40 focus:ring-1 focus:ring-accent/15";

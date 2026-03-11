@@ -4,7 +4,7 @@ import type { MemberCard as Member, LinkType } from "@/lib/types";
 
 export function MemberCard({ member }: { member: Member }) {
   return (
-    <article className="group rounded-xl border border-line/40 bg-paper p-5 transition hover:border-line">
+    <article className="group rounded-xl border border-line/40 bg-paper p-5 transition hover:border-accent/30 hover:shadow-gold-sm">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 space-y-3">
           <div className="space-y-1.5">
@@ -17,7 +17,7 @@ export function MemberCard({ member }: { member: Member }) {
               <TagPill key={tag.id}>{tag.name}</TagPill>
             ))}
             {member.domains.map((tag) => (
-              <TagPill key={tag.id}>{tag.name}</TagPill>
+              <TagPill key={tag.id} variant="accent">{tag.name}</TagPill>
             ))}
             {member.keywords.map((tag) => (
               <TagPill key={tag.id}>{tag.name}</TagPill>
@@ -67,12 +67,11 @@ export function MemberCard({ member }: { member: Member }) {
   );
 }
 
-function TagPill({ children }: { children: string }) {
-  return (
-    <span className="rounded-md border border-line/50 px-2.5 py-1 text-[11px] font-medium text-muted">
-      {children}
-    </span>
-  );
+function TagPill({ children, variant = "default" }: { children: string; variant?: "default" | "accent" }) {
+  const styles = variant === "accent"
+    ? "rounded-md border border-accent/30 bg-accent/5 px-2.5 py-1 text-[11px] font-medium text-accent"
+    : "rounded-md border border-line/50 px-2.5 py-1 text-[11px] font-medium text-muted";
+  return <span className={styles}>{children}</span>;
 }
 
 function LinkIcon({ href, type }: { href: string; type: LinkType | "website" }) {
@@ -81,7 +80,7 @@ function LinkIcon({ href, type }: { href: string; type: LinkType | "website" }) 
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition hover:text-ink"
+      className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition hover:text-accent"
       aria-label={type}
     >
       {getLinkSvg(type)}

@@ -8,16 +8,18 @@
   --color-ink: 29 29 31;
   --color-muted: 134 134 139;
   --color-line: 210 210 215;
-  --color-accent: 0 113 227;
+  --color-accent: 214 145 18;
+  --color-navy: 0 54 96;
 }
 
 .dark {
-  --color-paper: 0 0 0;
-  --color-panel: 28 28 30;
-  --color-ink: 245 245 247;
-  --color-muted: 134 134 139;
-  --color-line: 56 56 58;
-  --color-accent: 41 151 255;
+  --color-paper: 10 15 26;
+  --color-panel: 18 26 46;
+  --color-ink: 240 242 245;
+  --color-muted: 139 145 160;
+  --color-line: 40 55 85;
+  --color-accent: 241 168 37;
+  --color-navy: 0 54 96;
 }
 
 * {
@@ -38,7 +40,7 @@ body {
 }
 
 ::selection {
-  background: rgba(var(--color-accent), 0.2);
+  background: rgba(var(--color-accent), 0.25);
 }
 
 @keyframes float-down {
@@ -57,4 +59,13 @@ body {
 
 .animate-blink {
   animation: blink 0.9s step-end infinite;
+}
+
+@keyframes gold-pulse {
+  0%, 100% { box-shadow: 0 0 16px 4px rgba(241, 168, 37, 0.25); }
+  50% { box-shadow: 0 0 28px 8px rgba(241, 168, 37, 0.45); }
+}
+
+.animate-gold-pulse {
+  animation: gold-pulse 3s ease-in-out infinite;
 }

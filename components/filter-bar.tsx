@@ -104,7 +104,7 @@ export function FilterBar({ filters, tags }: FilterBarProps) {
           </div>
           <button
             type="button"
-            className="shrink-0 text-xs text-muted transition hover:text-ink"
+            className="shrink-0 text-xs text-muted transition hover:text-accent"
             onClick={() =>
               updateParams({
                 q: "",
@@ -145,8 +145,8 @@ function FilterGroup({ items, activeValues, onToggle }: FilterGroupProps) {
             onClick={() => onToggle(tag.slug)}
             className={`rounded-lg border px-3 py-1.5 text-xs transition ${
               isActive
-                ? "border-accent/60 bg-accent/10 text-ink"
-                : "border-line/50 text-muted hover:border-line hover:text-ink"
+                ? "border-accent/60 bg-accent/10 text-accent"
+                : "border-line/50 text-muted hover:border-accent/30 hover:text-ink"
             }`}
           >
             {tag.name}

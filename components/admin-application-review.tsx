@@ -241,7 +241,7 @@ function TokenField({
               }
               className={`rounded-full border px-4 py-2 text-sm transition ${
                 isActive
-                  ? "border-accent bg-accent/12 text-ink"
+                  ? "border-accent/50 bg-accent/12 text-accent"
                   : "border-line/80 bg-paper/70 text-muted hover:border-accent/40 hover:text-ink"
               }`}
             >

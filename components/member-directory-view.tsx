@@ -27,7 +27,7 @@ export function MemberDirectoryView({ members }: { members: DirectoryMember[] })
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search members…"
-        className="mb-8 h-10 w-full max-w-sm rounded-lg border border-line/40 bg-paper px-4 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-ink/30 focus:ring-1 focus:ring-ink/10"
+        className="mb-8 h-10 w-full max-w-sm rounded-lg border border-line/40 bg-paper px-4 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent/40 focus:ring-1 focus:ring-accent/15"
       />
 
       {filtered.length === 0 ? (
@@ -45,7 +45,7 @@ export function MemberDirectoryView({ members }: { members: DirectoryMember[] })
 
 function DirectoryCard({ member }: { member: DirectoryMember }) {
   return (
-    <div className="rounded-xl border border-line/40 bg-panel/60 p-5 transition hover:border-line/70">
+    <div className="rounded-xl border border-line/40 bg-panel/60 p-5 transition hover:border-accent/30 hover:shadow-gold-sm">
       <h3 className="text-lg font-semibold text-ink">{member.fullName}</h3>
       {member.headline && (
         <p className="mt-1 text-sm text-muted">{member.headline}</p>
@@ -83,7 +83,7 @@ function DirectoryCard({ member }: { member: DirectoryMember }) {
         {member.email && (
           <a
             href={`mailto:${member.email}`}
-            className="text-muted transition hover:text-ink"
+            className="text-muted transition hover:text-accent"
             title={member.email}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -98,7 +98,7 @@ function DirectoryCard({ member }: { member: DirectoryMember }) {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted transition hover:text-ink"
+            className="text-muted transition hover:text-accent"
             title={link.label ?? link.linkType}
           >
             <LinkIcon type={link.linkType} />
@@ -110,7 +110,7 @@ function DirectoryCard({ member }: { member: DirectoryMember }) {
               href={member.websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted transition hover:text-ink"
+              className="text-muted transition hover:text-accent"
               title="Website"
             >
               <LinkIcon type="website" />

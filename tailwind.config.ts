@@ -15,10 +15,13 @@ const config: Config = {
         line: "rgb(var(--color-line) / <alpha-value>)",
         accent: "rgb(var(--color-accent) / <alpha-value>)",
         muted: "rgb(var(--color-muted) / <alpha-value>)",
-        panel: "rgb(var(--color-panel) / <alpha-value>)"
+        panel: "rgb(var(--color-panel) / <alpha-value>)",
+        navy: "rgb(var(--color-navy) / <alpha-value>)"
       },
       boxShadow: {
-        subtle: "0 2px 12px rgba(0, 0, 0, 0.08)"
+        subtle: "0 2px 12px rgba(0, 0, 0, 0.08)",
+        "gold-sm": "0 0 12px 2px rgba(241, 168, 37, 0.15)",
+        "gold-md": "0 0 24px 4px rgba(241, 168, 37, 0.2)"
       },
       fontFamily: {
         sans: [
