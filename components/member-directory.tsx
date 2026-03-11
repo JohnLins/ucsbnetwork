@@ -15,7 +15,7 @@ export function MemberDirectory({
       <div className="flex items-end justify-between gap-4">
         <p className="text-sm text-muted">
           {members.length} {members.length === 1 ? "member" : "members"}
-        </p>
+          </p>
         {usingFallbackData ? (
           <p className="text-right text-xs text-muted">
             Preview data — Supabase not configured.

@@ -49,16 +49,16 @@ export function MemberCard({ member }: { member: Member }) {
                 <div className="flex items-center gap-2">
                   {showWebsiteUrl ? (
                     <LinkIcon href={member.websiteUrl!} type="website" />
-                  ) : null}
-                  {member.links.map((link) => (
+              ) : null}
+              {member.links.map((link) => (
                     <LinkIcon
                       key={`${member.id}-${link.url}`}
                       href={link.url}
                       type={link.linkType}
                     />
-                  ))}
-                </div>
-              </div>
+              ))}
+            </div>
+          </div>
             );
           })()}
         </div>

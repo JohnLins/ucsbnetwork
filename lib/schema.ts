@@ -23,7 +23,7 @@ export const applicationSchema = z.object({
   companyOrOrg: z.string().trim().max(120).optional(),
   location: z.string().trim().max(120).optional(),
   websiteUrl: optionalUrlSchema,
-  bio: z.string().trim().min(40).max(1200),
+  bio: z.string().trim().min(10).max(1200),
   roles: z.array(z.string().trim().min(1).max(60)).max(8),
   customRoles: z.array(z.string().trim().min(1).max(60)).max(5).optional(),
   domains: z.array(z.string().trim().min(1).max(60)).max(8),

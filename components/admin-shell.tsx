@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function AdminShell({
   title,
@@ -9,6 +12,14 @@ export function AdminShell({
   eyebrow: string;
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
+    router.refresh();
+  }
+
   return (
     <div className="min-h-screen bg-paper">
       <header className="border-b border-line/70">
@@ -27,6 +38,12 @@ export function AdminShell({
             <Link href="/admin/members" className="transition hover:text-ink">
               Members
             </Link>
+            <button
+              onClick={handleLogout}
+              className="ml-2 rounded-lg border border-line/50 px-3 py-1.5 text-sm text-muted transition hover:text-ink"
+            >
+              Logout
+            </button>
           </nav>
         </div>
       </header>

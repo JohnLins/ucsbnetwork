@@ -1,68 +1,93 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { createHmac } from "crypto";
 
-import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { getSupabaseServiceClient } from "@/lib/supabase/service";
-import { hasPublicSupabaseEnv, hasServiceSupabaseEnv } from "@/lib/env";
+import { env, hasServiceSupabaseEnv } from "@/lib/env";
 
+const COOKIE_NAME = "admin_session";
+const HMAC_KEY = "ucsb-network-admin-v1";
+
+/**
+ * Compute the expected session token from the ADMIN_PASSWORD.
+ * Deterministic — anyone with the password produces the same token.
+ */
+function computeSessionToken(): string | null {
+  if (!env.ADMIN_PASSWORD) return null;
+  return createHmac("sha256", env.ADMIN_PASSWORD).update(HMAC_KEY).digest("hex");
+}
+
+/**
+ * Verify a provided password against the ADMIN_PASSWORD env var.
+ */
+export function verifyAdminPassword(password: string): boolean {
+  return Boolean(env.ADMIN_PASSWORD) && password === env.ADMIN_PASSWORD;
+}
+
+/**
+ * Set the admin session cookie.
+ */
+export async function setAdminSession() {
+  const token = computeSessionToken();
+  if (!token) return;
+
+  const cookieStore = await cookies();
+  cookieStore.set(COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7 // 7 days
+  });
+}
+
+/**
+ * Clear the admin session cookie.
+ */
+export async function clearAdminSession() {
+  const cookieStore = await cookies();
+  cookieStore.set(COOKIE_NAME, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0
+  });
+}
+
+/**
+ * Check if the current request has a valid admin session.
+ */
 export async function getAdminSession() {
-  if (!hasPublicSupabaseEnv || !hasServiceSupabaseEnv) {
+  if (!env.ADMIN_PASSWORD) {
     return {
-      user: null,
-      email: null,
       isAdmin: false,
-      isConfigured: false
+      isConfigured: false,
+      email: "hurshshah483@gmail.com"
     };
   }
 
-  const supabase = await getSupabaseServerClient();
-  const service = getSupabaseServiceClient();
-
-  if (!supabase || !service) {
-    return {
-      user: null,
-      email: null,
-      isAdmin: false,
-      isConfigured: false
-    };
+  const expectedToken = computeSessionToken();
+  if (!expectedToken) {
+    return { isAdmin: false, isConfigured: false, email: null };
   }
 
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
-
-  const email = user?.email?.toLowerCase() ?? null;
-
-  if (!email) {
-    return {
-      user: null,
-      email: null,
-      isAdmin: false,
-      isConfigured: true
-    };
-  }
-
-  const { data } = await service
-    .from("admin_users")
-    .select("email")
-    .eq("email", email)
-    .maybeSingle();
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get(COOKIE_NAME);
 
   return {
-    user,
-    email,
-    isAdmin: Boolean(data),
-    isConfigured: true
+    isAdmin: sessionCookie?.value === expectedToken,
+    isConfigured: hasServiceSupabaseEnv,
+    email: sessionCookie?.value === expectedToken ? "hurshshah483@gmail.com" : null
   };
 }
 
+/**
+ * Require admin session or redirect to login.
+ */
 export async function requireAdmin() {
   const session = await getAdminSession();
 
-  if (!session.isConfigured) {
-    return session;
-  }
-
-  if (!session.user || !session.isAdmin) {
+  if (!session.isAdmin) {
     redirect("/admin/login");
   }
 

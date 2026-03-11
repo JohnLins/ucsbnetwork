@@ -7,7 +7,8 @@ const serverSchema = z.object({
   RESEND_API_KEY: z.string().min(1).optional(),
   RESEND_FROM_EMAIL: z.string().email().default("apply@ucsb.network"),
   APP_BASE_URL: z.string().url().default("http://localhost:3000"),
-  RATE_LIMIT_SALT: z.string().min(8).optional()
+  RATE_LIMIT_SALT: z.string().min(8).optional(),
+  ADMIN_PASSWORD: z.string().min(12).optional()
 });
 
 const parsed = serverSchema.safeParse({
@@ -17,7 +18,8 @@ const parsed = serverSchema.safeParse({
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL,
   APP_BASE_URL: process.env.APP_BASE_URL,
-  RATE_LIMIT_SALT: process.env.RATE_LIMIT_SALT
+  RATE_LIMIT_SALT: process.env.RATE_LIMIT_SALT,
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
 });
 
 if (!parsed.success) {
@@ -33,7 +35,8 @@ export const env = parsed.success
       RESEND_API_KEY: process.env.RESEND_API_KEY,
       RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL ?? "apply@ucsb.network",
       APP_BASE_URL: process.env.APP_BASE_URL ?? "http://localhost:3000",
-      RATE_LIMIT_SALT: process.env.RATE_LIMIT_SALT
+      RATE_LIMIT_SALT: process.env.RATE_LIMIT_SALT,
+      ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
     };
 
 export const hasPublicSupabaseEnv =
