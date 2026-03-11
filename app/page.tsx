@@ -16,7 +16,7 @@ export default async function HomePage() {
       {/* ── Hero ── */}
       <section
         data-section
-        className="snap-section relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-black"
+        className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-black"
       >
         <ShaderBackground />
         <div className="relative z-10 px-6 text-center">
@@ -55,7 +55,7 @@ export default async function HomePage() {
       <section
         id="about"
         data-section
-        className="snap-section flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
+        className="flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
       >
         <Reveal className="mx-auto max-w-xl text-center">
           <p className="text-lg leading-relaxed text-ink sm:text-xl">
@@ -73,7 +73,7 @@ export default async function HomePage() {
       <section
         id="events"
         data-section
-        className="snap-section flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
+        className="flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
       >
         <div className="mx-auto w-full max-w-2xl">
           <Reveal>
@@ -105,7 +105,7 @@ export default async function HomePage() {
       <section
         id="network"
         data-section
-        className="snap-section flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
+        className="flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
       >
         <Reveal className="mx-auto w-full max-w-lg text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -126,7 +126,7 @@ export default async function HomePage() {
       <section
         id="apply"
         data-section
-        className="snap-section flex min-h-[100dvh] items-start justify-center border-t border-line/10 px-6 py-24"
+        className="flex min-h-[100dvh] items-start justify-center border-t border-line/10 px-6 py-24"
       >
         <Reveal className="mx-auto w-full max-w-2xl">
           <ApplicationForm tags={tags} />
