@@ -6,7 +6,7 @@ const serverSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
   RESEND_FROM_EMAIL: z.string().email().default("apply@ucsb.network"),
-  APP_BASE_URL: z.string().url().default("http://localhost:3000"),
+  APP_BASE_URL: z.string().url().default("https://ucsb.network"),
   RATE_LIMIT_SALT: z.string().min(8).optional(),
   ADMIN_PASSWORD: z.string().min(12).optional()
 });
@@ -34,7 +34,7 @@ export const env = parsed.success
       SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
       RESEND_API_KEY: process.env.RESEND_API_KEY,
       RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL ?? "apply@ucsb.network",
-      APP_BASE_URL: process.env.APP_BASE_URL ?? "http://localhost:3000",
+      APP_BASE_URL: process.env.APP_BASE_URL ?? "https://ucsb.network",
       RATE_LIMIT_SALT: process.env.RATE_LIMIT_SALT,
       ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
     };

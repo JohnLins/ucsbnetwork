@@ -136,5 +136,5 @@ export function ShaderBackground() {
     };
   }, []);
 
-  return <div ref={containerRef} className="absolute inset-0" />;
+  return <div ref={containerRef} className="absolute inset-0 pointer-events-none" />;
 }
