@@ -59,7 +59,7 @@ export const adminReviewSchema = z.object({
     headline: z.string().trim().min(2).max(160),
     companyOrOrg: z.string().trim().max(120).optional(),
     location: z.string().trim().max(120).optional(),
-    bio: z.string().trim().min(20).max(1200),
+    bio: z.string().trim().min(2).max(1200),
     websiteUrl: optionalUrlSchema,
     links: z.array(
       z.object({
@@ -80,7 +80,7 @@ export const memberUpsertSchema = z.object({
   headline: z.string().trim().min(2).max(160),
   companyOrOrg: z.string().trim().max(120).optional(),
   location: z.string().trim().max(120).optional(),
-  bio: z.string().trim().min(20).max(1200),
+  bio: z.string().trim().min(2).max(1200),
   websiteUrl: optionalUrlSchema,
   isPublished: z.boolean(),
   links: z.array(

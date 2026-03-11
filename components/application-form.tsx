@@ -241,6 +241,15 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           />
         </Field>
 
+        <Field label="Personal website">
+          <input
+            value={form.websiteUrl ?? ""}
+            onChange={(e) => updateField("websiteUrl", e.target.value)}
+            placeholder="https://yoursite.com"
+            className={inputClass}
+          />
+        </Field>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="LinkedIn">
             <input

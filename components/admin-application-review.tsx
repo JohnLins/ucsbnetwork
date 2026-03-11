@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import type { ApplicationRecord, Tag } from "@/lib/types";
 
@@ -10,6 +11,7 @@ type AdminApplicationReviewProps = {
 };
 
 export function AdminApplicationReview({ application, tags }: AdminApplicationReviewProps) {
+  const router = useRouter();
   const [status, setStatus] = useState<{ kind: "idle" | "loading" | "success" | "error"; message?: string }>({
     kind: "idle"
   });
@@ -70,6 +72,9 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
       kind: "success",
       message: decision === "approve" ? "Application approved." : "Application rejected."
     });
+
+    // Refresh the page data so the list updates
+    router.refresh();
   }
 
   return (

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { verifyAdminPassword, setAdminSession } from "@/lib/auth";
+import { verifyAdminPassword, computeAdminToken } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
@@ -11,9 +11,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid password." }, { status: 401 });
     }
 
-    await setAdminSession();
+    const token = computeAdminToken();
 
-    return NextResponse.json({ ok: true });
+    if (!token) {
+      return NextResponse.json({ error: "Admin not configured." }, { status: 500 });
+    }
+
+    const response = NextResponse.json({ ok: true });
+
+    response.cookies.set("admin_session", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7 // 7 days
+    });
+
+    return response;
   } catch {
     return NextResponse.json({ error: "Login failed." }, { status: 400 });
   }
