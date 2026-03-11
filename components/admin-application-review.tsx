@@ -68,9 +68,20 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
       return;
     }
 
+    const result = (await response.json().catch(() => null)) as {
+      ok?: boolean;
+      warnings?: string[];
+    } | null;
+
+    const warningText = result?.warnings?.length
+      ? ` (⚠ ${result.warnings.join("; ")})`
+      : "";
+
     setStatus({
       kind: "success",
-      message: decision === "approve" ? "Application approved." : "Application rejected."
+      message:
+        (decision === "approve" ? "Application approved." : "Application rejected.") +
+        warningText
     });
 
     // Refresh the page data so the list updates
@@ -96,6 +107,40 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
         </div>
       </div>
 
+      {/* ── Application answers (read-only) ── */}
+      <div className="mt-8 space-y-4">
+        <p className="text-[11px] uppercase tracking-[0.32em] text-muted">Application answers</p>
+        <div className="rounded-xl border border-line/40 bg-paper/60 p-5 text-sm leading-7 text-muted space-y-4">
+          <p><strong className="text-ink">What are you building?</strong><br />{application.bio}</p>
+          <p><strong className="text-ink">What is one opinion you hold that you think most people miss?</strong><br />{application.whyJoin}</p>
+          {application.whatYouCanHelpWith ? (
+            <p><strong className="text-ink">Can help with:</strong><br />{application.whatYouCanHelpWith}</p>
+          ) : null}
+          {application.whatYouAreLookingFor ? (
+            <p><strong className="text-ink">Looking for:</strong><br />{application.whatYouAreLookingFor}</p>
+          ) : null}
+          {application.websiteUrl ? (
+            <p><strong className="text-ink">Website:</strong>{" "}
+              <a href={application.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">{application.websiteUrl}</a>
+            </p>
+          ) : null}
+          {application.links.length > 0 ? (
+            <div>
+              <strong className="text-ink">Links:</strong>
+              <ul className="mt-1 space-y-1">
+                {application.links.map((link) => (
+                  <li key={link.id ?? link.url}>
+                    <span className="capitalize text-ink">{link.linkType}</span>:{" "}
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">{link.url}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      {/* ── Editable member draft ── */}
       <div className="mt-8 grid gap-8 xl:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-6">
           <EditableField label="Public name">
@@ -115,10 +160,10 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
           <EditableField label="Website">
             <input value={draft.websiteUrl} onChange={(e) => setDraft({ ...draft, websiteUrl: e.target.value })} className={inputClass} />
           </EditableField>
-          <EditableField label="Public bio">
+          <EditableField label="Member bio (editable)">
             <textarea value={draft.bio} onChange={(e) => setDraft({ ...draft, bio: e.target.value })} rows={6} className={textareaClass} />
           </EditableField>
-          <EditableField label="Review notes">
+          <EditableField label="Review notes (internal)">
             <textarea value={reviewNotes} onChange={(e) => setReviewNotes(e.target.value)} rows={4} className={textareaClass} />
           </EditableField>
           <TokenField
@@ -131,17 +176,6 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
         <div className="space-y-6">
           <TokenField title="Roles" values={draft.roles} options={roles} onChange={(values) => setDraft({ ...draft, roles: values })} />
           <TokenField title="Domains" values={draft.domains} options={domains} onChange={(values) => setDraft({ ...draft, domains: values })} />
-          <EditableField label="Private context">
-            <div className="rounded-xl border border-line/40 bg-paper/60 p-4 text-sm leading-7 text-muted">
-              <p><strong className="text-ink">Why join:</strong> {application.whyJoin}</p>
-              {application.whatYouCanHelpWith ? (
-                <p className="mt-3"><strong className="text-ink">Can help with:</strong> {application.whatYouCanHelpWith}</p>
-              ) : null}
-              {application.whatYouAreLookingFor ? (
-                <p className="mt-3"><strong className="text-ink">Looking for:</strong> {application.whatYouAreLookingFor}</p>
-              ) : null}
-            </div>
-          </EditableField>
         </div>
       </div>
 

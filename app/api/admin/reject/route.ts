@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     const { error } = await supabase.rpc("reject_application", {
       application_id: payload.applicationId,
       reviewer_email: session.email,
-      review_notes: payload.reviewNotes ?? null
+      p_review_notes: payload.reviewNotes ?? null
     });
 
     if (error) {

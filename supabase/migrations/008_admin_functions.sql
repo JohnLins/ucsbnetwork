@@ -149,7 +149,7 @@ begin
 end;
 $$;
 
-create or replace function public.reject_application(application_id uuid, reviewer_email citext, review_notes text default null)
+create or replace function public.reject_application(application_id uuid, reviewer_email citext, p_review_notes text default null)
 returns void
 language plpgsql
 security definer
@@ -159,7 +159,7 @@ begin
   update public.applications
   set
     status = 'rejected',
-    review_notes = review_notes,
+    review_notes = p_review_notes,
     reviewed_by_admin_email = reviewer_email,
     reviewed_at = now()
   where id = application_id;

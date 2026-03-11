@@ -59,7 +59,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
             </Link>
           ))}
         </aside>
-        <AdminMemberEditor selectedMember={selectedMember} tags={tags} />
+        <AdminMemberEditor key={selectedMember?.id ?? "new"} selectedMember={selectedMember} tags={tags} />
       </div>
     </AdminShell>
   );

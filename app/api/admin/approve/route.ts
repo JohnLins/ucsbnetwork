@@ -13,6 +13,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const warnings: string[] = [];
+
   try {
     const body = await request.json();
     const payload = adminReviewSchema.parse(body);
@@ -59,7 +61,7 @@ export async function POST(request: Request) {
 
     if (credError) {
       console.error("Failed to create member credentials:", credError);
-      // Don't fail the whole approval — member was already created
+      warnings.push(`Credentials not saved: ${credError.message}`);
     }
 
     // Email the member their login credentials
@@ -70,10 +72,16 @@ export async function POST(request: Request) {
         plainPassword
       );
     } catch (emailError) {
-      console.error("Failed to send welcome email:", emailError);
+      const emailErrorMessage = emailError instanceof Error ? emailError.message : String(emailError);
+      console.error("Failed to send welcome email:", emailErrorMessage);
+      warnings.push(`Welcome email failed: ${emailErrorMessage}`);
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({
+      ok: true,
+      memberId: newMemberId,
+      ...(warnings.length > 0 ? { warnings } : {})
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

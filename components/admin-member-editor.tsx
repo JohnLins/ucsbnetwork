@@ -87,6 +87,57 @@ export function AdminMemberEditor({
         <TokenPicker title="Roles" tags={tags.filter((tag) => tag.tagType === "role")} values={form.roles} onChange={(roles) => setForm({ ...form, roles })} />
         <TokenPicker title="Domains" tags={tags.filter((tag) => tag.tagType === "domain")} values={form.domains} onChange={(domains) => setForm({ ...form, domains })} />
         <TokenPicker title="Keywords" tags={tags.filter((tag) => tag.tagType === "keyword")} values={form.keywords} onChange={(keywords) => setForm({ ...form, keywords })} />
+
+        {/* Links editor */}
+        <div className="space-y-4">
+          <p className="text-[11px] uppercase tracking-[0.32em] text-muted">Links</p>
+          {form.links.map((link, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <select
+                value={link.linkType}
+                onChange={(e) => {
+                  const nextLinks = [...form.links];
+                  nextLinks[index] = { ...link, linkType: e.target.value as "website" | "linkedin" | "github" | "x" | "other" };
+                  setForm({ ...form, links: nextLinks });
+                }}
+                className="h-11 w-28 rounded-lg border border-line/60 bg-paper px-2 text-sm text-ink outline-none"
+              >
+                <option value="website">Website</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="github">GitHub</option>
+                <option value="x">X</option>
+                <option value="other">Other</option>
+              </select>
+              <input
+                value={link.url}
+                onChange={(e) => {
+                  const nextLinks = [...form.links];
+                  nextLinks[index] = { ...link, url: e.target.value };
+                  setForm({ ...form, links: nextLinks });
+                }}
+                placeholder="https://..."
+                className={inputClass}
+              />
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, links: form.links.filter((_, i) => i !== index) })}
+                className="shrink-0 text-sm text-red-400 hover:text-red-300"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() =>
+              setForm({ ...form, links: [...form.links, { linkType: "website", label: "", url: "" }] })
+            }
+            className="rounded-lg border border-dashed border-line/60 px-4 py-2 text-xs text-muted hover:border-accent/40 hover:text-ink transition"
+          >
+            + Add link
+          </button>
+        </div>
+
         <label className="flex items-center gap-3 text-sm text-muted">
           <input
             type="checkbox"
