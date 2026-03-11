@@ -13,11 +13,11 @@
 }
 
 .dark {
-  --color-paper: 10 15 26;
-  --color-panel: 18 26 46;
+  --color-paper: 5 8 16;
+  --color-panel: 12 18 32;
   --color-ink: 240 242 245;
-  --color-muted: 139 145 160;
-  --color-line: 40 55 85;
+  --color-muted: 130 138 155;
+  --color-line: 30 42 70;
   --color-accent: 241 168 37;
   --color-navy: 0 54 96;
 }
