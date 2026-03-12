@@ -77,7 +77,7 @@ export async function getApplications() {
       phone: application.phone ? String(application.phone) : null,
       ucsbAffiliationType: String(application.ucsb_affiliation_type),
       ucsbAffiliationDetail: String(application.ucsb_affiliation_detail),
-      graduationYear: application.graduation_year ? Number(application.graduation_year) : null,
+      graduationYear: application.graduation_year ? String(application.graduation_year) : null,
       currentTitle: String(application.current_title),
       companyOrOrg: application.company_or_org ? String(application.company_or_org) : null,
       location: application.location ? String(application.location) : null,

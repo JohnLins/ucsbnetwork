@@ -1,11 +1,35 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 
 import { sendApplicationEmail } from "@/lib/email/applications";
 import { createApplicationRecord } from "@/lib/data/mutations";
 import { applicationSchema } from "@/lib/schema";
 import { getSupabaseServiceClient } from "@/lib/supabase/service";
 import { hashSensitiveValue, isLikelyBotSubmission } from "@/lib/utils/security";
+
+/** Map Zod field paths to human-readable labels */
+const FIELD_LABELS: Record<string, string> = {
+  fullName: "Name",
+  email: "Email",
+  phone: "Phone",
+  ucsbAffiliationType: "UCSB status",
+  ucsbAffiliationDetail: "Major",
+  graduationYear: "Year",
+  currentTitle: "What you do",
+  companyOrOrg: "Company",
+  location: "Location",
+  websiteUrl: "Personal website",
+  bio: "What are you building",
+  roles: "Roles",
+  domains: "Domains",
+  keywords: "Keywords",
+  linkedinUrl: "LinkedIn",
+  xUrl: "X",
+  githubUrl: "GitHub",
+  whyJoin: "Opinion question",
+  referredBy: "Who referred you",
+};
 
 // April 3, 2026 11:59 PM PST = April 4, 2026 07:59:00 UTC
 const APPLICATION_DEADLINE = new Date("2026-04-04T07:59:00Z");
@@ -67,6 +91,47 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, applicationId });
   } catch (error) {
     console.error(error);
+
+    if (error instanceof ZodError) {
+      const fieldErrors: Record<string, string> = {};
+
+      for (const issue of error.issues) {
+        const fieldKey = issue.path[0]?.toString() ?? "_form";
+        if (fieldErrors[fieldKey]) continue; // keep first error per field
+
+        const label = FIELD_LABELS[fieldKey] ?? fieldKey;
+        let msg = issue.message;
+
+        // Make generic Zod messages more readable
+        if (issue.code === "too_small" && "minimum" in issue) {
+          msg =
+            issue.type === "string"
+              ? `Must be at least ${issue.minimum} characters`
+              : `Required`;
+        } else if (issue.code === "too_big" && "maximum" in issue) {
+          msg = `Must be ${issue.maximum} characters or fewer`;
+        } else if (issue.code === "invalid_type" && issue.message === "Required") {
+          msg = "Required";
+        } else if (issue.code === "invalid_string" && "validation" in issue) {
+          msg = `Enter a valid ${issue.validation}`;
+        }
+
+        fieldErrors[fieldKey] = `${label}: ${msg}`;
+      }
+
+      const messages = Object.values(fieldErrors);
+
+      return NextResponse.json(
+        {
+          error: messages.length === 1
+            ? messages[0]
+            : `Please fix the following:\n${messages.map((m) => `• ${m}`).join("\n")}`,
+          fieldErrors,
+        },
+        { status: 400 }
+      );
+    }
+
     const message = error instanceof Error ? error.message : "Unable to submit application.";
     return NextResponse.json({ error: message }, { status: 400 });
   }

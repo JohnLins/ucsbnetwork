@@ -10,7 +10,7 @@ type SubmissionState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "success" }
-  | { status: "error"; message: string };
+  | { status: "error"; message: string; fieldErrors?: Record<string, string> };
 
 function tagsByType(tags: Tag[], tagType: Tag["tagType"], fallback: readonly string[]) {
   const matching = tags.filter((tag) => tag.tagType === tagType);
@@ -78,6 +78,19 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    // Client-side word limit check
+    const wordErrors: string[] = [];
+    if (countWords(form.bio) > 100) wordErrors.push("\"What are you building?\" exceeds 100 words");
+    if (countWords(form.whyJoin) > 100) wordErrors.push("\"Opinion question\" exceeds 100 words");
+    if (wordErrors.length > 0) {
+      setSubmission({
+        status: "error",
+        message: wordErrors.join(". ") + ". Please shorten your response.",
+      });
+      return;
+    }
+
     setSubmission({ status: "loading" });
 
     const payload: ApplicationInput = {
@@ -85,7 +98,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
       customRoles: tokenize(form.customRoles?.join(",") ?? ""),
       customDomains: tokenize(form.customDomains?.join(",") ?? ""),
       keywords: tokenize(form.keywords.join(",")),
-      graduationYear: form.graduationYear ? Number(form.graduationYear) : null
+      graduationYear: form.graduationYear || null
     };
 
     const response = await fetch("/api/applications", {
@@ -95,8 +108,15 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
     });
 
     if (!response.ok) {
-      const data = (await response.json().catch(() => null)) as { error?: string } | null;
-      setSubmission({ status: "error", message: data?.error ?? "Unable to submit." });
+      const data = (await response.json().catch(() => null)) as {
+        error?: string;
+        fieldErrors?: Record<string, string>;
+      } | null;
+      setSubmission({
+        status: "error",
+        message: data?.error ?? "Unable to submit.",
+        fieldErrors: data?.fieldErrors,
+      });
       return;
     }
 
@@ -194,9 +214,9 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           </Field>
           <Field label="Year">
             <input
-              type="number"
               value={form.graduationYear ?? ""}
-              onChange={(e) => updateField("graduationYear", e.target.value ? Number(e.target.value) : null)}
+              onChange={(e) => updateField("graduationYear", e.target.value || null)}
+              placeholder="e.g. 2027, 1st year"
               className={inputClass}
             />
           </Field>
@@ -242,23 +262,23 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           />
         </div>
 
-        <Field label="What are you building? *">
+        <WordCountField label="What are you building? *" maxWords={100}>
           <textarea
             value={form.bio}
             onChange={(e) => updateField("bio", e.target.value)}
             rows={3}
             className={textareaClass}
           />
-        </Field>
+        </WordCountField>
 
-        <Field label="What is one opinion you hold that you think most people miss? *">
+        <WordCountField label="What is one opinion you hold that you think most people miss? *" maxWords={100}>
           <textarea
             value={form.whyJoin}
             onChange={(e) => updateField("whyJoin", e.target.value)}
             rows={3}
             className={textareaClass}
           />
-        </Field>
+        </WordCountField>
 
         <Field label="Who referred you?">
           <input
@@ -297,6 +317,23 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           </Field>
         </div>
 
+        {submission.status === "error" && (
+          <div className="rounded-lg border border-red-400/30 bg-red-400/5 px-4 py-3">
+            {submission.fieldErrors ? (
+              <ul className="space-y-1 text-sm text-red-400">
+                {Object.values(submission.fieldErrors).map((msg) => (
+                  <li key={msg} className="flex items-start gap-2">
+                    <span className="mt-0.5 shrink-0">•</span>
+                    <span>{msg}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-red-400">{submission.message}</p>
+            )}
+          </div>
+        )}
+
         <div className="flex items-center gap-4">
           <button
             type="submit"
@@ -305,9 +342,6 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           >
             {submission.status === "loading" ? "Submitting…" : "Submit"}
           </button>
-          {submission.status === "error" && (
-            <p className="text-sm text-red-400">{submission.message}</p>
-          )}
         </div>
       </form>
     </div>
@@ -315,6 +349,10 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
 }
 
 /* ---------- helpers ---------- */
+
+function countWords(text: string) {
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
 
 function tokenize(value: string) {
   return value
@@ -329,6 +367,32 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className="text-xs font-medium text-muted">{label}</span>
       {children}
     </label>
+  );
+}
+
+function WordCountField({
+  label,
+  maxWords,
+  children,
+}: {
+  label: string;
+  maxWords: number;
+  children: React.ReactElement<{ value?: string }>;
+}) {
+  const value = (children.props.value as string) ?? "";
+  const words = countWords(value);
+  const isOver = words > maxWords;
+
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-baseline justify-between">
+        <span className="text-xs font-medium text-muted">{label}</span>
+        <span className={`text-[11px] tabular-nums ${isOver ? "text-red-400" : "text-muted/60"}`}>
+          {words}/{maxWords} words
+        </span>
+      </div>
+      {children}
+    </div>
   );
 }
 

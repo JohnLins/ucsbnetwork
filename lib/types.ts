@@ -55,7 +55,7 @@ export type ApplicationInput = {
   phone?: string;
   ucsbAffiliationType: string;
   ucsbAffiliationDetail: string;
-  graduationYear?: number | null;
+  graduationYear?: string | null;
   currentTitle: string;
   companyOrOrg?: string;
   location?: string;
@@ -87,7 +87,7 @@ export type ApplicationRecord = {
   phone: string | null;
   ucsbAffiliationType: string;
   ucsbAffiliationDetail: string;
-  graduationYear: number | null;
+  graduationYear: string | null;
   currentTitle: string;
   companyOrOrg: string | null;
   location: string | null;
