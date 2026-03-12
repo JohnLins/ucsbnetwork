@@ -63,6 +63,10 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
   const DEADLINE = new Date("2026-04-04T07:59:00Z");
   const isClosed = new Date() >= DEADLINE;
 
+  // Non-student types only need name, email, and "what can you help with"
+  const NON_STUDENT_TYPES = ["Alumni", "Faculty", "Researcher", "Staff", "Community collaborator"];
+  const isNonStudent = NON_STUDENT_TYPES.includes(form.ucsbAffiliationType);
+
   function updateField<Key extends keyof ApplicationInput>(key: Key, value: ApplicationInput[Key]) {
     setForm((current) => ({ ...current, [key]: value }));
   }
@@ -79,11 +83,31 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    // Client-side required field check (conditional on affiliation type)
+    const missing: string[] = [];
+    if (!form.fullName.trim()) missing.push("Name");
+    if (!form.email.trim()) missing.push("Email");
+    if (!form.ucsbAffiliationType.trim()) missing.push("UCSB status");
+    if (!isNonStudent) {
+      if (!form.ucsbAffiliationDetail.trim()) missing.push("Major");
+      if (!form.currentTitle.trim()) missing.push("What you do");
+      if (!form.bio.trim()) missing.push("What are you building");
+      if (!form.whyJoin.trim()) missing.push("Most impressive accomplishment");
+    }
+    if (!(form.whatYouCanHelpWith ?? "").trim()) missing.push("What can you help other members with");
+    if (missing.length > 0) {
+      setSubmission({
+        status: "error",
+        message: `Please fill in: ${missing.join(", ")}`,
+      });
+      return;
+    }
+
     // Client-side word limit check
     const wordErrors: string[] = [];
     if (countWords(form.bio) > 250) wordErrors.push("\"What are you building?\" exceeds 250 words");
-    if (countWords(form.whyJoin) > 100) wordErrors.push("\"Opinion question\" exceeds 100 words");
-    if (countWords(form.whatYouCanHelpWith ?? "") > 100) wordErrors.push("\"What would you contribute?\" exceeds 100 words");
+    if (countWords(form.whyJoin) > 100) wordErrors.push("\"Most impressive accomplishment\" exceeds 100 words");
+    if (countWords(form.whatYouCanHelpWith ?? "") > 100) wordErrors.push("\"What can you help with\" exceeds 100 words");
     if (wordErrors.length > 0) {
       setSubmission({
         status: "error",
@@ -202,7 +226,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
-          <Field label="UCSB status">
+          <Field label="UCSB status *">
             <select
               value={form.ucsbAffiliationType}
               onChange={(e) => updateField("ucsbAffiliationType", e.target.value)}
@@ -221,7 +245,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
               className={inputClass}
             />
           </Field>
-          <Field label="Major *">
+          <Field label={isNonStudent ? "Major / department" : "Major *"}>
             <input
               value={form.ucsbAffiliationDetail}
               onChange={(e) => updateField("ucsbAffiliationDetail", e.target.value)}
@@ -231,7 +255,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="What you do *">
+          <Field label={isNonStudent ? "What you do" : "What you do *"}>
             <input
               value={form.currentTitle}
               onChange={(e) => updateField("currentTitle", e.target.value)}
@@ -263,7 +287,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           />
         </div>
 
-        <WordCountField label="What are you building? *" maxWords={250}>
+        <WordCountField label={isNonStudent ? "What are you building?" : "What are you building? *"} maxWords={250}>
           <textarea
             value={form.bio}
             onChange={(e) => updateField("bio", e.target.value)}
@@ -272,7 +296,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           />
         </WordCountField>
 
-        <WordCountField label="What's the most impressive thing you've built, shipped, researched, or accomplished in the last 12 months? Links encouraged. *" maxWords={100}>
+        <WordCountField label={isNonStudent ? "What's the most impressive thing you've built, shipped, researched, or accomplished in the last 12 months? Links encouraged." : "What's the most impressive thing you've built, shipped, researched, or accomplished in the last 12 months? Links encouraged. *"} maxWords={100}>
           <textarea
             value={form.whyJoin}
             onChange={(e) => updateField("whyJoin", e.target.value)}
