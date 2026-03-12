@@ -102,18 +102,15 @@ export async function POST(request: Request) {
         const label = FIELD_LABELS[fieldKey] ?? fieldKey;
         let msg = issue.message;
 
-        // Make generic Zod messages more readable
-        if (issue.code === "too_small" && "minimum" in issue) {
-          msg =
-            issue.type === "string"
-              ? `Must be at least ${issue.minimum} characters`
-              : `Required`;
-        } else if (issue.code === "too_big" && "maximum" in issue) {
-          msg = `Must be ${issue.maximum} characters or fewer`;
-        } else if (issue.code === "invalid_type" && issue.message === "Required") {
+        // Make generic Zod messages more human-readable
+        if (msg === "Required") {
           msg = "Required";
-        } else if (issue.code === "invalid_string" && "validation" in issue) {
-          msg = `Enter a valid ${issue.validation}`;
+        } else if ("minimum" in issue) {
+          const min = (issue as unknown as Record<string, unknown>).minimum;
+          msg = `Must be at least ${min} characters`;
+        } else if ("maximum" in issue) {
+          const max = (issue as unknown as Record<string, unknown>).maximum;
+          msg = `Must be ${max} characters or fewer`;
         }
 
         fieldErrors[fieldKey] = `${label}: ${msg}`;
