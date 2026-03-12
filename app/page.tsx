@@ -81,11 +81,12 @@ export default async function HomePage() {
             <p className="mt-5 text-sm leading-relaxed text-muted">
               VCs, alumni, and operators who back our builders.
             </p>
-            <div className="mt-14">
-              <span className="inline-flex rounded-lg border border-accent/30 px-5 py-2.5 text-xs tracking-wide text-accent/70">
-                Coming soon
-              </span>
-            </div>
+            <p className="mt-8 text-sm text-muted">
+              Interested?{" "}
+              <a href="mailto:hursh@ucsb.network" className="text-accent hover:underline">
+                hursh@ucsb.network
+              </a>
+            </p>
           </Reveal>
         </section>
 
