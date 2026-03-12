@@ -25,8 +25,7 @@ export default async function HomePage() {
           <Reveal className="mx-auto max-w-xl text-center">
             <OrbDivider className="mb-10" />
             <p className="text-lg leading-relaxed text-ink sm:text-xl">
-              A curated group of founders, builders, and engineers affiliated with
-              UCSB.
+              A curated network of UCSB founders, builders, and engineers.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-muted sm:text-xl">
               We host VC and builder events, and meet often to build, talk, and
@@ -35,59 +34,81 @@ export default async function HomePage() {
           </Reveal>
         </section>
 
-        {/* ── Events ── */}
+        {/* ── For Builders ── */}
         <section
-          id="events"
+          id="builders"
           data-section
           className="flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
         >
           <div className="mx-auto w-full max-w-2xl">
             <Reveal>
               <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                What happens.
+                For builders.
               </h2>
             </Reveal>
             <div className="mt-16 space-y-0">
               <Reveal direction="left">
                 <div className="py-8">
-                  <EventRow num="01" title="Build Nights" desc="Ship together, every week." />
+                  <EventRow num="01" title="Member Directory" desc="Know who's building what. Find co-founders, collaborators, and the right people fast." />
                 </div>
               </Reveal>
               <Reveal direction="left">
                 <div className="border-t border-line/20 py-8">
-                  <EventRow num="02" title="Pitch Nights" desc="Share what you're working on." />
+                  <EventRow num="02" title="Warm Intros" desc="Get connected to VCs, operators, and alumni who back UCSB talent." />
                 </div>
               </Reveal>
               <Reveal direction="left">
                 <div className="border-t border-line/20 py-8">
-                  <EventRow num="03" title="Competitions" desc="Win Cursor & Codex credits." />
+                  <EventRow num="03" title="Build Nights & Pitch Nights" desc="Ship together weekly. Share what you're working on." />
+                </div>
+              </Reveal>
+              <Reveal direction="left">
+                <div className="border-t border-line/20 py-8">
+                  <EventRow num="04" title="Curated People" desc="Serious builders around you, consistently." />
                 </div>
               </Reveal>
             </div>
           </div>
         </section>
 
-        {/* ── VC & Alumni ── */}
+        {/* ── For VCs & Partners ── */}
         <section
           id="network"
           data-section
           className="flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
         >
-          <Reveal className="mx-auto w-full max-w-lg text-center">
-            <OrbDivider className="mb-10" />
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Beyond campus.
-            </h2>
-            <p className="mt-5 text-sm leading-relaxed text-muted">
-              VCs, alumni, and operators who back our builders.
-            </p>
-            <p className="mt-8 text-sm text-muted">
-              Interested?{" "}
-              <a href="mailto:hursh@ucsb.network" className="text-accent hover:underline">
-                hursh@ucsb.network
-              </a>
-            </p>
-          </Reveal>
+          <div className="mx-auto w-full max-w-2xl">
+            <Reveal>
+              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                For VCs & partners.
+              </h2>
+            </Reveal>
+            <div className="mt-16 space-y-0">
+              <Reveal direction="left">
+                <div className="py-8">
+                  <EventRow num="01" title="Curated Pipeline" desc="A cleaner path into vetted UCSB talent" />
+                </div>
+              </Reveal>
+              <Reveal direction="left">
+                <div className="border-t border-line/20 py-8">
+                  <EventRow num="02" title="Warm Intros" desc="Direct access to founders through the member directory and network." />
+                </div>
+              </Reveal>
+              <Reveal direction="left">
+                <div className="border-t border-line/20 py-8">
+                  <EventRow num="03" title="Events & Deal Flow" desc="Attend pitch nights, meet builders early, and stay close to what's shipping." />
+                </div>
+              </Reveal>
+            </div>
+            <Reveal>
+              <p className="mt-12 text-sm text-muted">
+                Interested?{" "}
+                <a href="mailto:hursh@ucsb.network" className="text-accent hover:underline">
+                  hursh@ucsb.network
+                </a>
+              </p>
+            </Reveal>
+          </div>
         </section>
 
         {/* ── Apply ── */}
