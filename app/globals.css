@@ -28,6 +28,8 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 body {
@@ -37,6 +39,59 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+html,
+body,
+main,
+section,
+article,
+aside,
+header,
+footer,
+nav,
+div,
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+label,
+li,
+ul,
+ol,
+small,
+strong,
+em {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default;
+}
+
+input,
+textarea,
+select,
+option {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+button,
+button *,
+[role="button"],
+canvas,
+svg,
+img,
+video {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none;
 }
 
 ::selection {

@@ -9,6 +9,23 @@ interface ScrollExpansionHeroProps {
   children?: ReactNode;
 }
 
+const textSelectionSelector = [
+  "[data-allow-selection]",
+  "p",
+  "span",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "a",
+  "label",
+  "input",
+  "textarea",
+  "select"
+].join(", ");
+
 export function ScrollExpansionHero({ children }: ScrollExpansionHeroProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showContent, setShowContent] = useState(false);
@@ -17,6 +34,10 @@ export function ScrollExpansionHero({ children }: ScrollExpansionHeroProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
+  const heroViewportRef = useRef<HTMLDivElement | null>(null);
+
+  const isSelectableTarget = (target: EventTarget | null) =>
+    target instanceof Element && Boolean(target.closest(textSelectionSelector));
 
   // Reset on mount
   useEffect(() => {
@@ -27,6 +48,9 @@ export function ScrollExpansionHero({ children }: ScrollExpansionHeroProps) {
 
   // Scroll/touch handlers
   useEffect(() => {
+    const heroViewport = heroViewportRef.current;
+    if (!heroViewport) return;
+
     const handleWheel = (e: WheelEvent) => {
       if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
         setMediaFullyExpanded(false);
@@ -47,10 +71,19 @@ export function ScrollExpansionHero({ children }: ScrollExpansionHeroProps) {
     };
 
     const handleTouchStart = (e: TouchEvent) => {
+      if (isSelectableTarget(e.target)) {
+        setTouchStartY(0);
+        return;
+      }
+
       setTouchStartY(e.touches[0].clientY);
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      if (isSelectableTarget(e.target)) {
+        return;
+      }
+
       if (!touchStartY) return;
 
       const touchY = e.touches[0].clientY;
@@ -87,18 +120,18 @@ export function ScrollExpansionHero({ children }: ScrollExpansionHeroProps) {
       }
     };
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
+    heroViewport.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("scroll", handleScroll);
-    window.addEventListener("touchstart", handleTouchStart, { passive: false });
-    window.addEventListener("touchmove", handleTouchMove, { passive: false });
-    window.addEventListener("touchend", handleTouchEnd);
+    heroViewport.addEventListener("touchstart", handleTouchStart, { passive: false });
+    heroViewport.addEventListener("touchmove", handleTouchMove, { passive: false });
+    heroViewport.addEventListener("touchend", handleTouchEnd);
 
     return () => {
-      window.removeEventListener("wheel", handleWheel);
+      heroViewport.removeEventListener("wheel", handleWheel);
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
+      heroViewport.removeEventListener("touchstart", handleTouchStart);
+      heroViewport.removeEventListener("touchmove", handleTouchMove);
+      heroViewport.removeEventListener("touchend", handleTouchEnd);
     };
   }, [scrollProgress, mediaFullyExpanded, touchStartY]);
 
@@ -135,7 +168,10 @@ export function ScrollExpansionHero({ children }: ScrollExpansionHeroProps) {
           <div className="absolute inset-0 z-0 bg-paper" />
 
           <div className="container relative z-10 mx-auto flex flex-col items-center justify-start">
-            <div className="relative flex h-[100dvh] w-full flex-col items-center justify-center">
+            <div
+              ref={heroViewportRef}
+              className="relative flex h-[100dvh] w-full flex-col items-center justify-center"
+            >
 
               {/* Globe container — expands on scroll */}
               <div
@@ -160,7 +196,10 @@ export function ScrollExpansionHero({ children }: ScrollExpansionHeroProps) {
               </div>
 
               {/* Title text — splits apart on scroll */}
-              <div className="relative z-10 flex flex-col items-center justify-center gap-2">
+              <div
+                data-allow-selection
+                className="relative z-10 flex flex-col items-center justify-center gap-2"
+              >
                 <div className="flex items-center gap-3">
                   <motion.span
                     className="text-6xl font-bold tracking-tight text-white sm:text-7xl lg:text-8xl"
@@ -226,10 +265,11 @@ export function ScrollExpansionHero({ children }: ScrollExpansionHeroProps) {
 
             {/* Content revealed after full expansion */}
             <motion.div
-              className="flex w-full flex-col"
+              className={`flex w-full flex-col ${showContent ? "visible" : "pointer-events-none invisible"}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: showContent ? 1 : 0 }}
               transition={{ duration: 0.7 }}
+              aria-hidden={!showContent}
             >
               {children}
             </motion.div>
