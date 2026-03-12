@@ -112,12 +112,12 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
         <p className="text-[11px] uppercase tracking-[0.32em] text-muted">Application answers</p>
         <div className="rounded-xl border border-line/40 bg-paper/60 p-5 text-sm leading-7 text-muted space-y-4">
           <p><strong className="text-ink">What are you building?</strong><br />{application.bio}</p>
-          <p><strong className="text-ink">What is one opinion you hold that you think most people miss?</strong><br />{application.whyJoin}</p>
+          <p><strong className="text-ink">Most impressive thing built/shipped/accomplished (last 12 months):</strong><br />{application.whyJoin}</p>
           {application.whatYouCanHelpWith ? (
-            <p><strong className="text-ink">Can help with:</strong><br />{application.whatYouCanHelpWith}</p>
+            <p><strong className="text-ink">Can help other members with:</strong><br />{application.whatYouCanHelpWith}</p>
           ) : null}
           {application.whatYouAreLookingFor ? (
-            <p><strong className="text-ink">Looking for:</strong><br />{application.whatYouAreLookingFor}</p>
+            <p><strong className="text-ink">People they think should be in the network:</strong><br />{application.whatYouAreLookingFor}</p>
           ) : null}
           {application.referredBy ? (
             <p><strong className="text-ink">Referred by:</strong><br />{application.referredBy}</p>

@@ -27,7 +27,9 @@ const FIELD_LABELS: Record<string, string> = {
   linkedinUrl: "LinkedIn",
   xUrl: "X",
   githubUrl: "GitHub",
-  whyJoin: "Opinion question",
+  whyJoin: "Most impressive accomplishment",
+  whatYouCanHelpWith: "What can you help with",
+  whatYouAreLookingFor: "People who should be in the network",
   referredBy: "Who referred you",
 };
 

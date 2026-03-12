@@ -81,8 +81,9 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
 
     // Client-side word limit check
     const wordErrors: string[] = [];
-    if (countWords(form.bio) > 100) wordErrors.push("\"What are you building?\" exceeds 100 words");
+    if (countWords(form.bio) > 250) wordErrors.push("\"What are you building?\" exceeds 250 words");
     if (countWords(form.whyJoin) > 100) wordErrors.push("\"Opinion question\" exceeds 100 words");
+    if (countWords(form.whatYouCanHelpWith ?? "") > 100) wordErrors.push("\"What would you contribute?\" exceeds 100 words");
     if (wordErrors.length > 0) {
       setSubmission({
         status: "error",
@@ -262,16 +263,16 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           />
         </div>
 
-        <WordCountField label="What are you building? *" maxWords={100}>
+        <WordCountField label="What are you building? *" maxWords={250}>
           <textarea
             value={form.bio}
             onChange={(e) => updateField("bio", e.target.value)}
-            rows={3}
+            rows={4}
             className={textareaClass}
           />
         </WordCountField>
 
-        <WordCountField label="What is one opinion you hold that you think most people miss? *" maxWords={100}>
+        <WordCountField label="What's the most impressive thing you've built, shipped, researched, or accomplished in the last 12 months? Links encouraged. *" maxWords={100}>
           <textarea
             value={form.whyJoin}
             onChange={(e) => updateField("whyJoin", e.target.value)}
@@ -279,6 +280,25 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
             className={textareaClass}
           />
         </WordCountField>
+
+        <WordCountField label="What can you help other members with? *" maxWords={100}>
+          <textarea
+            value={form.whatYouCanHelpWith ?? ""}
+            onChange={(e) => updateField("whatYouCanHelpWith", e.target.value)}
+            rows={3}
+            className={textareaClass}
+          />
+        </WordCountField>
+
+        <Field label="Who are 1–2 people you think should also be in this network?">
+          <textarea
+            value={form.whatYouAreLookingFor ?? ""}
+            onChange={(e) => updateField("whatYouAreLookingFor", e.target.value)}
+            rows={2}
+            placeholder="Names, links, or how to reach them"
+            className={textareaClass}
+          />
+        </Field>
 
         <Field label="Who referred you?">
           <input
