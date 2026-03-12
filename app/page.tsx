@@ -96,6 +96,9 @@ export default async function HomePage() {
           className="flex min-h-[100dvh] items-start justify-center border-t border-line/10 px-6 py-24"
         >
           <Reveal className="mx-auto w-full max-w-2xl">
+            <p className="mb-6 text-sm font-medium tracking-wide text-accent">
+              Applications for the first cohort close April 3.
+            </p>
             <ApplicationForm tags={tags} />
           </Reveal>
         </section>

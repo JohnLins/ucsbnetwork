@@ -119,6 +119,9 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
           {application.whatYouAreLookingFor ? (
             <p><strong className="text-ink">Looking for:</strong><br />{application.whatYouAreLookingFor}</p>
           ) : null}
+          {application.referredBy ? (
+            <p><strong className="text-ink">Referred by:</strong><br />{application.referredBy}</p>
+          ) : null}
           {application.websiteUrl ? (
             <p><strong className="text-ink">Website:</strong>{" "}
               <a href={application.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">{application.websiteUrl}</a>

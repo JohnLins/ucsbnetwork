@@ -86,6 +86,7 @@ export async function getApplications() {
       whatYouCanHelpWith: application.what_you_can_help_with ? String(application.what_you_can_help_with) : null,
       whatYouAreLookingFor: application.what_you_are_looking_for ? String(application.what_you_are_looking_for) : null,
       whyJoin: String(application.why_join),
+      referredBy: application.referred_by ? String(application.referred_by) : null,
       consentToPublish: Boolean(application.consent_to_publish),
       reviewNotes: application.review_notes ? String(application.review_notes) : null,
       reviewedByAdminEmail: application.reviewed_by_admin_email ? String(application.reviewed_by_admin_email) : null,

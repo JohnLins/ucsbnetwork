@@ -53,10 +53,15 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
     whatYouCanHelpWith: "",
     whatYouAreLookingFor: "",
     whyJoin: "",
+    referredBy: "",
     consentToPublishSelectedProfileFields: true,
     formStartedAt: Date.now(),
     honeypot: ""
   });
+
+  // April 3, 2026 11:59 PM PST = April 4, 2026 07:59:00 UTC
+  const DEADLINE = new Date("2026-04-04T07:59:00Z");
+  const isClosed = new Date() >= DEADLINE;
 
   function updateField<Key extends keyof ApplicationInput>(key: Key, value: ApplicationInput[Key]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -120,10 +125,24 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
       whatYouCanHelpWith: "",
       whatYouAreLookingFor: "",
       whyJoin: "",
+      referredBy: "",
       consentToPublishSelectedProfileFields: true,
       formStartedAt: Date.now(),
       honeypot: ""
     }));
+  }
+
+  if (isClosed) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <div className="text-center">
+          <p className="text-2xl font-medium text-ink">Applications closed.</p>
+          <p className="mt-2 text-sm text-muted">
+            Applications for the first cohort closed on April 3, 2026.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (submission.status === "success") {
@@ -238,6 +257,15 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
             onChange={(e) => updateField("whyJoin", e.target.value)}
             rows={3}
             className={textareaClass}
+          />
+        </Field>
+
+        <Field label="Who referred you?">
+          <input
+            value={form.referredBy ?? ""}
+            onChange={(e) => updateField("referredBy", e.target.value)}
+            placeholder="Name or how you heard about us"
+            className={inputClass}
           />
         </Field>
 

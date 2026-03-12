@@ -7,8 +7,18 @@ import { applicationSchema } from "@/lib/schema";
 import { getSupabaseServiceClient } from "@/lib/supabase/service";
 import { hashSensitiveValue, isLikelyBotSubmission } from "@/lib/utils/security";
 
+// April 3, 2026 11:59 PM PST = April 4, 2026 07:59:00 UTC
+const APPLICATION_DEADLINE = new Date("2026-04-04T07:59:00Z");
+
 export async function POST(request: Request) {
   try {
+    if (new Date() >= APPLICATION_DEADLINE) {
+      return NextResponse.json(
+        { error: "Applications for the first cohort have closed." },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const payload = applicationSchema.parse(body);
 

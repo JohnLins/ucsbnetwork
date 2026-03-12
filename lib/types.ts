@@ -73,6 +73,7 @@ export type ApplicationInput = {
   whatYouCanHelpWith?: string;
   whatYouAreLookingFor?: string;
   whyJoin: string;
+  referredBy?: string;
   consentToPublishSelectedProfileFields: boolean;
   formStartedAt: number;
   honeypot?: string;
@@ -95,6 +96,7 @@ export type ApplicationRecord = {
   whatYouCanHelpWith: string | null;
   whatYouAreLookingFor: string | null;
   whyJoin: string;
+  referredBy: string | null;
   consentToPublish: boolean;
   reviewNotes: string | null;
   reviewedByAdminEmail: string | null;
