@@ -31,6 +31,7 @@ const FIELD_LABELS: Record<string, string> = {
   whatYouCanHelpWith: "What can you help with",
   whatYouAreLookingFor: "People who should be in the network",
   referredBy: "Who referred you",
+  resumeUrl: "File upload",
 };
 
 // April 3, 2026 11:59 PM PST = April 4, 2026 07:59:00 UTC

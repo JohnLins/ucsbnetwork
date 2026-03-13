@@ -12,6 +12,12 @@ type SubmissionState =
   | { status: "success" }
   | { status: "error"; message: string; fieldErrors?: Record<string, string> };
 
+type UploadState =
+  | { status: "idle" }
+  | { status: "uploading" }
+  | { status: "uploaded"; path: string; name: string }
+  | { status: "error"; message: string };
+
 function tagsByType(tags: Tag[], tagType: Tag["tagType"], fallback: readonly string[]) {
   const matching = tags.filter((tag) => tag.tagType === tagType);
   if (matching.length > 0) return matching;
@@ -29,6 +35,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
   const roleOptions = tagsByType(tags, "role", defaultRoleOptions);
   const domainOptions = tagsByType(tags, "domain", defaultDomainOptions);
   const [submission, setSubmission] = useState<SubmissionState>({ status: "idle" });
+  const [upload, setUpload] = useState<UploadState>({ status: "idle" });
   const [form, setForm] = useState<ApplicationInput>({
     fullName: "",
     email: "",
@@ -78,6 +85,48 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
         : [...current[key], value];
       return { ...current, [key]: nextValues };
     });
+  }
+
+  async function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["application/pdf", "image/png", "image/jpeg", "image/jpg"];
+    if (!allowedTypes.includes(file.type)) {
+      setUpload({ status: "error", message: "Only PDF, PNG, and JPG files are accepted." });
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setUpload({ status: "error", message: "File must be 10 MB or smaller." });
+      return;
+    }
+
+    setUpload({ status: "uploading" });
+
+    const body = new FormData();
+    body.append("file", file);
+
+    try {
+      const response = await fetch("/api/upload", { method: "POST", body });
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        setUpload({ status: "error", message: data?.error ?? "Upload failed." });
+        return;
+      }
+
+      const data = (await response.json()) as { path: string; name: string };
+      setUpload({ status: "uploaded", path: data.path, name: data.name });
+      updateField("resumeUrl", data.path);
+    } catch {
+      setUpload({ status: "error", message: "Upload failed. Please try again." });
+    }
+  }
+
+  function removeUpload() {
+    setUpload({ status: "idle" });
+    updateField("resumeUrl", undefined);
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -332,6 +381,50 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
             className={inputClass}
           />
         </Field>
+
+        <div className="space-y-1.5">
+          <span className="text-xs font-medium text-muted">
+            Additional context upload (resume, portfolio, one-pager)
+          </span>
+          {upload.status === "idle" || upload.status === "error" ? (
+            <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-line/60 bg-paper px-4 py-5 text-sm text-muted transition hover:border-accent/40 hover:text-ink">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span>Choose a file (PDF, PNG, JPG — max 10 MB)</span>
+              <input
+                type="file"
+                accept=".pdf,.png,.jpg,.jpeg"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+            </label>
+          ) : upload.status === "uploading" ? (
+            <div className="flex items-center gap-2 rounded-lg border border-line/40 bg-paper px-4 py-3 text-sm text-muted">
+              <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              Uploading…
+            </div>
+          ) : (
+            <div className="flex items-center justify-between rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-sm">
+              <span className="truncate text-ink">{upload.name}</span>
+              <button
+                type="button"
+                onClick={removeUpload}
+                className="ml-3 shrink-0 text-xs text-muted hover:text-ink"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+          {upload.status === "error" && (
+            <p className="text-xs text-red-400">{upload.message}</p>
+          )}
+        </div>
 
         <Field label="Personal website">
           <input

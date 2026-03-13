@@ -76,6 +76,7 @@ export type ApplicationInput = {
   whatYouAreLookingFor?: string;
   whyJoin: string;
   referredBy?: string;
+  resumeUrl?: string;
   consentToPublishSelectedProfileFields: boolean;
   formStartedAt: number;
   honeypot?: string;
@@ -99,6 +100,8 @@ export type ApplicationRecord = {
   whatYouAreLookingFor: string | null;
   whyJoin: string;
   referredBy: string | null;
+  resumeUrl: string | null;
+  resumeSignedUrl: string | null;
   consentToPublish: boolean;
   reviewNotes: string | null;
   reviewedByAdminEmail: string | null;

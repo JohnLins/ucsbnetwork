@@ -60,7 +60,7 @@ export async function getApplications() {
 
   const formattedTags = (tags ?? []).map(formatTag);
 
-  return ((applications ?? []) as Array<Record<string, unknown>>).map<ApplicationRecord>((application) => {
+  const mapped = ((applications ?? []) as Array<Record<string, unknown>>).map<ApplicationRecord>((application) => {
     const relatedTagIds = new Set(
       (applicationTags ?? [])
         .filter((tag) => tag.application_id === application.id)
@@ -87,6 +87,8 @@ export async function getApplications() {
       whatYouAreLookingFor: application.what_you_are_looking_for ? String(application.what_you_are_looking_for) : null,
       whyJoin: String(application.why_join),
       referredBy: application.referred_by ? String(application.referred_by) : null,
+      resumeUrl: application.resume_url ? String(application.resume_url) : null,
+      resumeSignedUrl: null,
       consentToPublish: Boolean(application.consent_to_publish),
       reviewNotes: application.review_notes ? String(application.review_notes) : null,
       reviewedByAdminEmail: application.reviewed_by_admin_email ? String(application.reviewed_by_admin_email) : null,
@@ -108,6 +110,26 @@ export async function getApplications() {
       keywords: groupedTags.keywords
     };
   });
+
+  // Generate signed URLs for applications that have file uploads
+  const withUploads = mapped.filter((app) => app.resumeUrl);
+  if (withUploads.length > 0) {
+    const signedResults = await Promise.all(
+      withUploads.map((app) =>
+        supabase.storage
+          .from("application-uploads")
+          .createSignedUrl(app.resumeUrl!, 3600) // 1 hour expiry
+      )
+    );
+    for (let i = 0; i < withUploads.length; i++) {
+      const result = signedResults[i];
+      if (result.data?.signedUrl) {
+        withUploads[i].resumeSignedUrl = result.data.signedUrl;
+      }
+    }
+  }
+
+  return mapped;
 }
 
 export async function getMembers() {

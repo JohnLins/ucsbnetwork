@@ -99,6 +99,7 @@ export async function createApplicationRecord(payload: ApplicationInput) {
       what_you_are_looking_for: payload.whatYouAreLookingFor || null,
       why_join: payload.whyJoin,
       referred_by: payload.referredBy || null,
+      resume_url: payload.resumeUrl || null,
       consent_to_publish: payload.consentToPublishSelectedProfileFields
     })
     .select("id")

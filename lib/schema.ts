@@ -45,6 +45,7 @@ export const applicationSchema = z.object({
   whatYouAreLookingFor: z.string().trim().optional(),
   whyJoin: z.string().trim(),
   referredBy: z.string().trim().optional(),
+  resumeUrl: z.string().trim().optional(),
   consentToPublishSelectedProfileFields: z.literal(true),
   formStartedAt: z.number().int(),
   honeypot: z.string().optional()
