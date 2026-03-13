@@ -94,7 +94,7 @@ export default async function AdminApplicationsPage({ searchParams }: PageProps)
         </aside>
         <div>
           {selectedApplication ? (
-            <AdminApplicationReview application={selectedApplication} tags={tags} />
+            <AdminApplicationReview key={selectedApplication.id} application={selectedApplication} tags={tags} />
           ) : (
             <div className="rounded-2xl border border-line/40 bg-panel/60 p-6 text-sm text-muted">
               Select an application to review.
