@@ -54,47 +54,47 @@ export const applicationSchema = z.object({
 export const adminReviewSchema = z.object({
   applicationId: z.string().uuid(),
   decision: z.enum(["approve", "reject"]),
-  reviewNotes: z.string().trim().max(1000).optional(),
+  reviewNotes: z.string().trim().optional(),
   memberDraft: z.object({
-    fullName: z.string().trim().min(2).max(120),
-    headline: z.string().trim().min(2).max(160),
-    companyOrOrg: z.string().trim().max(120).optional(),
-    location: z.string().trim().max(120).optional(),
-    bio: z.string().trim().min(2).max(1200),
+    fullName: z.string().trim(),
+    headline: z.string().trim().optional().default(""),
+    companyOrOrg: z.string().trim().optional(),
+    location: z.string().trim().optional(),
+    bio: z.string().trim().optional().default(""),
     websiteUrl: optionalUrlSchema,
     memberType: z.enum(["member", "advisor"]).default("member"),
     links: z.array(
       z.object({
         linkType: linkTypeSchema,
-        label: z.string().trim().max(60).optional(),
+        label: z.string().trim().optional(),
         url: z.string().trim().min(1).refine(isSafeExternalUrl, "Enter a valid URL")
       })
     ),
-    roles: z.array(z.string().trim().min(1).max(60)).max(12),
-    domains: z.array(z.string().trim().min(1).max(60)).max(12),
-    keywords: z.array(z.string().trim().min(1).max(60)).max(20)
+    roles: z.array(z.string().trim().min(1)),
+    domains: z.array(z.string().trim().min(1)),
+    keywords: z.array(z.string().trim().min(1))
   })
 });
 
 export const memberUpsertSchema = z.object({
   id: z.string().uuid().optional(),
   email: z.string().trim().email().optional(),
-  fullName: z.string().trim().min(2).max(120),
-  headline: z.string().trim().min(2).max(160),
-  companyOrOrg: z.string().trim().max(120).optional(),
-  location: z.string().trim().max(120).optional(),
-  bio: z.string().trim().min(2).max(1200),
+  fullName: z.string().trim(),
+  headline: z.string().trim().optional().default(""),
+  companyOrOrg: z.string().trim().optional(),
+  location: z.string().trim().optional(),
+  bio: z.string().trim().optional().default(""),
   websiteUrl: optionalUrlSchema,
   isPublished: z.boolean(),
   memberType: z.enum(["member", "advisor"]).default("member"),
   links: z.array(
     z.object({
       linkType: linkTypeSchema,
-      label: z.string().trim().max(60).optional(),
+      label: z.string().trim().optional(),
       url: z.string().trim().min(1).refine(isSafeExternalUrl, "Enter a valid URL")
     })
   ),
-  roles: z.array(z.string().trim().min(1).max(60)).max(12),
-  domains: z.array(z.string().trim().min(1).max(60)).max(12),
-  keywords: z.array(z.string().trim().min(1).max(60)).max(20)
+  roles: z.array(z.string().trim().min(1)),
+  domains: z.array(z.string().trim().min(1)),
+  keywords: z.array(z.string().trim().min(1))
 });
