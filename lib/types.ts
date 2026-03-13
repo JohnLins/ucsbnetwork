@@ -38,6 +38,10 @@ export type MemberCard = {
   keywords: Tag[];
 };
 
+export type AdminMember = MemberCard & {
+  email: string | null;
+};
+
 export type DirectoryFilters = {
   q: string;
   roles: string[];
@@ -135,6 +139,7 @@ export type AdminApplicationReviewPayload = {
 
 export type MemberUpsertInput = {
   id?: string;
+  email?: string;
   fullName: string;
   headline?: string;
   companyOrOrg?: string;

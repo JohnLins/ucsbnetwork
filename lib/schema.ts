@@ -78,6 +78,7 @@ export const adminReviewSchema = z.object({
 
 export const memberUpsertSchema = z.object({
   id: z.string().uuid().optional(),
+  email: z.string().trim().email().optional(),
   fullName: z.string().trim().min(2).max(120),
   headline: z.string().trim().min(2).max(160),
   companyOrOrg: z.string().trim().max(120).optional(),

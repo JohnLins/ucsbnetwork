@@ -1,5 +1,6 @@
 import { requireMember } from "@/lib/member-auth";
 import { getDirectoryMembers } from "@/lib/data/members";
+import { ChangePasswordForm } from "@/components/change-password-form";
 import { MemberDirectoryView } from "@/components/member-directory-view";
 import { MemberLogoutButtonClient } from "@/components/member-logout-button";
 
@@ -16,7 +17,10 @@ export default async function MemberDirectoryPage() {
             <p className="text-xs uppercase tracking-[0.38em] text-accent">Network</p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">Directory</h1>
           </div>
-          <MemberLogoutButtonClient />
+          <div className="flex items-center gap-4">
+            <ChangePasswordForm />
+            <MemberLogoutButtonClient />
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-6 py-10 lg:px-10">

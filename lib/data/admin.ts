@@ -1,4 +1,4 @@
-import type { ApplicationRecord, LinkRecord, MemberCard, MemberType, Tag, TagType } from "@/lib/types";
+import type { AdminMember, ApplicationRecord, LinkRecord, MemberType, Tag, TagType } from "@/lib/types";
 import { getSupabaseServiceClient } from "@/lib/supabase/service";
 
 function formatTag(row: { id: string; name: string; slug: string; tag_type: TagType; is_active: boolean }): Tag {
@@ -132,14 +132,14 @@ export async function getApplications() {
   return mapped;
 }
 
-export async function getMembers() {
+export async function getMembers(): Promise<AdminMember[]> {
   const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
     return [];
   }
 
-  const [{ data: members }, { data: links }, { data: memberTags }, { data: tags }] = await Promise.all([
+  const [{ data: members }, { data: links }, { data: memberTags }, { data: tags }, { data: credentials }] = await Promise.all([
     supabase
       .from("members")
       .select("*")
@@ -152,12 +152,18 @@ export async function getMembers() {
       .select("member_id, tag_id"),
     supabase
       .from("tags")
-      .select("id, name, slug, tag_type, is_active")
+      .select("id, name, slug, tag_type, is_active"),
+    supabase
+      .from("member_credentials")
+      .select("member_id, email")
   ]);
 
   const formattedTags = (tags ?? []).map(formatTag);
+  const emailByMemberId = new Map(
+    (credentials ?? []).map((c) => [c.member_id, c.email as string])
+  );
 
-  return ((members ?? []) as Array<Record<string, unknown>>).map<MemberCard>((member) => {
+  return ((members ?? []) as Array<Record<string, unknown>>).map<AdminMember>((member) => {
     const relatedTagIds = new Set(
       (memberTags ?? [])
         .filter((tag) => tag.member_id === member.id)
@@ -179,6 +185,7 @@ export async function getMembers() {
       websiteUrl: member.website_url ? String(member.website_url) : null,
       isPublished: Boolean(member.is_published),
       memberType: (member.member_type === "advisor" ? "advisor" : "member") as MemberType,
+      email: emailByMemberId.get(String(member.id)) ?? null,
       links: (links ?? [])
         .filter((link) => link.member_id === member.id)
         .map<LinkRecord>((link) => ({

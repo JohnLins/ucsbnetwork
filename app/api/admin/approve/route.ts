@@ -64,12 +64,16 @@ export async function POST(request: Request) {
       warnings.push(`Credentials not saved: ${credError.message}`);
     }
 
+    // Determine member type from the draft payload
+    const resolvedMemberType = payload.memberDraft.memberType === "advisor" ? "advisor" : "member";
+
     // Email the member their login credentials
     try {
       await sendMemberWelcomeEmail(
         application.email,
         application.full_name,
-        plainPassword
+        plainPassword,
+        resolvedMemberType
       );
     } catch (emailError) {
       const emailErrorMessage = emailError instanceof Error ? emailError.message : String(emailError);

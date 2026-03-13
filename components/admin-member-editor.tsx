@@ -1,23 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import type { MemberCard, MemberType, Tag } from "@/lib/types";
+import type { AdminMember, MemberType, Tag } from "@/lib/types";
 
 export function AdminMemberEditor({
   selectedMember,
   tags,
   defaultMemberType = "member"
 }: {
-  selectedMember?: MemberCard;
+  selectedMember?: AdminMember;
   tags: Tag[];
   defaultMemberType?: MemberType;
 }) {
+  const router = useRouter();
   const [status, setStatus] = useState<{ kind: "idle" | "loading" | "success" | "error"; message?: string }>({
     kind: "idle"
   });
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [form, setForm] = useState({
     id: selectedMember?.id,
+    email: selectedMember?.email ?? "",
     fullName: selectedMember?.fullName ?? "",
     headline: selectedMember?.headline ?? "",
     companyOrOrg: selectedMember?.companyOrOrg ?? "",
@@ -58,6 +62,29 @@ export function AdminMemberEditor({
     setStatus({ kind: "success", message: "Member saved. Refresh to see the latest data." });
   }
 
+  async function handleDelete() {
+    if (!selectedMember) return;
+
+    setStatus({ kind: "loading", message: "Deleting..." });
+
+    try {
+      const response = await fetch(`/api/admin/members/${selectedMember.id}`, {
+        method: "DELETE"
+      });
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        setStatus({ kind: "error", message: data?.error ?? "Unable to delete member." });
+        return;
+      }
+
+      setStatus({ kind: "success", message: "Member deleted." });
+      router.refresh();
+    } catch {
+      setStatus({ kind: "error", message: "Something went wrong." });
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="rounded-2xl border border-line/40 bg-panel/60 p-6">
       <div className="space-y-2 border-b border-line/30 pb-5">
@@ -69,6 +96,16 @@ export function AdminMemberEditor({
       <div className="mt-8 space-y-6">
         <Labeled title="Full name">
           <input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className={inputClass} />
+        </Labeled>
+        <Labeled title={selectedMember ? "Email (read-only)" : "Email (required for new members)"}>
+          <input
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            placeholder="member@example.com"
+            readOnly={!!selectedMember}
+            className={`${inputClass}${selectedMember ? " opacity-60 cursor-not-allowed" : ""}`}
+          />
         </Labeled>
         <Labeled title="Headline">
           <input value={form.headline} onChange={(e) => setForm({ ...form, headline: e.target.value })} className={inputClass} />
@@ -163,14 +200,47 @@ export function AdminMemberEditor({
         </label>
       </div>
       <div className="mt-8 flex flex-col gap-4 border-t border-line/30 pt-5 md:flex-row md:items-center md:justify-between">
-        <p className="text-sm text-muted">{status.message ?? ""}</p>
-        <button
-          type="submit"
-          disabled={status.kind === "loading"}
-          className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
-        >
-          {status.kind === "loading" ? "Saving..." : "Save member"}
-        </button>
+        <div className="flex items-center gap-3">
+          <p className="text-sm text-muted">{status.message ?? ""}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {selectedMember && !deleteConfirm && (
+            <button
+              type="button"
+              onClick={() => setDeleteConfirm(true)}
+              className="rounded-xl border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
+            >
+              Delete
+            </button>
+          )}
+          {selectedMember && deleteConfirm && (
+            <>
+              <span className="text-sm text-red-400">Are you sure?</span>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={status.kind === "loading"}
+                className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700 disabled:opacity-50"
+              >
+                Confirm delete
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeleteConfirm(false)}
+                className="text-sm text-muted hover:text-ink transition"
+              >
+                Cancel
+              </button>
+            </>
+          )}
+          <button
+            type="submit"
+            disabled={status.kind === "loading"}
+            className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
+          >
+            {status.kind === "loading" ? "Saving..." : "Save member"}
+          </button>
+        </div>
       </div>
     </form>
   );
