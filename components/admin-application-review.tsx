@@ -191,18 +191,6 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
           <EditableField label="Website">
             <input value={draft.websiteUrl} onChange={(e) => setDraft({ ...draft, websiteUrl: e.target.value })} className={inputClass} />
           </EditableField>
-          <EditableField label="Directory type">
-            <select
-              value={draft.memberType}
-              onChange={(e) => setDraft({ ...draft, memberType: e.target.value as MemberType })}
-              className="h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none"
-            >
-              <option value="partner">Partner</option>
-              <option value="member">Member</option>
-              <option value="alumni_advisor">Alumni Advisor</option>
-              <option value="alumni_network">Alumni Network</option>
-            </select>
-          </EditableField>
           <EditableField label="Member bio (editable)">
             <textarea value={draft.bio} onChange={(e) => setDraft({ ...draft, bio: e.target.value })} rows={6} className={textareaClass} />
           </EditableField>
@@ -222,25 +210,53 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col gap-4 border-t border-line/30 pt-5 md:flex-row md:items-center md:justify-between">
-        <div className="text-sm text-muted">{status.message ?? ""}</div>
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={() => submit("reject")}
-            disabled={status.kind === "loading"}
-            className="rounded-xl border border-line/50 px-5 py-2.5 text-sm text-muted transition hover:text-ink disabled:opacity-50"
-          >
-            Reject
-          </button>
-          <button
-            type="button"
-            onClick={() => submit("approve")}
-            disabled={status.kind === "loading"}
-            className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
-          >
-            Approve and publish
-          </button>
+      <div className="mt-8 border-t border-line/30 pt-5">
+        {/* Accept as tier */}
+        <div className="mb-4">
+          <p className="mb-2 text-[11px] uppercase tracking-[0.32em] text-muted">Accept as</p>
+          <div className="flex flex-wrap gap-2">
+            {([
+              { value: "partner", label: "Partner" },
+              { value: "member", label: "Member" },
+              { value: "alumni_advisor", label: "Alumni Advisor" },
+              { value: "alumni_network", label: "Alumni Network" }
+            ] as const).map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setDraft({ ...draft, memberType: option.value })}
+                className={`rounded-lg border px-4 py-2 text-sm font-medium transition ${
+                  draft.memberType === option.value
+                    ? "border-accent/50 bg-accent/15 text-accent"
+                    : "border-line/60 text-muted hover:border-accent/30 hover:text-ink"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="text-sm text-muted">{status.message ?? ""}</div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => submit("reject")}
+              disabled={status.kind === "loading"}
+              className="rounded-xl border border-line/50 px-5 py-2.5 text-sm text-muted transition hover:text-ink disabled:opacity-50"
+            >
+              Reject
+            </button>
+            <button
+              type="button"
+              onClick={() => submit("approve")}
+              disabled={status.kind === "loading"}
+              className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
+            >
+              Approve as {draft.memberType === "partner" ? "Partner" : draft.memberType === "member" ? "Member" : draft.memberType === "alumni_advisor" ? "Alumni Advisor" : "Alumni Network"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

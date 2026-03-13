@@ -137,6 +137,63 @@ export type AdminApplicationReviewPayload = {
   };
 };
 
+// ── Events ──
+
+export type EventVisibility = "all" | "partners_only" | "advisors_only" | "partners_and_advisors";
+export type RsvpMode = "open" | "invite_only" | "closed";
+export type RsvpStatus = "going" | "maybe" | "not_going";
+
+export type EventRecord = {
+  id: string;
+  title: string;
+  description: string;
+  location: string;
+  eventDate: string;
+  endDate: string | null;
+  imageUrl: string | null;
+  externalUrl: string | null;
+  sponsor: string | null;
+  maxCapacity: number | null;
+  visibility: EventVisibility;
+  rsvpMode: RsvpMode;
+  rsvpOpenTo: MemberType[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type EventWithRsvp = EventRecord & {
+  rsvpCount: number;
+  currentUserRsvp: RsvpStatus | null;
+  canRsvp: boolean;
+};
+
+export type EventRsvp = {
+  id: string;
+  eventId: string;
+  memberId: string;
+  memberName: string;
+  memberType: MemberType;
+  status: RsvpStatus;
+  invited: boolean;
+  createdAt: string;
+};
+
+export type EventUpsertInput = {
+  id?: string;
+  title: string;
+  description: string;
+  location: string;
+  eventDate: string;
+  endDate?: string;
+  imageUrl?: string;
+  externalUrl?: string;
+  sponsor?: string;
+  maxCapacity?: number | null;
+  visibility: EventVisibility;
+  rsvpMode: RsvpMode;
+  rsvpOpenTo: MemberType[];
+};
+
 export type MemberUpsertInput = {
   id?: string;
   email?: string;

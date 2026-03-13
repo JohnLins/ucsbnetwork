@@ -97,14 +97,13 @@ export function AdminMemberEditor({
         <Labeled title="Full name">
           <input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className={inputClass} />
         </Labeled>
-        <Labeled title={selectedMember ? "Email (read-only)" : "Email (required for new members)"}>
+        <Labeled title={selectedMember ? "Email" : "Email (required for new members)"}>
           <input
             type="email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             placeholder="member@example.com"
-            readOnly={!!selectedMember}
-            className={`${inputClass}${selectedMember ? " opacity-60 cursor-not-allowed" : ""}`}
+            className={inputClass}
           />
         </Labeled>
         <Labeled title="Headline">

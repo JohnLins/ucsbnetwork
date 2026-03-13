@@ -31,7 +31,7 @@ export function MemberLoginForm() {
         return;
       }
 
-      router.push("/members");
+      router.push("/members/events");
       router.refresh();
     } catch {
       setStatus("error");

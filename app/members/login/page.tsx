@@ -7,7 +7,7 @@ export default async function MemberLoginPage() {
   const session = await getMemberSession();
 
   if (session.isAuthenticated) {
-    redirect("/members");
+    redirect("/members/events");
   }
 
   return (

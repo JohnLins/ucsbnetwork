@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { createHmac } from "crypto";
 
 import { env } from "@/lib/env";
+import type { MemberType } from "@/lib/types";
+import { getSupabaseServiceClient } from "@/lib/supabase/service";
 
 const COOKIE_NAME = "member_session";
 const HMAC_KEY = "ucsb-network-member-v1";
@@ -64,4 +66,26 @@ export async function requireMember() {
   }
 
   return session;
+}
+
+/**
+ * Get the member_type for a given member ID.
+ */
+export async function getMemberType(memberId: string): Promise<MemberType> {
+  const supabase = getSupabaseServiceClient();
+  if (!supabase) return "member";
+
+  const { data } = await supabase
+    .from("members")
+    .select("member_type")
+    .eq("id", memberId)
+    .single();
+
+  if (!data) return "member";
+
+  const mt = String(data.member_type);
+  if (["partner", "member", "alumni_advisor", "alumni_network"].includes(mt)) {
+    return mt as MemberType;
+  }
+  return "member";
 }

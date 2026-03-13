@@ -22,36 +22,49 @@ export async function POST(request: Request) {
     const isNew = !payload.id;
     const memberId = await syncMemberRecord(payload);
 
-    // For new members, create credentials and send welcome email
-    if (isNew && payload.email) {
+    if (payload.email) {
       const supabase = getSupabaseServiceClient();
 
       if (supabase) {
-        const plainPassword = generatePassword(16);
-        const passwordHash = await hashPassword(plainPassword);
+        if (isNew) {
+          // For new members, create credentials and send welcome email
+          const plainPassword = generatePassword(16);
+          const passwordHash = await hashPassword(plainPassword);
 
-        const { error: credError } = await supabase.from("member_credentials").insert({
-          member_id: memberId,
-          email: payload.email.toLowerCase(),
-          password_hash: passwordHash
-        });
+          const { error: credError } = await supabase.from("member_credentials").insert({
+            member_id: memberId,
+            email: payload.email.toLowerCase(),
+            password_hash: passwordHash
+          });
 
-        if (credError) {
-          console.error("Failed to create member credentials:", credError);
-          warnings.push(`Credentials not saved: ${credError.message}`);
+          if (credError) {
+            console.error("Failed to create member credentials:", credError);
+            warnings.push(`Credentials not saved: ${credError.message}`);
+          } else {
+            // Send welcome email
+            try {
+              await sendMemberWelcomeEmail(
+                payload.email,
+                payload.fullName,
+                plainPassword,
+                payload.memberType ?? "partner"
+              );
+            } catch (emailError) {
+              const msg = emailError instanceof Error ? emailError.message : String(emailError);
+              console.error("Failed to send welcome email:", msg);
+              warnings.push(`Welcome email failed: ${msg}`);
+            }
+          }
         } else {
-          // Send welcome email
-          try {
-            await sendMemberWelcomeEmail(
-              payload.email,
-              payload.fullName,
-              plainPassword,
-              payload.memberType ?? "partner"
-            );
-          } catch (emailError) {
-            const msg = emailError instanceof Error ? emailError.message : String(emailError);
-            console.error("Failed to send welcome email:", msg);
-            warnings.push(`Welcome email failed: ${msg}`);
+          // For existing members, update the email in credentials
+          const { error: updateError } = await supabase
+            .from("member_credentials")
+            .update({ email: payload.email.toLowerCase() })
+            .eq("member_id", memberId);
+
+          if (updateError) {
+            console.error("Failed to update member email:", updateError);
+            warnings.push(`Email not updated: ${updateError.message}`);
           }
         }
       }

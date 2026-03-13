@@ -69,8 +69,8 @@ function getEmailWording(memberType: MemberType) {
   switch (memberType) {
     case "partner":
       return {
-        subject: "Welcome to ucsb.network — Founding Partner",
-        greeting: "You've been accepted into ucsb.network as a founding partner.",
+        subject: "Welcome to ucsb.network — Cohort 1",
+        greeting: "You've been accepted into ucsb.network Cohort 1.",
         directoryNote:
           "Once logged in you can view the full network directory — partners, members, and alumni."
       };
@@ -93,7 +93,7 @@ function getEmailWording(memberType: MemberType) {
     default:
       return {
         subject: "Welcome to ucsb.network",
-        greeting: "You've been accepted into ucsb.network.",
+        greeting: "You've been accepted as a member of ucsb.network.",
         directoryNote:
           "Once logged in you can view the full member directory and reach out to other members."
       };
