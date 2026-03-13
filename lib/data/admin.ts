@@ -184,7 +184,9 @@ export async function getMembers(): Promise<AdminMember[]> {
       bio: String(member.bio),
       websiteUrl: member.website_url ? String(member.website_url) : null,
       isPublished: Boolean(member.is_published),
-      memberType: (member.member_type === "advisor" ? "advisor" : "member") as MemberType,
+      memberType: (["partner", "member", "alumni_advisor", "alumni_network"].includes(String(member.member_type))
+        ? String(member.member_type)
+        : "partner") as MemberType,
       email: emailByMemberId.get(String(member.id)) ?? null,
       links: (links ?? [])
         .filter((link) => link.member_id === member.id)

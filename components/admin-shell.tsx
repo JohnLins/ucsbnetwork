@@ -38,8 +38,8 @@ export function AdminShell({
             <Link href="/admin/members?tab=members" className="transition hover:text-accent">
               Members
             </Link>
-            <Link href="/admin/members?tab=advisors" className="transition hover:text-accent">
-              Advisors
+            <Link href="/admin/members?tab=alumni" className="transition hover:text-accent">
+              Alumni
             </Link>
             <button
               onClick={handleLogout}

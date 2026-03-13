@@ -46,7 +46,7 @@ export async function POST(request: Request) {
               payload.email,
               payload.fullName,
               plainPassword,
-              payload.memberType ?? "member"
+              payload.memberType ?? "partner"
             );
           } catch (emailError) {
             const msg = emailError instanceof Error ? emailError.message : String(emailError);

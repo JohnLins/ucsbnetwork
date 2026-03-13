@@ -26,10 +26,14 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
 
   const [allMembers, tags] = await Promise.all([getMembers(), getAdminTags()]);
 
-  const tab = typeof params.tab === "string" ? params.tab : "members";
+  const tab = typeof params.tab === "string" ? params.tab : "partners";
+  const partners = allMembers.filter((m) => m.memberType === "partner");
   const regularMembers = allMembers.filter((m) => m.memberType === "member");
-  const advisors = allMembers.filter((m) => m.memberType === "advisor");
-  const visibleMembers = tab === "advisors" ? advisors : regularMembers;
+  const alumni = allMembers.filter((m) => m.memberType === "alumni_advisor" || m.memberType === "alumni_network");
+  const visibleMembers = tab === "alumni" ? alumni : tab === "members" ? regularMembers : partners;
+
+  const newLabel = tab === "alumni" ? "alumni" : tab === "members" ? "member" : "partner";
+  const defaultType = tab === "alumni" ? "alumni_advisor" : tab === "members" ? "member" : "partner";
 
   const selectedId = typeof params.id === "string" ? params.id : undefined;
   const selectedMember = visibleMembers.find((member) => member.id === selectedId);
@@ -38,6 +42,16 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
     <AdminShell eyebrow="Admin" title="Members">
       {/* Tab bar */}
       <div className="mb-6 flex gap-2">
+        <Link
+          href="/admin/members?tab=partners"
+          className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+            tab === "partners"
+              ? "bg-accent/15 text-accent"
+              : "text-muted hover:text-ink"
+          }`}
+        >
+          Partners ({partners.length})
+        </Link>
         <Link
           href="/admin/members?tab=members"
           className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
@@ -49,14 +63,14 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
           Members ({regularMembers.length})
         </Link>
         <Link
-          href="/admin/members?tab=advisors"
+          href="/admin/members?tab=alumni"
           className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-            tab === "advisors"
+            tab === "alumni"
               ? "bg-accent/15 text-accent"
               : "text-muted hover:text-ink"
           }`}
         >
-          Advisors ({advisors.length})
+          Alumni ({alumni.length})
         </Link>
       </div>
 
@@ -70,7 +84,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
           >
             <p className="text-[11px] uppercase tracking-[0.32em] text-accent">Create</p>
             <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">
-              New {tab === "advisors" ? "advisor" : "member"}
+              New {newLabel}
             </h2>
           </Link>
           {visibleMembers.map((member) => (
@@ -95,7 +109,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
           key={selectedMember?.id ?? `new-${tab}`}
           selectedMember={selectedMember}
           tags={tags}
-          defaultMemberType={tab === "advisors" ? "advisor" : "member"}
+          defaultMemberType={defaultType as import("@/lib/types").MemberType}
         />
       </div>
     </AdminShell>

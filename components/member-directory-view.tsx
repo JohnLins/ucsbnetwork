@@ -4,33 +4,45 @@ import { useState } from "react";
 
 import type { DirectoryMember } from "@/lib/data/members";
 
-type Tab = "members" | "advisors";
+type Tab = "partners" | "members" | "alumni";
+
+function matchesSearch(m: DirectoryMember, q: string): boolean {
+  return (
+    m.fullName.toLowerCase().includes(q) ||
+    m.headline?.toLowerCase().includes(q) ||
+    m.bio.toLowerCase().includes(q) ||
+    m.companyOrOrg?.toLowerCase().includes(q) ||
+    m.roles.some((t) => t.name.toLowerCase().includes(q)) ||
+    m.domains.some((t) => t.name.toLowerCase().includes(q))
+  );
+}
 
 export function MemberDirectoryView({ members }: { members: DirectoryMember[] }) {
-  const [tab, setTab] = useState<Tab>("members");
+  const [tab, setTab] = useState<Tab>("partners");
   const [search, setSearch] = useState("");
 
+  const partners = members.filter((m) => m.memberType === "partner");
   const regularMembers = members.filter((m) => m.memberType === "member");
-  const advisors = members.filter((m) => m.memberType === "advisor");
-  const visibleMembers = tab === "advisors" ? advisors : regularMembers;
+  const alumniAdvisors = members.filter((m) => m.memberType === "alumni_advisor");
+  const alumniNetwork = members.filter((m) => m.memberType === "alumni_network");
+  const allAlumni = [...alumniAdvisors, ...alumniNetwork];
 
-  const filtered = visibleMembers.filter((m) => {
-    if (!search) return true;
-    const q = search.toLowerCase();
-    return (
-      m.fullName.toLowerCase().includes(q) ||
-      m.headline?.toLowerCase().includes(q) ||
-      m.bio.toLowerCase().includes(q) ||
-      m.companyOrOrg?.toLowerCase().includes(q) ||
-      m.roles.some((t) => t.name.toLowerCase().includes(q)) ||
-      m.domains.some((t) => t.name.toLowerCase().includes(q))
-    );
-  });
+  const q = search.toLowerCase();
 
   return (
     <div>
       {/* Tab bar */}
       <div className="mb-6 flex gap-2">
+        <button
+          onClick={() => { setTab("partners"); setSearch(""); }}
+          className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+            tab === "partners"
+              ? "bg-accent/15 text-accent"
+              : "text-muted hover:text-ink"
+          }`}
+        >
+          Partners ({partners.length})
+        </button>
         <button
           onClick={() => { setTab("members"); setSearch(""); }}
           className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
@@ -42,14 +54,14 @@ export function MemberDirectoryView({ members }: { members: DirectoryMember[] })
           Members ({regularMembers.length})
         </button>
         <button
-          onClick={() => { setTab("advisors"); setSearch(""); }}
+          onClick={() => { setTab("alumni"); setSearch(""); }}
           className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-            tab === "advisors"
+            tab === "alumni"
               ? "bg-accent/15 text-accent"
               : "text-muted hover:text-ink"
           }`}
         >
-          Advisors ({advisors.length})
+          Alumni ({allAlumni.length})
         </button>
       </div>
 
@@ -57,20 +69,85 @@ export function MemberDirectoryView({ members }: { members: DirectoryMember[] })
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder={tab === "advisors" ? "Search advisors…" : "Search members…"}
+        placeholder={
+          tab === "alumni"
+            ? "Search alumni…"
+            : tab === "members"
+            ? "Search members…"
+            : "Search partners…"
+        }
         className="mb-8 h-10 w-full max-w-sm rounded-lg border border-line/40 bg-paper px-4 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent/40 focus:ring-1 focus:ring-accent/15"
       />
 
-      {filtered.length === 0 ? (
-        <p className="text-sm text-muted">
-          {tab === "advisors" ? "No advisors found." : "No members found."}
-        </p>
+      {tab === "alumni" ? (
+        <AlumniTab
+          advisors={search ? alumniAdvisors.filter((m) => matchesSearch(m, q)) : alumniAdvisors}
+          network={search ? alumniNetwork.filter((m) => matchesSearch(m, q)) : alumniNetwork}
+        />
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((member) => (
-            <DirectoryCard key={member.id} member={member} />
-          ))}
-        </div>
+        <MemberGrid
+          members={
+            search
+              ? (tab === "partners" ? partners : regularMembers).filter((m) => matchesSearch(m, q))
+              : tab === "partners"
+              ? partners
+              : regularMembers
+          }
+          emptyLabel={tab === "partners" ? "No partners found." : "No members found."}
+        />
+      )}
+    </div>
+  );
+}
+
+function MemberGrid({ members, emptyLabel }: { members: DirectoryMember[]; emptyLabel: string }) {
+  if (members.length === 0) {
+    return <p className="text-sm text-muted">{emptyLabel}</p>;
+  }
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {members.map((member) => (
+        <DirectoryCard key={member.id} member={member} />
+      ))}
+    </div>
+  );
+}
+
+function AlumniTab({
+  advisors,
+  network
+}: {
+  advisors: DirectoryMember[];
+  network: DirectoryMember[];
+}) {
+  if (advisors.length === 0 && network.length === 0) {
+    return <p className="text-sm text-muted">No alumni found.</p>;
+  }
+  return (
+    <div className="space-y-10">
+      {advisors.length > 0 && (
+        <section>
+          <h3 className="mb-4 text-xs font-medium uppercase tracking-[0.32em] text-accent">
+            Advisors
+          </h3>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {advisors.map((member) => (
+              <DirectoryCard key={member.id} member={member} />
+            ))}
+          </div>
+        </section>
+      )}
+      {network.length > 0 && (
+        <section>
+          <h3 className="mb-4 text-xs font-medium uppercase tracking-[0.32em] text-accent">
+            Network
+          </h3>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {network.map((member) => (
+              <DirectoryCard key={member.id} member={member} />
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

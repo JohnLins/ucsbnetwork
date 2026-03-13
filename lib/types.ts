@@ -1,7 +1,7 @@
 export type TagType = "role" | "domain" | "keyword";
 export type LinkType = "website" | "linkedin" | "github" | "x" | "other";
 export type ApplicationStatus = "pending" | "approved" | "rejected";
-export type MemberType = "member" | "advisor";
+export type MemberType = "partner" | "member" | "alumni_advisor" | "alumni_network";
 
 export type Tag = {
   id: string;

@@ -32,7 +32,7 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
     location: application.location ?? "",
     bio: application.bio,
     websiteUrl: application.websiteUrl ?? "",
-    memberType: (isAdvisor ? "advisor" : "member") as MemberType,
+    memberType: (isAdvisor ? "alumni_advisor" : "partner") as MemberType,
     roles: application.roles.map((tag) => tag.slug),
     domains: application.domains.map((tag) => tag.slug),
     keywords: application.keywords.map((tag) => tag.slug),
@@ -197,8 +197,10 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
               onChange={(e) => setDraft({ ...draft, memberType: e.target.value as MemberType })}
               className="h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none"
             >
+              <option value="partner">Partner</option>
               <option value="member">Member</option>
-              <option value="advisor">Advisor</option>
+              <option value="alumni_advisor">Alumni Advisor</option>
+              <option value="alumni_network">Alumni Network</option>
             </select>
           </EditableField>
           <EditableField label="Member bio (editable)">

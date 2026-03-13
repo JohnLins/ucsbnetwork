@@ -8,7 +8,7 @@ import type { AdminMember, MemberType, Tag } from "@/lib/types";
 export function AdminMemberEditor({
   selectedMember,
   tags,
-  defaultMemberType = "member"
+  defaultMemberType = "partner"
 }: {
   selectedMember?: AdminMember;
   tags: Tag[];
@@ -184,8 +184,10 @@ export function AdminMemberEditor({
             onChange={(e) => setForm({ ...form, memberType: e.target.value as MemberType })}
             className="h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none"
           >
+            <option value="partner">Partner</option>
             <option value="member">Member</option>
-            <option value="advisor">Advisor</option>
+            <option value="alumni_advisor">Alumni Advisor</option>
+            <option value="alumni_network">Alumni Network</option>
           </select>
         </Labeled>
 

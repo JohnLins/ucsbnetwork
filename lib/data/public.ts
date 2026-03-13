@@ -70,7 +70,11 @@ function hydrateMembers(
       bio: member.bio,
       websiteUrl: member.website_url,
       isPublished: member.is_published,
-      memberType: (member as Record<string, unknown>).member_type === "advisor" ? "advisor" : "member",
+      memberType: (["partner", "member", "alumni_advisor", "alumni_network"].includes(
+        String((member as Record<string, unknown>).member_type)
+      )
+        ? String((member as Record<string, unknown>).member_type)
+        : "partner") as MemberCard["memberType"],
       links: relatedLinks,
       roles: groupedTags.roles,
       domains: groupedTags.domains,
