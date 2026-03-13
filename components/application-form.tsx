@@ -252,6 +252,9 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
 
   return (
     <div>
+      <p className="mb-6 text-sm font-medium tracking-wide text-accent">
+        Applications for the first cohort close April 3.
+      </p>
       <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Apply.</h2>
 
       <form className="mt-10 space-y-5" onSubmit={handleSubmit}>

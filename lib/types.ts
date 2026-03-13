@@ -32,6 +32,7 @@ export type MemberCard = {
   websiteUrl: string | null;
   isPublished: boolean;
   memberType: MemberType;
+  cohort: number | null;
   links: LinkRecord[];
   roles: Tag[];
   domains: Tag[];
@@ -130,6 +131,7 @@ export type AdminApplicationReviewPayload = {
     bio: string;
     websiteUrl?: string;
     memberType: MemberType;
+    cohort?: number | null;
     links: Array<{ linkType: LinkType; label?: string; url: string }>;
     roles: string[];
     domains: string[];
@@ -205,6 +207,7 @@ export type MemberUpsertInput = {
   websiteUrl?: string;
   isPublished: boolean;
   memberType: MemberType;
+  cohort?: number | null;
   links: Array<{ linkType: LinkType; label?: string; url: string }>;
   roles: string[];
   domains: string[];

@@ -56,15 +56,52 @@ export async function POST(request: Request) {
             }
           }
         } else {
-          // For existing members, update the email in credentials
-          const { error: updateError } = await supabase
+          // For existing members, check if credentials exist
+          const { data: existingCreds } = await supabase
             .from("member_credentials")
-            .update({ email: payload.email.toLowerCase() })
-            .eq("member_id", memberId);
+            .select("id")
+            .eq("member_id", memberId)
+            .maybeSingle();
 
-          if (updateError) {
-            console.error("Failed to update member email:", updateError);
-            warnings.push(`Email not updated: ${updateError.message}`);
+          if (existingCreds) {
+            // Update existing credentials email
+            const { error: updateError } = await supabase
+              .from("member_credentials")
+              .update({ email: payload.email.toLowerCase() })
+              .eq("member_id", memberId);
+
+            if (updateError) {
+              console.error("Failed to update member email:", updateError);
+              warnings.push(`Email not updated: ${updateError.message}`);
+            }
+          } else {
+            // No credentials row exists — create one and send welcome email
+            const plainPassword = generatePassword(16);
+            const passwordHash = await hashPassword(plainPassword);
+
+            const { error: credError } = await supabase.from("member_credentials").insert({
+              member_id: memberId,
+              email: payload.email.toLowerCase(),
+              password_hash: passwordHash
+            });
+
+            if (credError) {
+              console.error("Failed to create member credentials:", credError);
+              warnings.push(`Credentials not saved: ${credError.message}`);
+            } else {
+              try {
+                await sendMemberWelcomeEmail(
+                  payload.email,
+                  payload.fullName,
+                  plainPassword,
+                  payload.memberType ?? "partner"
+                );
+              } catch (emailError) {
+                const msg = emailError instanceof Error ? emailError.message : String(emailError);
+                console.error("Failed to send welcome email:", msg);
+                warnings.push(`Welcome email failed: ${msg}`);
+              }
+            }
           }
         }
       }

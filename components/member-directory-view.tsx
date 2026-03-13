@@ -84,18 +84,67 @@ export function MemberDirectoryView({ members }: { members: DirectoryMember[] })
           advisors={search ? alumniAdvisors.filter((m) => matchesSearch(m, q)) : alumniAdvisors}
           network={search ? alumniNetwork.filter((m) => matchesSearch(m, q)) : alumniNetwork}
         />
+      ) : tab === "partners" ? (
+        <PartnersByCohort
+          partners={search ? partners.filter((m) => matchesSearch(m, q)) : partners}
+        />
       ) : (
         <MemberGrid
-          members={
-            search
-              ? (tab === "partners" ? partners : regularMembers).filter((m) => matchesSearch(m, q))
-              : tab === "partners"
-              ? partners
-              : regularMembers
-          }
-          emptyLabel={tab === "partners" ? "No partners found." : "No members found."}
+          members={search ? regularMembers.filter((m) => matchesSearch(m, q)) : regularMembers}
+          emptyLabel="No members found."
         />
       )}
+    </div>
+  );
+}
+
+function PartnersByCohort({ partners }: { partners: DirectoryMember[] }) {
+  if (partners.length === 0) {
+    return <p className="text-sm text-muted">No partners found.</p>;
+  }
+
+  // Group by cohort number; null/undefined cohort goes to "Uncategorized"
+  const cohortMap = new Map<number | null, DirectoryMember[]>();
+  for (const p of partners) {
+    const key = p.cohort ?? null;
+    const list = cohortMap.get(key) ?? [];
+    list.push(p);
+    cohortMap.set(key, list);
+  }
+
+  // Sort cohorts numerically (non-null first, then null at the end)
+  const sortedCohorts = [...cohortMap.entries()].sort((a, b) => {
+    if (a[0] === null && b[0] === null) return 0;
+    if (a[0] === null) return 1;
+    if (b[0] === null) return -1;
+    return a[0] - b[0];
+  });
+
+  // If there's only one cohort group, don't show the heading
+  if (sortedCohorts.length === 1) {
+    return (
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {sortedCohorts[0][1].map((member) => (
+          <DirectoryCard key={member.id} member={member} />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-10">
+      {sortedCohorts.map(([cohort, cohortMembers]) => (
+        <section key={cohort ?? "none"}>
+          <h3 className="mb-4 text-xs font-medium uppercase tracking-[0.32em] text-accent">
+            {cohort != null ? `Cohort ${cohort}` : "Other"}
+          </h3>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {cohortMembers.map((member) => (
+              <DirectoryCard key={member.id} member={member} />
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }

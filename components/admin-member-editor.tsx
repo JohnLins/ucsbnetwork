@@ -30,6 +30,7 @@ export function AdminMemberEditor({
     websiteUrl: selectedMember?.websiteUrl ?? "",
     isPublished: selectedMember?.isPublished ?? true,
     memberType: (selectedMember?.memberType ?? defaultMemberType) as MemberType,
+    cohort: selectedMember?.cohort ?? (defaultMemberType === "partner" ? 1 : null) as number | null,
     roles: selectedMember?.roles.map((tag) => tag.slug) ?? [],
     domains: selectedMember?.domains.map((tag) => tag.slug) ?? [],
     keywords: selectedMember?.keywords.map((tag) => tag.slug) ?? [],
@@ -193,6 +194,21 @@ export function AdminMemberEditor({
             <option value="alumni_network">Alumni Network</option>
           </select>
         </Labeled>
+
+        {form.memberType === "partner" && (
+          <Labeled title="Cohort">
+            <input
+              type="number"
+              min={1}
+              value={form.cohort ?? ""}
+              onChange={(e) =>
+                setForm({ ...form, cohort: e.target.value ? parseInt(e.target.value, 10) : null })
+              }
+              placeholder="e.g. 1"
+              className="h-11 w-24 rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20"
+            />
+          </Labeled>
+        )}
 
         <label className="flex items-center gap-3 text-sm text-muted">
           <input

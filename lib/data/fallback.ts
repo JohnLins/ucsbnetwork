@@ -45,6 +45,7 @@ export const fallbackMembers: MemberCard[] = [
     websiteUrl: "https://example.com",
     isPublished: true,
     memberType: "partner",
+    cohort: 1,
     links: [
       {
         linkType: "website",
@@ -76,6 +77,7 @@ export const fallbackMembers: MemberCard[] = [
     websiteUrl: "https://example.org",
     isPublished: true,
     memberType: "partner",
+    cohort: 1,
     links: [
       {
         linkType: "website",

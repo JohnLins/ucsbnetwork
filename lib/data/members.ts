@@ -75,6 +75,7 @@ export async function getDirectoryMembers(): Promise<DirectoryMember[]> {
       memberType: (["partner", "member", "alumni_advisor", "alumni_network"].includes(String(member.member_type))
         ? String(member.member_type)
         : "partner") as MemberType,
+      cohort: member.cohort != null ? Number(member.cohort) : null,
       email: emailByMemberId.get(String(member.id)) ?? null,
       links: (links ?? [])
         .filter((link) => link.member_id === member.id)

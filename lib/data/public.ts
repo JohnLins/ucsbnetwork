@@ -15,6 +15,8 @@ type DatabaseMember = {
   bio: string;
   website_url: string | null;
   is_published: boolean;
+  member_type: string | null;
+  cohort: number | null;
 };
 
 function groupTagsByType(tags: Tag[]) {
@@ -71,10 +73,11 @@ function hydrateMembers(
       websiteUrl: member.website_url,
       isPublished: member.is_published,
       memberType: (["partner", "member", "alumni_advisor", "alumni_network"].includes(
-        String((member as Record<string, unknown>).member_type)
+        String(member.member_type)
       )
-        ? String((member as Record<string, unknown>).member_type)
+        ? String(member.member_type)
         : "partner") as MemberCard["memberType"],
+      cohort: member.cohort != null ? Number(member.cohort) : null,
       links: relatedLinks,
       roles: groupedTags.roles,
       domains: groupedTags.domains,
@@ -112,7 +115,7 @@ export async function getDirectoryPageData(filters: DirectoryFilters) {
   const [{ data: members }, { data: memberLinks }, { data: memberTags }, { data: tags }] = await Promise.all([
     supabase
       .from("members")
-      .select("id, slug, full_name, first_name, last_name, headline, company_or_org, location, bio, website_url, is_published")
+      .select("id, slug, full_name, first_name, last_name, headline, company_or_org, location, bio, website_url, is_published, member_type, cohort")
       .eq("is_published", true)
       .is("archived_at", null),
     supabase

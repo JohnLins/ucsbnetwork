@@ -33,6 +33,7 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
     bio: application.bio,
     websiteUrl: application.websiteUrl ?? "",
     memberType: (isAdvisor ? "alumni_advisor" : "partner") as MemberType,
+    cohort: isAdvisor ? null : 1 as number | null,
     roles: application.roles.map((tag) => tag.slug),
     domains: application.domains.map((tag) => tag.slug),
     keywords: application.keywords.map((tag) => tag.slug),
@@ -236,6 +237,22 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
             ))}
           </div>
         </div>
+
+        {draft.memberType === "partner" && (
+          <div className="mb-4">
+            <p className="mb-2 text-[11px] uppercase tracking-[0.32em] text-muted">Cohort</p>
+            <input
+              type="number"
+              min={1}
+              value={draft.cohort ?? ""}
+              onChange={(e) =>
+                setDraft({ ...draft, cohort: e.target.value ? parseInt(e.target.value, 10) : null })
+              }
+              placeholder="e.g. 1"
+              className="h-11 w-24 rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20"
+            />
+          </div>
+        )}
 
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="text-sm text-muted">{status.message ?? ""}</div>
