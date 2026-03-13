@@ -50,7 +50,10 @@ export function AdminMemberEditor({
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(form)
+      body: JSON.stringify({
+        ...form,
+        email: form.email.trim() || undefined
+      })
     });
 
     if (!response.ok) {
@@ -59,7 +62,8 @@ export function AdminMemberEditor({
       return;
     }
 
-    setStatus({ kind: "success", message: "Member saved. Refresh to see the latest data." });
+    setStatus({ kind: "success", message: "Member saved." });
+    router.refresh();
   }
 
   async function handleDelete() {
