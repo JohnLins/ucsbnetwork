@@ -44,6 +44,7 @@ export const fallbackMembers: MemberCard[] = [
     bio: "UCSB alum focused on turning research-grade models into reliable workflows for healthcare teams and technical operators.",
     websiteUrl: "https://example.com",
     isPublished: true,
+    memberType: "member",
     links: [
       {
         linkType: "website",
@@ -74,6 +75,7 @@ export const fallbackMembers: MemberCard[] = [
     bio: "Builder-investor working across energy markets, quant systems, and founder support with a bias toward deep technical teams.",
     websiteUrl: "https://example.org",
     isPublished: true,
+    memberType: "member",
     links: [
       {
         linkType: "website",

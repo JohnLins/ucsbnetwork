@@ -32,11 +32,14 @@ export function AdminShell({
             <Link href="/" className="transition hover:text-accent">
               Public site
             </Link>
-            <Link href="/admin/applications" className="transition hover:text-accent">
+            <Link href="/admin/applications?tab=students" className="transition hover:text-accent">
               Applications
             </Link>
-            <Link href="/admin/members" className="transition hover:text-accent">
+            <Link href="/admin/members?tab=members" className="transition hover:text-accent">
               Members
+            </Link>
+            <Link href="/admin/members?tab=advisors" className="transition hover:text-accent">
+              Advisors
             </Link>
             <button
               onClick={handleLogout}

@@ -199,7 +199,8 @@ export async function syncMemberRecord(payload: MemberUpsertInput) {
     .upsert(
       {
         id: payload.id,
-        ...memberPayload
+        ...memberPayload,
+        member_type: payload.memberType ?? "member"
       },
       {
         onConflict: "id"

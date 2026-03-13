@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 
-import type { MemberCard, Tag } from "@/lib/types";
+import type { MemberCard, MemberType, Tag } from "@/lib/types";
 
 export function AdminMemberEditor({
   selectedMember,
-  tags
+  tags,
+  defaultMemberType = "member"
 }: {
   selectedMember?: MemberCard;
   tags: Tag[];
+  defaultMemberType?: MemberType;
 }) {
   const [status, setStatus] = useState<{ kind: "idle" | "loading" | "success" | "error"; message?: string }>({
     kind: "idle"
@@ -23,6 +25,7 @@ export function AdminMemberEditor({
     bio: selectedMember?.bio ?? "",
     websiteUrl: selectedMember?.websiteUrl ?? "",
     isPublished: selectedMember?.isPublished ?? true,
+    memberType: (selectedMember?.memberType ?? defaultMemberType) as MemberType,
     roles: selectedMember?.roles.map((tag) => tag.slug) ?? [],
     domains: selectedMember?.domains.map((tag) => tag.slug) ?? [],
     keywords: selectedMember?.keywords.map((tag) => tag.slug) ?? [],
@@ -137,6 +140,17 @@ export function AdminMemberEditor({
             + Add link
           </button>
         </div>
+
+        <Labeled title="Directory type">
+          <select
+            value={form.memberType}
+            onChange={(e) => setForm({ ...form, memberType: e.target.value as MemberType })}
+            className="h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none"
+          >
+            <option value="member">Member</option>
+            <option value="advisor">Advisor</option>
+          </select>
+        </Labeled>
 
         <label className="flex items-center gap-3 text-sm text-muted">
           <input

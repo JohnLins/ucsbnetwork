@@ -13,22 +13,22 @@ const optionalUrlSchema = z
   .refine((value) => isSafeExternalUrl(value), "Enter a valid URL");
 
 export const applicationSchema = z.object({
-  fullName: z.string().trim().min(2).max(120),
+  fullName: z.string().trim().min(2),
   email: z.string().trim().email(),
-  phone: z.string().trim().max(40).optional(),
-  ucsbAffiliationType: z.string().trim().min(2).max(80),
-  ucsbAffiliationDetail: z.string().trim().max(160),
-  graduationYear: z.string().trim().max(40).nullable().optional(),
-  currentTitle: z.string().trim().max(120),
-  companyOrOrg: z.string().trim().max(120).optional(),
-  location: z.string().trim().max(120).optional(),
+  phone: z.string().trim().optional(),
+  ucsbAffiliationType: z.string().trim().min(2),
+  ucsbAffiliationDetail: z.string().trim(),
+  graduationYear: z.string().trim().nullable().optional(),
+  currentTitle: z.string().trim(),
+  companyOrOrg: z.string().trim().optional(),
+  location: z.string().trim().optional(),
   websiteUrl: optionalUrlSchema,
-  bio: z.string().trim().max(1200),
-  roles: z.array(z.string().trim().min(1).max(60)).max(8),
-  customRoles: z.array(z.string().trim().min(1).max(60)).max(5).optional(),
-  domains: z.array(z.string().trim().min(1).max(60)).max(8),
-  customDomains: z.array(z.string().trim().min(1).max(60)).max(5).optional(),
-  keywords: z.array(z.string().trim().min(1).max(60)).max(16),
+  bio: z.string().trim(),
+  roles: z.array(z.string().trim().min(1)),
+  customRoles: z.array(z.string().trim().min(1)).optional(),
+  domains: z.array(z.string().trim().min(1)),
+  customDomains: z.array(z.string().trim().min(1)).optional(),
+  keywords: z.array(z.string().trim().min(1)),
   linkedinUrl: optionalUrlSchema,
   xUrl: optionalUrlSchema,
   githubUrl: optionalUrlSchema,
@@ -36,16 +36,15 @@ export const applicationSchema = z.object({
     .array(
       z.object({
         linkType: linkTypeSchema,
-        label: z.string().trim().max(60).optional(),
+        label: z.string().trim().optional(),
         url: z.string().trim().min(1).refine(isSafeExternalUrl, "Enter a valid URL")
       })
     )
-    .max(8)
     .optional(),
-  whatYouCanHelpWith: z.string().trim().max(500).optional(),
-  whatYouAreLookingFor: z.string().trim().max(500).optional(),
-  whyJoin: z.string().trim().max(700),
-  referredBy: z.string().trim().max(200).optional(),
+  whatYouCanHelpWith: z.string().trim().optional(),
+  whatYouAreLookingFor: z.string().trim().optional(),
+  whyJoin: z.string().trim(),
+  referredBy: z.string().trim().optional(),
   consentToPublishSelectedProfileFields: z.literal(true),
   formStartedAt: z.number().int(),
   honeypot: z.string().optional()
@@ -62,6 +61,7 @@ export const adminReviewSchema = z.object({
     location: z.string().trim().max(120).optional(),
     bio: z.string().trim().min(2).max(1200),
     websiteUrl: optionalUrlSchema,
+    memberType: z.enum(["member", "advisor"]).default("member"),
     links: z.array(
       z.object({
         linkType: linkTypeSchema,
@@ -84,6 +84,7 @@ export const memberUpsertSchema = z.object({
   bio: z.string().trim().min(2).max(1200),
   websiteUrl: optionalUrlSchema,
   isPublished: z.boolean(),
+  memberType: z.enum(["member", "advisor"]).default("member"),
   links: z.array(
     z.object({
       linkType: linkTypeSchema,

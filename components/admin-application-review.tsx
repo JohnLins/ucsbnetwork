@@ -3,7 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import type { ApplicationRecord, Tag } from "@/lib/types";
+import type { ApplicationRecord, MemberType, Tag } from "@/lib/types";
+
+const NON_STUDENT_TYPES = new Set([
+  "Alumni",
+  "Faculty",
+  "Researcher",
+  "Staff",
+  "Community collaborator"
+]);
 
 type AdminApplicationReviewProps = {
   application: ApplicationRecord;
@@ -15,6 +23,8 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
   const [status, setStatus] = useState<{ kind: "idle" | "loading" | "success" | "error"; message?: string }>({
     kind: "idle"
   });
+  const isAdvisor = NON_STUDENT_TYPES.has(application.ucsbAffiliationType);
+
   const [draft, setDraft] = useState({
     fullName: application.fullName,
     headline: [application.currentTitle, application.companyOrOrg].filter(Boolean).join(" at "),
@@ -22,6 +32,7 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
     location: application.location ?? "",
     bio: application.bio,
     websiteUrl: application.websiteUrl ?? "",
+    memberType: (isAdvisor ? "advisor" : "member") as MemberType,
     roles: application.roles.map((tag) => tag.slug),
     domains: application.domains.map((tag) => tag.slug),
     keywords: application.keywords.map((tag) => tag.slug),
@@ -162,6 +173,16 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
           </div>
           <EditableField label="Website">
             <input value={draft.websiteUrl} onChange={(e) => setDraft({ ...draft, websiteUrl: e.target.value })} className={inputClass} />
+          </EditableField>
+          <EditableField label="Directory type">
+            <select
+              value={draft.memberType}
+              onChange={(e) => setDraft({ ...draft, memberType: e.target.value as MemberType })}
+              className="h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none"
+            >
+              <option value="member">Member</option>
+              <option value="advisor">Advisor</option>
+            </select>
           </EditableField>
           <EditableField label="Member bio (editable)">
             <textarea value={draft.bio} onChange={(e) => setDraft({ ...draft, bio: e.target.value })} rows={6} className={textareaClass} />

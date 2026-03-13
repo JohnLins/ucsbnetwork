@@ -70,6 +70,7 @@ function hydrateMembers(
       bio: member.bio,
       websiteUrl: member.website_url,
       isPublished: member.is_published,
+      memberType: (member as Record<string, unknown>).member_type === "advisor" ? "advisor" : "member",
       links: relatedLinks,
       roles: groupedTags.roles,
       domains: groupedTags.domains,

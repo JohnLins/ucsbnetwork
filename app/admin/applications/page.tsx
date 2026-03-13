@@ -6,6 +6,14 @@ import { requireAdmin } from "@/lib/auth";
 import { getApplications, getAdminTags } from "@/lib/data/admin";
 import { hasServiceSupabaseEnv } from "@/lib/env";
 
+const NON_STUDENT_TYPES = new Set([
+  "Alumni",
+  "Faculty",
+  "Researcher",
+  "Staff",
+  "Community collaborator"
+]);
+
 type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
@@ -23,20 +31,50 @@ export default async function AdminApplicationsPage({ searchParams }: PageProps)
   }
 
   const [applications, tags] = await Promise.all([getApplications(), getAdminTags()]);
-  const selectedId = typeof params.id === "string" ? params.id : applications[0]?.id;
-  const selectedApplication = applications.find((application) => application.id === selectedId) ?? applications[0];
+
+  const tab = typeof params.tab === "string" ? params.tab : "students";
+  const studentApps = applications.filter((a) => !NON_STUDENT_TYPES.has(a.ucsbAffiliationType));
+  const advisorApps = applications.filter((a) => NON_STUDENT_TYPES.has(a.ucsbAffiliationType));
+  const visibleApps = tab === "advisors" ? advisorApps : studentApps;
+
+  const selectedId = typeof params.id === "string" ? params.id : visibleApps[0]?.id;
+  const selectedApplication = visibleApps.find((application) => application.id === selectedId) ?? visibleApps[0];
 
   return (
     <AdminShell eyebrow="Admin" title="Applications">
+      {/* Tab bar */}
+      <div className="mb-6 flex gap-2">
+        <Link
+          href="/admin/applications?tab=students"
+          className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+            tab === "students"
+              ? "bg-accent/15 text-accent"
+              : "text-muted hover:text-ink"
+          }`}
+        >
+          Students ({studentApps.length})
+        </Link>
+        <Link
+          href="/admin/applications?tab=advisors"
+          className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+            tab === "advisors"
+              ? "bg-accent/15 text-accent"
+              : "text-muted hover:text-ink"
+          }`}
+        >
+          Alumni &amp; Advisors ({advisorApps.length})
+        </Link>
+      </div>
+
       <div className="grid gap-8 xl:grid-cols-[0.42fr_0.58fr]">
         <aside className="space-y-3 rounded-2xl border border-line/40 bg-panel/60 p-4">
-          {applications.length === 0 ? (
-            <p className="p-4 text-sm text-muted">No applications yet.</p>
+          {visibleApps.length === 0 ? (
+            <p className="p-4 text-sm text-muted">No applications in this category yet.</p>
           ) : (
-            applications.map((application) => (
+            visibleApps.map((application) => (
               <Link
                 key={application.id}
-                href={`/admin/applications?id=${application.id}`}
+                href={`/admin/applications?tab=${tab}&id=${application.id}`}
                 className={`block rounded-[1.3rem] border px-4 py-4 transition ${
                   selectedApplication?.id === application.id
                     ? "border-accent/50 bg-accent/10"
@@ -49,6 +87,7 @@ export default async function AdminApplicationsPage({ searchParams }: PageProps)
                   {application.currentTitle}
                   {application.companyOrOrg ? ` at ${application.companyOrOrg}` : ""}
                 </p>
+                <p className="mt-1 text-xs text-muted/70">{application.ucsbAffiliationType}</p>
               </Link>
             ))
           )}

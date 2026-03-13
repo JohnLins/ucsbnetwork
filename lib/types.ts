@@ -1,6 +1,7 @@
 export type TagType = "role" | "domain" | "keyword";
 export type LinkType = "website" | "linkedin" | "github" | "x" | "other";
 export type ApplicationStatus = "pending" | "approved" | "rejected";
+export type MemberType = "member" | "advisor";
 
 export type Tag = {
   id: string;
@@ -30,6 +31,7 @@ export type MemberCard = {
   bio: string;
   websiteUrl: string | null;
   isPublished: boolean;
+  memberType: MemberType;
   links: LinkRecord[];
   roles: Tag[];
   domains: Tag[];
@@ -120,6 +122,7 @@ export type AdminApplicationReviewPayload = {
     location?: string;
     bio: string;
     websiteUrl?: string;
+    memberType: MemberType;
     links: Array<{ linkType: LinkType; label?: string; url: string }>;
     roles: string[];
     domains: string[];
@@ -136,6 +139,7 @@ export type MemberUpsertInput = {
   bio: string;
   websiteUrl?: string;
   isPublished: boolean;
+  memberType: MemberType;
   links: Array<{ linkType: LinkType; label?: string; url: string }>;
   roles: string[];
   domains: string[];

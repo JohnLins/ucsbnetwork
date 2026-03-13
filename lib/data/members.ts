@@ -1,4 +1,4 @@
-import type { LinkRecord, MemberCard, Tag, TagType } from "@/lib/types";
+import type { LinkRecord, MemberCard, MemberType, Tag, TagType } from "@/lib/types";
 import { getSupabaseServiceClient } from "@/lib/supabase/service";
 
 function formatTag(row: { id: string; name: string; slug: string; tag_type: TagType; is_active: boolean }): Tag {
@@ -72,6 +72,7 @@ export async function getDirectoryMembers(): Promise<DirectoryMember[]> {
       bio: String(member.bio),
       websiteUrl: member.website_url ? String(member.website_url) : null,
       isPublished: Boolean(member.is_published),
+      memberType: (member.member_type === "advisor" ? "advisor" : "member") as MemberType,
       email: emailByMemberId.get(String(member.id)) ?? null,
       links: (links ?? [])
         .filter((link) => link.member_id === member.id)

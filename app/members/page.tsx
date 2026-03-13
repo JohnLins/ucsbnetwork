@@ -13,7 +13,7 @@ export default async function MemberDirectoryPage() {
       <header className="border-b border-line/70">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 lg:px-10">
           <div>
-            <p className="text-xs uppercase tracking-[0.38em] text-accent">Members</p>
+            <p className="text-xs uppercase tracking-[0.38em] text-accent">Network</p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">Directory</h1>
           </div>
           <MemberLogoutButtonClient />

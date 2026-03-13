@@ -4,10 +4,17 @@ import { useState } from "react";
 
 import type { DirectoryMember } from "@/lib/data/members";
 
+type Tab = "members" | "advisors";
+
 export function MemberDirectoryView({ members }: { members: DirectoryMember[] }) {
+  const [tab, setTab] = useState<Tab>("members");
   const [search, setSearch] = useState("");
 
-  const filtered = members.filter((m) => {
+  const regularMembers = members.filter((m) => m.memberType === "member");
+  const advisors = members.filter((m) => m.memberType === "advisor");
+  const visibleMembers = tab === "advisors" ? advisors : regularMembers;
+
+  const filtered = visibleMembers.filter((m) => {
     if (!search) return true;
     const q = search.toLowerCase();
     return (
@@ -22,16 +29,42 @@ export function MemberDirectoryView({ members }: { members: DirectoryMember[] })
 
   return (
     <div>
+      {/* Tab bar */}
+      <div className="mb-6 flex gap-2">
+        <button
+          onClick={() => { setTab("members"); setSearch(""); }}
+          className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+            tab === "members"
+              ? "bg-accent/15 text-accent"
+              : "text-muted hover:text-ink"
+          }`}
+        >
+          Members ({regularMembers.length})
+        </button>
+        <button
+          onClick={() => { setTab("advisors"); setSearch(""); }}
+          className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+            tab === "advisors"
+              ? "bg-accent/15 text-accent"
+              : "text-muted hover:text-ink"
+          }`}
+        >
+          Advisors ({advisors.length})
+        </button>
+      </div>
+
       <input
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search members…"
+        placeholder={tab === "advisors" ? "Search advisors…" : "Search members…"}
         className="mb-8 h-10 w-full max-w-sm rounded-lg border border-line/40 bg-paper px-4 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent/40 focus:ring-1 focus:ring-accent/15"
       />
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-muted">No members found.</p>
+        <p className="text-sm text-muted">
+          {tab === "advisors" ? "No advisors found." : "No members found."}
+        </p>
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((member) => (
