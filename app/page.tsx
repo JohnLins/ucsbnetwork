@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { ApplicationForm } from "@/components/application-form";
 import { KeyboardNav } from "@/components/keyboard-nav";
 import { Reveal } from "@/components/motion";
@@ -31,6 +33,17 @@ export default async function HomePage() {
               We host VC and builder events, and meet often to build, talk, and
               network.
             </p>
+            <div className="mt-8 flex items-center justify-center gap-2 text-sm text-muted/70">
+              <span>Advised by</span>
+              <Image
+                src="/yc-logo.svg"
+                alt="Y Combinator"
+                width={20}
+                height={20}
+                className="rounded-[4px]"
+              />
+              <span>founders</span>
+            </div>
           </Reveal>
         </section>
 
