@@ -41,6 +41,9 @@ export function AdminShell({
             <Link href="/admin/members?tab=alumni" className="transition hover:text-accent">
               Alumni
             </Link>
+            <Link href="/admin/events" className="transition hover:text-accent">
+              Events
+            </Link>
             <button
               onClick={handleLogout}
               className="ml-2 rounded-lg border border-line/50 px-3 py-1.5 text-sm text-muted transition hover:border-accent/40 hover:text-ink"
