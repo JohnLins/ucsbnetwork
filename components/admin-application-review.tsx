@@ -243,10 +243,10 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
             <p className="mb-2 text-[11px] uppercase tracking-[0.32em] text-muted">Cohort</p>
             <input
               type="number"
-              min={1}
+              min={0}
               value={draft.cohort ?? ""}
               onChange={(e) =>
-                setDraft({ ...draft, cohort: e.target.value ? parseInt(e.target.value, 10) : null })
+                setDraft({ ...draft, cohort: e.target.value !== "" ? parseInt(e.target.value, 10) : null })
               }
               placeholder="e.g. 1"
               className="h-11 w-24 rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20"

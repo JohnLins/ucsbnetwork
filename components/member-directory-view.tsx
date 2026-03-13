@@ -136,7 +136,7 @@ function PartnersByCohort({ partners }: { partners: DirectoryMember[] }) {
       {sortedCohorts.map(([cohort, cohortMembers]) => (
         <section key={cohort ?? "none"}>
           <h3 className="mb-4 text-xs font-medium uppercase tracking-[0.32em] text-accent">
-            {cohort != null ? `Cohort ${cohort}` : "Other"}
+            {cohort === 0 ? "Founding Operators" : cohort != null ? `Cohort ${cohort}` : "Other"}
           </h3>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {cohortMembers.map((member) => (

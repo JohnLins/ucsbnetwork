@@ -199,10 +199,10 @@ export function AdminMemberEditor({
           <Labeled title="Cohort">
             <input
               type="number"
-              min={1}
+              min={0}
               value={form.cohort ?? ""}
               onChange={(e) =>
-                setForm({ ...form, cohort: e.target.value ? parseInt(e.target.value, 10) : null })
+                setForm({ ...form, cohort: e.target.value !== "" ? parseInt(e.target.value, 10) : null })
               }
               placeholder="e.g. 1"
               className="h-11 w-24 rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20"

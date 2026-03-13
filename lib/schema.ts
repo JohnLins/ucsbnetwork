@@ -63,7 +63,7 @@ export const adminReviewSchema = z.object({
     bio: z.string().trim().optional().default(""),
     websiteUrl: optionalUrlSchema,
     memberType: z.enum(["partner", "member", "alumni_advisor", "alumni_network"]).default("partner"),
-    cohort: z.number().int().positive().nullable().optional(),
+    cohort: z.number().int().min(0).nullable().optional(),
     links: z.array(
       z.object({
         linkType: linkTypeSchema,
@@ -92,7 +92,7 @@ export const memberUpsertSchema = z.object({
   websiteUrl: optionalUrlSchema,
   isPublished: z.boolean(),
   memberType: z.enum(["partner", "member", "alumni_advisor", "alumni_network"]).default("partner"),
-  cohort: z.number().int().positive().nullable().optional(),
+  cohort: z.number().int().min(0).nullable().optional(),
   links: z.array(
     z.object({
       linkType: linkTypeSchema,
