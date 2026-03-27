@@ -34,8 +34,8 @@ const FIELD_LABELS: Record<string, string> = {
   resumeUrl: "File upload",
 };
 
-// April 3, 2026 11:59 PM PST = April 4, 2026 07:59:00 UTC
-const APPLICATION_DEADLINE = new Date("2026-04-04T07:59:00Z");
+// April 10, 2026 11:59 PM PDT = April 11, 2026 06:59:00 UTC
+const APPLICATION_DEADLINE = new Date("2026-04-11T06:59:00Z");
 
 export async function POST(request: Request) {
   try {

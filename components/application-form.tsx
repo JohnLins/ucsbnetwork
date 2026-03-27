@@ -66,8 +66,8 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
     honeypot: ""
   });
 
-  // April 3, 2026 11:59 PM PST = April 4, 2026 07:59:00 UTC
-  const DEADLINE = new Date("2026-04-04T07:59:00Z");
+  // April 10, 2026 11:59 PM PDT = April 11, 2026 06:59:00 UTC
+  const DEADLINE = new Date("2026-04-11T06:59:00Z");
   const isClosed = new Date() >= DEADLINE;
 
   // Non-student types only need name, email, and "what can you help with"
@@ -232,7 +232,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
         <div className="text-center">
           <p className="text-2xl font-medium text-ink">Applications closed.</p>
           <p className="mt-2 text-sm text-muted">
-            Applications for the first cohort closed on April 3, 2026.
+            Applications for the first cohort closed on April 10, 2026.
           </p>
         </div>
       </div>
@@ -253,7 +253,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
   return (
     <div>
       <p className="mb-6 text-sm font-medium tracking-wide text-accent">
-        Applications for the first cohort close April 3.
+        Applications for the first cohort close April 10.
       </p>
       <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Apply.</h2>
 
