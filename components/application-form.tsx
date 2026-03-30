@@ -257,7 +257,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
       </p>
       <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Apply.</h2>
       <p className="mt-3 text-sm leading-relaxed text-muted">
-        Founders, operators, designers, engineers — if you&apos;re cracked, we want you here. This is a talent network, not just a builder community.
+        Founders, operators, designers, engineers — if you&apos;re cracked, we want you here. 
       </p>
 
       <form className="mt-10 space-y-5" onSubmit={handleSubmit}>
