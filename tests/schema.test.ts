@@ -3,14 +3,29 @@ import { describe, expect, it } from "vitest";
 import { applicationSchema } from "@/lib/schema";
 
 describe("applicationSchema", () => {
-  it("accepts a valid application payload", () => {
+  it("accepts a minimal application payload", () => {
+    const result = applicationSchema.parse({
+      fullName: "Ava Chen",
+      email: "ava@example.com",
+      ucsbAffiliationType: "Alumni",
+      bio: "Building a health-tech startup.",
+      consentToPublishSelectedProfileFields: true,
+      formStartedAt: Date.now(),
+    });
+
+    expect(result.roles).toEqual([]);
+    expect(result.domains).toEqual([]);
+    expect(result.keywords).toEqual([]);
+  });
+
+  it("accepts a full application payload", () => {
     const result = applicationSchema.parse({
       fullName: "Ava Chen",
       email: "ava@example.com",
       phone: "",
       ucsbAffiliationType: "Alumni",
       ucsbAffiliationDetail: "Class of 2020",
-      graduationYear: 2020,
+      graduationYear: "2020",
       currentTitle: "Founder",
       companyOrOrg: "North Hall Labs",
       location: "San Francisco",
@@ -42,14 +57,8 @@ describe("applicationSchema", () => {
         fullName: "Ava Chen",
         email: "ava@example.com",
         ucsbAffiliationType: "Alumni",
-        ucsbAffiliationDetail: "Class of 2020",
-        currentTitle: "Founder",
         bio: "B".repeat(50),
-        roles: ["founder"],
-        domains: ["healthcare"],
-        keywords: ["ai"],
         websiteUrl: "javascript:alert(1)",
-        whyJoin: "I want to contribute to the UCSB builder network.",
         consentToPublishSelectedProfileFields: true,
         formStartedAt: Date.now()
       })

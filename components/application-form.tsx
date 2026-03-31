@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 
-import { defaultDomainOptions, defaultRoleOptions, ucsbAffiliationOptions } from "@/lib/constants/options";
+import { ucsbAffiliationOptions } from "@/lib/constants/options";
 import type { ApplicationInput, Tag } from "@/lib/types";
-import { slugify } from "@/lib/utils/slug";
 
 type SubmissionState =
   | { status: "idle" }
@@ -18,22 +17,7 @@ type UploadState =
   | { status: "uploaded"; path: string; name: string }
   | { status: "error"; message: string };
 
-function tagsByType(tags: Tag[], tagType: Tag["tagType"], fallback: readonly string[]) {
-  const matching = tags.filter((tag) => tag.tagType === tagType);
-  if (matching.length > 0) return matching;
-
-  return fallback.map((name, index) => ({
-    id: `${tagType}-${index}`,
-    name,
-    slug: slugify(name),
-    tagType,
-    isActive: true
-  }));
-}
-
 export function ApplicationForm({ tags }: { tags: Tag[] }) {
-  const roleOptions = tagsByType(tags, "role", defaultRoleOptions);
-  const domainOptions = tagsByType(tags, "domain", defaultDomainOptions);
   const [submission, setSubmission] = useState<SubmissionState>({ status: "idle" });
   const [upload, setUpload] = useState<UploadState>({ status: "idle" });
   const [form, setForm] = useState<ApplicationInput>({
@@ -48,18 +32,12 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
     location: "",
     websiteUrl: "",
     bio: "",
-    roles: [],
-    customRoles: [],
-    domains: [],
-    customDomains: [],
-    keywords: [],
     linkedinUrl: "",
     xUrl: "",
     githubUrl: "",
     additionalLinks: [],
     whatYouCanHelpWith: "",
     whatYouAreLookingFor: "",
-    whyJoin: "",
     referredBy: "",
     consentToPublishSelectedProfileFields: true,
     formStartedAt: Date.now(),
@@ -76,15 +54,6 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
 
   function updateField<Key extends keyof ApplicationInput>(key: Key, value: ApplicationInput[Key]) {
     setForm((current) => ({ ...current, [key]: value }));
-  }
-
-  function toggleValue(key: "roles" | "domains", value: string) {
-    setForm((current) => {
-      const nextValues = current[key].includes(value)
-        ? current[key].filter((entry) => entry !== value)
-        : [...current[key], value];
-      return { ...current, [key]: nextValues };
-    });
   }
 
   async function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
@@ -132,18 +101,11 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // Client-side required field check (conditional on affiliation type)
     const missing: string[] = [];
     if (!form.fullName.trim()) missing.push("Name");
     if (!form.email.trim()) missing.push("Email");
-    if (!form.ucsbAffiliationType.trim()) missing.push("UCSB status");
-    if (!isNonStudent) {
-      if (!form.ucsbAffiliationDetail.trim()) missing.push("Major");
-      if (!form.currentTitle.trim()) missing.push("What you do");
-      if (!form.bio.trim()) missing.push("What are you building");
-      if (!form.whyJoin.trim()) missing.push("Most impressive accomplishment");
-    }
-    if (!(form.whatYouCanHelpWith ?? "").trim()) missing.push("What can you help other members with");
+    if (!form.bio.trim()) missing.push("What are you building");
+    if (isNonStudent && !(form.whatYouCanHelpWith ?? "").trim()) missing.push("What can you help other members with");
     if (missing.length > 0) {
       setSubmission({
         status: "error",
@@ -152,11 +114,9 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
       return;
     }
 
-    // Client-side word limit check
     const wordErrors: string[] = [];
     if (countWords(form.bio) > 250) wordErrors.push("\"What are you building?\" exceeds 250 words");
-    if (countWords(form.whyJoin) > 100) wordErrors.push("\"Most impressive accomplishment\" exceeds 100 words");
-    if (countWords(form.whatYouCanHelpWith ?? "") > 100) wordErrors.push("\"What can you help with\" exceeds 100 words");
+    if (isNonStudent && countWords(form.whatYouCanHelpWith ?? "") > 100) wordErrors.push("\"What can you help with\" exceeds 100 words");
     if (wordErrors.length > 0) {
       setSubmission({
         status: "error",
@@ -169,9 +129,6 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
 
     const payload: ApplicationInput = {
       ...form,
-      customRoles: tokenize(form.customRoles?.join(",") ?? ""),
-      customDomains: tokenize(form.customDomains?.join(",") ?? ""),
-      keywords: tokenize(form.keywords.join(",")),
       graduationYear: form.graduationYear || null
     };
 
@@ -207,18 +164,12 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
       location: "",
       websiteUrl: "",
       bio: "",
-      roles: [],
-      customRoles: [],
-      domains: [],
-      customDomains: [],
-      keywords: [],
       linkedinUrl: "",
       xUrl: "",
       githubUrl: "",
       additionalLinks: [],
       whatYouCanHelpWith: "",
       whatYouAreLookingFor: "",
-      whyJoin: "",
       referredBy: "",
       consentToPublishSelectedProfileFields: true,
       formStartedAt: Date.now(),
@@ -256,9 +207,6 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
         Applications for the first cohort close April 10.
       </p>
       <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Apply.</h2>
-      <p className="mt-3 text-sm leading-relaxed text-muted">
-        Founders, operators, designers, engineers — if you&apos;re cracked, we want you here. 
-      </p>
 
       <form className="mt-10 space-y-5" onSubmit={handleSubmit}>
         <input
@@ -281,7 +229,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
-          <Field label="UCSB status *">
+          <Field label="UCSB status">
             <select
               value={form.ucsbAffiliationType}
               onChange={(e) => updateField("ucsbAffiliationType", e.target.value)}
@@ -300,9 +248,9 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
               className={inputClass}
             />
           </Field>
-          <Field label={isNonStudent ? "Major / department" : "Major *"}>
+          <Field label={isNonStudent ? "Major / department" : "Major"}>
             <input
-              value={form.ucsbAffiliationDetail}
+              value={form.ucsbAffiliationDetail ?? ""}
               onChange={(e) => updateField("ucsbAffiliationDetail", e.target.value)}
               className={inputClass}
             />
@@ -310,9 +258,9 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label={isNonStudent ? "What you do" : "What you do *"}>
+          <Field label="What you do">
             <input
-              value={form.currentTitle}
+              value={form.currentTitle ?? ""}
               onChange={(e) => updateField("currentTitle", e.target.value)}
               placeholder="e.g. founder, engineer"
               className={inputClass}
@@ -327,22 +275,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           </Field>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2">
-          <ChipGroup
-            title="Roles"
-            items={roleOptions}
-            active={form.roles}
-            onToggle={(v) => toggleValue("roles", v)}
-          />
-          <ChipGroup
-            title="Domains"
-            items={domainOptions}
-            active={form.domains}
-            onToggle={(v) => toggleValue("domains", v)}
-          />
-        </div>
-
-        <WordCountField label={isNonStudent ? "What are you building?" : "What are you building? *"} maxWords={250}>
+        <WordCountField label="What are you building? *" maxWords={250}>
           <textarea
             value={form.bio}
             onChange={(e) => updateField("bio", e.target.value)}
@@ -351,23 +284,16 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
           />
         </WordCountField>
 
-        <WordCountField label={isNonStudent ? "What's the most impressive thing you've built, shipped, researched, or accomplished in the last 12 months? Links encouraged." : "What's the most impressive thing you've built, shipped, researched, or accomplished in the last 12 months? Links encouraged. *"} maxWords={100}>
-          <textarea
-            value={form.whyJoin}
-            onChange={(e) => updateField("whyJoin", e.target.value)}
-            rows={3}
-            className={textareaClass}
-          />
-        </WordCountField>
-
-        <WordCountField label="What can you help other members with? *" maxWords={100}>
-          <textarea
-            value={form.whatYouCanHelpWith ?? ""}
-            onChange={(e) => updateField("whatYouCanHelpWith", e.target.value)}
-            rows={3}
-            className={textareaClass}
-          />
-        </WordCountField>
+        {isNonStudent && (
+          <WordCountField label="What can you help other members with? *" maxWords={100}>
+            <textarea
+              value={form.whatYouCanHelpWith ?? ""}
+              onChange={(e) => updateField("whatYouCanHelpWith", e.target.value)}
+              rows={3}
+              className={textareaClass}
+            />
+          </WordCountField>
+        )}
 
         <Field label="Who are 1–2 people you think should also be in this network?">
           <textarea
@@ -497,13 +423,6 @@ function countWords(text: string) {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
-function tokenize(value: string) {
-  return value
-    .split(",")
-    .map((entry) => entry.trim())
-    .filter(Boolean);
-}
-
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block space-y-1.5">
@@ -535,43 +454,6 @@ function WordCountField({
         </span>
       </div>
       {children}
-    </div>
-  );
-}
-
-function ChipGroup({
-  title,
-  items,
-  active,
-  onToggle
-}: {
-  title: string;
-  items: Tag[];
-  active: string[];
-  onToggle: (slug: string) => void;
-}) {
-  return (
-    <div className="space-y-2">
-      <p className="text-xs font-medium text-muted">{title}</p>
-      <div className="flex flex-wrap gap-1.5">
-        {items.map((item) => {
-          const isActive = active.includes(item.slug);
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onToggle(item.slug)}
-              className={`rounded-lg border px-3 py-1.5 text-xs transition ${
-                isActive
-                  ? "border-accent/50 bg-accent/10 text-accent"
-                  : "border-line/40 text-muted hover:border-accent/30 hover:text-ink"
-              }`}
-            >
-              {item.name}
-            </button>
-          );
-        })}
-      </div>
     </div>
   );
 }
