@@ -88,16 +88,16 @@ export async function createApplicationRecord(payload: ApplicationInput) {
       email: payload.email.toLowerCase(),
       phone: payload.phone || null,
       ucsb_affiliation_type: payload.ucsbAffiliationType,
-      ucsb_affiliation_detail: payload.ucsbAffiliationDetail,
+      ucsb_affiliation_detail: payload.ucsbAffiliationDetail || null,
       graduation_year: payload.graduationYear ?? null,
-      current_title: payload.currentTitle,
+      current_title: payload.currentTitle || null,
       company_or_org: payload.companyOrOrg || null,
       location: payload.location || null,
       website_url: normalizeOptionalUrl(payload.websiteUrl),
       bio: payload.bio,
       what_you_can_help_with: payload.whatYouCanHelpWith || null,
       what_you_are_looking_for: payload.whatYouAreLookingFor || null,
-      why_join: payload.whyJoin,
+      why_join: payload.whyJoin || null,
       referred_by: payload.referredBy || null,
       resume_url: payload.resumeUrl || null,
       consent_to_publish: payload.consentToPublishSelectedProfileFields
@@ -162,9 +162,9 @@ export async function createApplicationRecord(payload: ApplicationInput) {
   }
 
   const [roleIds, domainIds, keywordIds] = await Promise.all([
-    resolveTagIds("role", [...payload.roles, ...(payload.customRoles ?? [])]),
-    resolveTagIds("domain", [...payload.domains, ...(payload.customDomains ?? [])]),
-    resolveTagIds("keyword", payload.keywords)
+    resolveTagIds("role", [...(payload.roles ?? []), ...(payload.customRoles ?? [])]),
+    resolveTagIds("domain", [...(payload.domains ?? []), ...(payload.customDomains ?? [])]),
+    resolveTagIds("keyword", payload.keywords ?? [])
   ]);
 
   const tagRows = [...roleIds, ...domainIds, ...keywordIds].map((tagId) => ({
