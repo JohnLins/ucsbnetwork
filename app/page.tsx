@@ -75,7 +75,7 @@ export default async function HomePage() {
               </div>
               <div className="rounded-lg border border-accent/20 px-5 py-4 text-center">
                 <p className="text-lg font-semibold text-ink">Founder Dinner</p>
-                <p className="mt-1 text-xs text-muted">with Mindfort AI (YC S25)</p>
+                <p className="mt-1 text-xs text-muted">with Mindfort AI (YC X25)</p>
               </div>
               <div className="rounded-lg border border-accent/20 px-5 py-4 text-center">
                 <p className="text-lg font-semibold text-ink">Hackathon</p>
