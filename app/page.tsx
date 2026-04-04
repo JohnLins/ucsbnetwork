@@ -101,7 +101,7 @@ export default async function HomePage() {
                 Spring Sprint.
               </h2>
               <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted">
-                8 weeks of building, shipping, and getting real feedback &mdash;
+                8 weeks of building, shipping, and getting real feedback,
                 culminating in a Demo Day where you pitch what you&rsquo;ve built
                 to VCs, operators, and founders.
               </p>
