@@ -13,8 +13,8 @@ export function SiteHeader() {
           <a href="#about" className="hidden text-xs text-muted transition hover:text-accent md:inline-flex">
             About
           </a>
-          <a href="#events" className="hidden text-xs text-muted transition hover:text-accent md:inline-flex">
-            Events
+          <a href="#sprint" className="hidden text-xs text-muted transition hover:text-accent md:inline-flex">
+            Spring Sprint
           </a>
           <a href="#network" className="hidden text-xs text-muted transition hover:text-accent md:inline-flex">
             Network
