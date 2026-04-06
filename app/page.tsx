@@ -30,7 +30,7 @@ export default async function HomePage() {
               A curated network of UCSB founders, builders, and engineers.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-muted sm:text-xl">
-              This spring, we&rsquo;re running an 8-week sprint &mdash; weekly
+              This spring, we&rsquo;re running an 8-week sprint. Weekly
               office hours with operators, feedback sessions, and a Demo Day
               in front of VCs and founders.
             </p>
