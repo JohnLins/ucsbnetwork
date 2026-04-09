@@ -38,24 +38,30 @@ export default async function HomePage() {
               Advised by alumni at Meta, NASA, YC, ByteDance, & more
             </p>
 
-            <div className="mt-8 flex flex-col items-center gap-3">
-              <span className="text-[10px] uppercase tracking-[0.2em] text-muted/40">
-                Our Partners
-              </span>
-              <div className="flex items-center gap-8">
-                <Image
-                  src="/cursor-logo.png"
-                  alt="Cursor"
-                  width={100}
-                  height={28}
-                  className="object-contain"
-                />
+            <div className="mt-8 flex items-center justify-center gap-10">
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-muted/40">
+                  General Sponsor
+                </span>
                 <Image
                   src="/mindfort-logo.jpeg"
                   alt="Mindfort AI"
                   width={100}
                   height={28}
                   className="rounded-sm object-contain"
+                />
+              </div>
+              <div className="h-10 w-px bg-line/10" />
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-muted/40">
+                  Build Partner
+                </span>
+                <Image
+                  src="/cursor-logo.png"
+                  alt="Cursor"
+                  width={100}
+                  height={28}
+                  className="object-contain"
                 />
               </div>
             </div>
