@@ -64,7 +64,7 @@ export default function HackathonPage() {
               </Link>
             </div>
           </div>
-          <aside className="border-l border-ink/10 pl-10">
+          <aside className="lg:border-l lg:border-ink/10 lg:pl-10">
             <p className="eyebrow">The deal</p>
             <ul className="mt-6 space-y-5 text-sm leading-relaxed text-ink/80">
               <li className="flex items-baseline gap-3">

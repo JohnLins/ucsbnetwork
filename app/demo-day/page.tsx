@@ -64,7 +64,7 @@ export default async function DemoDayPage() {
             </div>
           </div>
 
-          <aside className="border-l border-ink/10 pl-10">
+          <aside className="lg:border-l lg:border-ink/10 lg:pl-10">
             <p className="eyebrow">For investors</p>
             <h2 className="mt-4 font-display text-2xl leading-snug text-ink">
               First look at UCSB&rsquo;s best founders.
@@ -94,7 +94,7 @@ export default async function DemoDayPage() {
           {upcomingDemoDay ? (
             <UpcomingDemoDayBlock event={upcomingDemoDay} />
           ) : (
-            <div className="mt-6 border border-ink/10 p-12">
+            <div className="mt-6 border border-ink/10 p-8 sm:p-10 lg:p-12">
               <h2 className="font-display text-display-sm text-ink">
                 To be announced.
               </h2>
@@ -124,7 +124,7 @@ export default async function DemoDayPage() {
                 return (
                   <div
                     key={event.id}
-                    className="grid grid-cols-[10rem_1fr] gap-8 border-t border-ink/10 py-6 first:border-t-0"
+                    className="grid gap-2 border-t border-ink/10 py-6 first:border-t-0 sm:grid-cols-[10rem_1fr] sm:gap-8"
                   >
                     <p className="font-mono text-xs uppercase tracking-wide text-muted">
                       {date}
@@ -168,7 +168,7 @@ export default async function DemoDayPage() {
 function UpcomingDemoDayBlock({ event }: { event: EventRecord }) {
   const { date, time } = formatDateTime(event.eventDate);
   return (
-    <div className="mt-6 grid gap-10 border border-ink/10 p-10 lg:grid-cols-[1fr_1fr]">
+    <div className="mt-6 grid gap-10 border border-ink/10 p-6 sm:p-10 lg:grid-cols-[1fr_1fr]">
       <div>
         <h2 className="font-display text-display-sm text-ink">{event.title}</h2>
         {event.description ? (
@@ -199,7 +199,7 @@ function UpcomingDemoDayBlock({ event }: { event: EventRecord }) {
           ) : null}
         </div>
       </div>
-      <aside className="border-l border-ink/10 pl-10">
+      <aside className="lg:border-l lg:border-ink/10 lg:pl-10">
         <p className="eyebrow">Request an invite</p>
         <p className="mt-4 text-sm leading-relaxed text-ink/80">
           Demo Day is invite-only. If you invest or operate and want to be in

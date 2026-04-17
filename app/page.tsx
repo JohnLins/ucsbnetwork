@@ -42,7 +42,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <aside className="relative border-l border-ink/10 lg:pl-10">
+          <aside className="relative lg:border-l lg:border-ink/10 lg:pl-10">
             <p className="eyebrow">Cohort 1 &middot; Spring 2026</p>
             <div className="mt-8 grid grid-cols-3 gap-y-8 gap-x-6">
               <Stat num="8" label="Weeks of focused building" />
@@ -109,7 +109,7 @@ export default async function HomePage() {
       {/* ── Batch preview ── */}
       <section className="border-b border-ink/10">
         <div className="mx-auto max-w-6xl px-6 py-20 lg:px-8 lg:py-24">
-          <div className="flex items-end justify-between gap-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <div>
               <p className="eyebrow-accent">Cohort {CURRENT_COHORT}</p>
               <h2 className="mt-4 font-display text-display-sm text-ink">

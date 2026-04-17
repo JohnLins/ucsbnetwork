@@ -34,11 +34,11 @@ export function AdminShell({
       <header className="border-b border-ink/10 bg-paper/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:px-10">
           <div className="flex items-center gap-8">
-            <Link href="/admin/applications" className="flex items-baseline gap-2">
+            <Link href="/admin/applications" className="flex items-center gap-2 leading-none">
               <span className="font-display text-xl leading-none text-ink">ucsb</span>
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
-              <span className="text-sm font-medium tracking-wide text-ink">network</span>
-              <span className="ml-2 font-mono text-[10px] uppercase tracking-[0.26em] text-accent">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
+              <span className="text-sm font-medium leading-none tracking-wide text-ink">network</span>
+              <span className="ml-2 font-mono text-[10px] uppercase leading-none tracking-[0.26em] text-accent">
                 Admin
               </span>
             </Link>
