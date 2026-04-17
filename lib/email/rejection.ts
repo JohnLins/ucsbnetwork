@@ -2,7 +2,11 @@ import { Resend } from "resend";
 
 import { env } from "@/lib/env";
 
-export type RejectionVariant = "standard" | "hackathon" | "next_cohort";
+export type RejectionVariant =
+  | "standard"
+  | "hackathon"
+  | "next_cohort"
+  | "team_matching";
 
 type SendRejectionEmailArgs = {
   applicantEmail: string;
@@ -29,9 +33,9 @@ function getCopy(variant: RejectionVariant, firstName: string) {
           "",
           "Thanks for applying to the ucsb.network cohort. We're not able to offer you a spot this time.",
           "",
-          "That said, you can clearly build, and the hackathon is the right room for you. A weekend in person with the cohort and a handful of outside UCSB builders we pick by hand. $1,000 in credits for the winner; $250 in credits for everyone who ships.",
+          "That said, you can clearly build, and we think you might be a good fit for our hackathon. A weekend in person with the cohort and a handful of other UCSB builders we pick by hand. $1,000 in credits for the winner; $250 in credits for everyone who enters.",
           "",
-          `Sign up here: ${hackathonUrl}`
+          `Apply here: ${hackathonUrl}`
         ]
       };
     case "next_cohort":
@@ -40,11 +44,24 @@ function getCopy(variant: RejectionVariant, firstName: string) {
         body: [
           `Hi ${firstName},`,
           "",
-          "Thanks for applying to the ucsb.network cohort. This was a hard call; you were near the top of the pile.",
+          "Thanks for applying to the ucsb.network cohort. We are unable to offer you a spot this time, but you were at the top of the pile.",
           "",
           "We're only taking six startups in the first cohort, so we had to draw a tight line. Please apply to the next cycle. You're exactly the kind of builder we want around.",
           "",
           `Applications: ${applyUrl}`
+        ]
+      };
+    case "team_matching":
+      return {
+        subject: "ucsb.network: your application",
+        body: [
+          `Hi ${firstName},`,
+          "",
+          "Thanks for applying to the ucsb.network cohort. We're not offering you a founder seat, but we flagged your application for team matching.",
+          "",
+          "A few of the six startups in this batch are hiring early. If one of them wants to meet, we'll make the intro directly. No promises on timing or whether a match comes through.",
+          "",
+          "Either way, keep building."
         ]
       };
     case "standard":

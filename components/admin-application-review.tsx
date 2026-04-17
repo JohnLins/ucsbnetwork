@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 
 import type { ApplicationRecord, MemberType, Tag } from "@/lib/types";
 
-type RejectionVariant = "standard" | "hackathon" | "next_cohort";
+type RejectionVariant =
+  | "standard"
+  | "hackathon"
+  | "next_cohort"
+  | "team_matching";
 
 const REJECTION_VARIANTS: Array<{
   value: RejectionVariant;
@@ -26,6 +30,11 @@ const REJECTION_VARIANTS: Array<{
     value: "next_cohort",
     label: "Next cohort",
     blurb: "Top of the pile but didn't make the cut. Asks them to apply next cycle."
+  },
+  {
+    value: "team_matching",
+    label: "Team matching",
+    blurb: "Not a founder fit, but strong. Hold for intros to cohort startups."
   }
 ];
 
@@ -373,7 +382,7 @@ export function AdminApplicationReview({ application, tags }: AdminApplicationRe
             <span className="font-mono text-ink">apply@ucsb.network</span> with
             this body, plus your optional note below.
           </p>
-          <div className="grid gap-2 sm:grid-cols-3">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             {REJECTION_VARIANTS.map((option) => {
               const isActive = rejectionVariant === option.value;
               return (

@@ -51,7 +51,12 @@ export const applicationSchema = z.object({
   honeypot: z.string().optional()
 });
 
-export const rejectionVariantSchema = z.enum(["standard", "hackathon", "next_cohort"]);
+export const rejectionVariantSchema = z.enum([
+  "standard",
+  "hackathon",
+  "next_cohort",
+  "team_matching"
+]);
 
 export const adminReviewSchema = z.object({
   applicationId: z.string().uuid(),
