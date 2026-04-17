@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Instrument_Serif, IBM_Plex_Mono } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
@@ -29,6 +29,12 @@ export const metadata: Metadata = {
   title: "ucsb.network: The UCSB Accelerator",
   description:
     "An 8-week accelerator for UCSB founders. Weekly 1:1 mentor sessions, a hackathon, and Demo Day in front of VCs and operators."
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
