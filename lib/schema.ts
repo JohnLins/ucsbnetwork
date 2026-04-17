@@ -51,10 +51,14 @@ export const applicationSchema = z.object({
   honeypot: z.string().optional()
 });
 
+export const rejectionVariantSchema = z.enum(["standard", "hackathon", "next_cohort"]);
+
 export const adminReviewSchema = z.object({
   applicationId: z.string().uuid(),
   decision: z.enum(["approve", "reject"]),
   reviewNotes: z.string().trim().optional(),
+  rejectionVariant: rejectionVariantSchema.optional(),
+  applicantNote: z.string().trim().max(2000).optional(),
   memberDraft: z.object({
     fullName: z.string().trim(),
     headline: z.string().trim().optional().default(""),
@@ -75,6 +79,16 @@ export const adminReviewSchema = z.object({
     domains: z.array(z.string().trim().min(1)),
     keywords: z.array(z.string().trim().min(1))
   })
+});
+
+export const hackathonSignupSchema = z.object({
+  name: z.string().trim().min(2).max(120),
+  email: z.string().trim().email().max(200),
+  school: z.string().trim().max(120).optional(),
+  pitch: z.string().trim().min(10).max(2000),
+  link: optionalUrlSchema,
+  formStartedAt: z.number().int(),
+  honeypot: z.string().optional()
 });
 
 export const memberUpsertSchema = z.object({

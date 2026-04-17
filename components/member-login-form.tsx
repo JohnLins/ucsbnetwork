@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -40,53 +41,72 @@ export function MemberLoginForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6 rounded-2xl border border-line/40 bg-panel/60 p-8"
-    >
-      <div className="space-y-3">
-        <h2 className="text-2xl font-semibold tracking-tight text-ink">
-          Member login
-        </h2>
-        <p className="text-sm text-muted">
-          Use the credentials you received when accepted.
+    <div>
+      <Link href="/" className="flex items-baseline gap-2">
+        <span className="font-display text-2xl leading-none text-ink">ucsb</span>
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
+        <span className="text-base font-medium tracking-wide text-ink">network</span>
+      </Link>
+
+      <div className="mt-10">
+        <p className="eyebrow-accent">Member access</p>
+        <h1 className="mt-3 font-display text-4xl leading-tight text-ink">
+          Sign in to the portal.
+        </h1>
+        <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
+          Use the credentials you received when you joined the cohort.
         </p>
       </div>
-      <label className="block space-y-1.5">
-        <span className="text-[11px] uppercase tracking-[0.32em] text-muted">
-          Email
-        </span>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
-          autoFocus
-          className="h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20"
-        />
-      </label>
-      <label className="block space-y-1.5">
-        <span className="text-[11px] uppercase tracking-[0.32em] text-muted">
-          Password
-        </span>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••••••"
-          className="h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20"
-        />
-      </label>
-      <button
-        type="submit"
-        disabled={status === "loading" || !email || !password}
-        className="rounded-xl bg-accent px-6 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
-      >
-        {status === "loading" ? "Signing in…" : "Sign in"}
-      </button>
-      {message ? (
-        <p className="text-sm text-red-400">{message}</p>
-      ) : null}
-    </form>
+
+      <form onSubmit={handleSubmit} className="mt-10 space-y-5">
+        <label className="block space-y-1.5">
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+            Email
+          </span>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            autoFocus
+            className="h-11 w-full border border-ink/15 bg-paper px-3.5 text-sm text-ink outline-none transition focus:border-accent focus:ring-1 focus:ring-accent/25"
+          />
+        </label>
+        <label className="block space-y-1.5">
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+            Password
+          </span>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••••••"
+            className="h-11 w-full border border-ink/15 bg-paper px-3.5 text-sm text-ink outline-none transition focus:border-accent focus:ring-1 focus:ring-accent/25"
+          />
+        </label>
+        <button
+          type="submit"
+          disabled={status === "loading" || !email || !password}
+          className="btn-primary w-full disabled:opacity-50"
+        >
+          {status === "loading" ? "Signing in…" : "Sign in"}
+        </button>
+        {message ? (
+          <p className="border border-red-500/30 bg-red-500/5 p-3 text-sm text-red-500">
+            {message}
+          </p>
+        ) : null}
+      </form>
+
+      <hr className="hr-hairline my-8" />
+
+      <p className="text-xs text-muted">
+        Not a member yet?{" "}
+        <Link href="/apply" className="link-editorial">
+          Apply to the cohort
+        </Link>
+        .
+      </p>
+    </div>
   );
 }

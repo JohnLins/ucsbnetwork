@@ -22,7 +22,7 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
   if (!hasServiceSupabaseEnv || !session.isConfigured) {
     return (
       <AdminShell eyebrow="Admin" title="Events">
-        <div className="rounded-2xl border border-line/40 bg-panel/60 p-8 text-sm leading-7 text-muted">
+        <div className="border border-ink/10 bg-paper p-8 text-sm leading-7 text-muted">
           Configure Supabase before managing events.
         </div>
       </AdminShell>
@@ -37,38 +37,45 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
   return (
     <AdminShell eyebrow="Admin" title="Events">
       <div className="grid gap-8 xl:grid-cols-[0.38fr_0.62fr]">
-        <aside className="space-y-3 rounded-2xl border border-line/40 bg-panel/60 p-4">
+        <aside className="divide-y divide-ink/10 border border-ink/10 bg-paper">
           <Link
             href="/admin/events"
-            className={`block rounded-[1.3rem] border px-4 py-4 transition ${
-              !selectedEvent
-                ? "border-accent/50 bg-accent/10"
-                : "border-line/70 bg-paper/70 hover:border-accent/40"
+            className={`block px-5 py-4 transition ${
+              !selectedEvent ? "bg-accent/5" : "hover:bg-panel/60"
             }`}
           >
-            <p className="text-[11px] uppercase tracking-[0.32em] text-accent">Create</p>
-            <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">New event</h2>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
+              Create
+            </p>
+            <h2 className="mt-2 font-display text-xl leading-tight text-ink">
+              New event
+            </h2>
           </Link>
           {events.map((event) => {
             const isPast = new Date(event.eventDate) < new Date();
+            const isSelected = selectedEvent?.id === event.id;
             return (
               <Link
                 key={event.id}
                 href={`/admin/events?id=${event.id}`}
-                className={`block rounded-[1.3rem] border px-4 py-4 transition ${
-                  selectedEvent?.id === event.id
-                    ? "border-accent/50 bg-accent/10"
-                    : "border-line/70 bg-paper/70 hover:border-accent/40"
+                className={`block px-5 py-4 transition ${
+                  isSelected ? "bg-accent/5" : "hover:bg-panel/60"
                 }`}
               >
-                <p className="text-[11px] uppercase tracking-[0.32em] text-accent">
-                  {isPast ? "Past" : "Upcoming"}
-                </p>
-                <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">{event.title}</h2>
-                <p className="mt-2 text-sm text-muted">
-                  {formatShortDate(event.eventDate)}
-                  {event.sponsor ? ` · ${event.sponsor}` : ""}
-                </p>
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
+                    {isPast ? "Past" : "Upcoming"}
+                  </p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+                    {formatShortDate(event.eventDate)}
+                  </p>
+                </div>
+                <h2 className="mt-2 font-display text-xl leading-tight text-ink">
+                  {event.title}
+                </h2>
+                {event.sponsor ? (
+                  <p className="mt-1 text-sm text-muted">{event.sponsor}</p>
+                ) : null}
               </Link>
             );
           })}

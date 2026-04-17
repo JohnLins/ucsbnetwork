@@ -2,24 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────
+   Tokens (light: default brand canvas)
+   YC editorial + UCSB navy & gold.
+   ───────────────────────────────────────────── */
+
 :root {
-  --color-paper: 255 255 255;
-  --color-panel: 245 245 247;
-  --color-ink: 29 29 31;
-  --color-muted: 134 134 139;
-  --color-line: 210 210 215;
+  --color-paper: 250 248 242;
+  --color-panel: 245 241 230;
+  --color-ink: 17 19 24;
+  --color-muted: 95 100 112;
+  --color-line: 230 225 209;
   --color-accent: 214 145 18;
-  --color-navy: 0 54 96;
+  --color-navy: 12 26 58;
 }
 
 .dark {
-  --color-paper: 5 8 16;
-  --color-panel: 12 18 32;
-  --color-ink: 240 242 245;
-  --color-muted: 130 138 155;
-  --color-line: 30 42 70;
+  --color-paper: 8 12 24;
+  --color-panel: 14 20 38;
+  --color-ink: 240 240 235;
+  --color-muted: 145 150 162;
+  --color-line: 36 48 78;
   --color-accent: 241 168 37;
-  --color-navy: 0 54 96;
+  --color-navy: 8 18 44;
 }
 
 * {
@@ -30,17 +35,20 @@ html {
   scroll-behavior: smooth;
   -webkit-user-select: text;
   user-select: text;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   min-height: 100vh;
   background: rgb(var(--color-paper));
   color: rgb(var(--color-ink));
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-user-select: text;
   user-select: text;
+  text-rendering: optimizeLegibility;
 }
 
 html,
@@ -98,29 +106,136 @@ video {
   background: rgba(var(--color-accent), 0.25);
 }
 
-@keyframes float-down {
-  0%, 100% { transform: translateY(0); opacity: 0.4; }
-  50% { transform: translateY(8px); opacity: 1; }
+/* ─────────────────────────────────────────────
+   Editorial component layer
+   ───────────────────────────────────────────── */
+
+@layer components {
+  /* Uppercase mono micro-label, YC-style eyebrow */
+  .eyebrow {
+    font-family: var(--font-mono), "IBM Plex Mono", "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgb(var(--color-muted));
+  }
+
+  .eyebrow-accent {
+    font-family: var(--font-mono), "IBM Plex Mono", "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgb(var(--color-accent));
+  }
+
+  /* Thick editorial horizontal rule */
+  .hr-editorial {
+    border: 0;
+    border-top: 1px solid rgb(var(--color-ink));
+    margin: 0;
+    opacity: 1;
+  }
+
+  .hr-hairline {
+    border: 0;
+    border-top: 1px solid rgb(var(--color-line));
+    margin: 0;
+  }
+
+  /* Numbered row pattern: mono counter aligned with title */
+  .numbered-row {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgb(var(--color-line));
+  }
+
+  .numbered-row:first-child {
+    border-top: 0;
+  }
+
+  .numbered-row__num {
+    font-family: var(--font-mono), "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+    color: rgb(var(--color-accent));
+  }
+
+  /* YC-style primary button (gold) */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgb(var(--color-accent));
+    color: #0b0e14;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid rgb(var(--color-accent));
+    transition: transform 120ms ease, box-shadow 200ms ease, opacity 120ms ease;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.92;
+    box-shadow: 0 0 0 3px rgba(var(--color-accent), 0.15);
+  }
+
+  .btn-primary:active {
+    transform: translateY(1px);
+  }
+
+  /* YC-style secondary button (outlined ink) */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: rgb(var(--color-ink));
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid rgb(var(--color-ink));
+    transition: background 200ms ease, color 200ms ease;
+  }
+
+  .btn-secondary:hover {
+    background: rgb(var(--color-ink));
+    color: rgb(var(--color-paper));
+  }
+
+  /* Editorial link underline */
+  .link-editorial {
+    color: rgb(var(--color-ink));
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--color-accent));
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+    transition: color 150ms ease;
+  }
+
+  .link-editorial:hover {
+    color: rgb(var(--color-accent));
+  }
 }
 
-.animate-float-down {
-  animation: float-down 2.5s ease-in-out infinite;
-}
+/* ─────────────────────────────────────────────
+   Motion
+   ───────────────────────────────────────────── */
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.animate-blink {
-  animation: blink 0.9s step-end infinite;
-}
-
-@keyframes gold-pulse {
-  0%, 100% { box-shadow: 0 0 16px 4px rgba(241, 168, 37, 0.25); }
-  50% { box-shadow: 0 0 28px 8px rgba(241, 168, 37, 0.45); }
-}
-
-.animate-gold-pulse {
-  animation: gold-pulse 3s ease-in-out infinite;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

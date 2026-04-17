@@ -70,7 +70,7 @@ export function AdminMemberEditor({
   async function handleDelete() {
     if (!selectedMember) return;
 
-    setStatus({ kind: "loading", message: "Deleting..." });
+    setStatus({ kind: "loading", message: "Deleting…" });
 
     try {
       const response = await fetch(`/api/admin/members/${selectedMember.id}`, {
@@ -91,16 +91,23 @@ export function AdminMemberEditor({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl border border-line/40 bg-panel/60 p-6">
-      <div className="space-y-2 border-b border-line/30 pb-5">
-        <p className="text-xs font-medium text-muted">
+    <form onSubmit={handleSubmit} className="border border-ink/10 bg-paper">
+      <div className="border-b border-ink/10 p-6">
+        <p className="eyebrow-accent">
           {selectedMember ? "Edit member" : "Create member"}
         </p>
-        <h2 className="text-2xl font-semibold tracking-tight text-ink">{selectedMember ? selectedMember.fullName : "New member"}</h2>
+        <h2 className="mt-3 font-display text-3xl leading-tight text-ink">
+          {selectedMember ? selectedMember.fullName : "New member"}
+        </h2>
       </div>
-      <div className="mt-8 space-y-6">
+
+      <div className="space-y-5 border-b border-ink/10 p-6">
         <Labeled title="Full name">
-          <input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className={inputClass} />
+          <input
+            value={form.fullName}
+            onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+            className={inputClass}
+          />
         </Labeled>
         <Labeled title={selectedMember ? "Email" : "Email (required for new members)"}>
           <input
@@ -112,39 +119,85 @@ export function AdminMemberEditor({
           />
         </Labeled>
         <Labeled title="Headline">
-          <input value={form.headline} onChange={(e) => setForm({ ...form, headline: e.target.value })} className={inputClass} />
+          <input
+            value={form.headline}
+            onChange={(e) => setForm({ ...form, headline: e.target.value })}
+            className={inputClass}
+          />
         </Labeled>
         <div className="grid gap-5 md:grid-cols-2">
           <Labeled title="Company">
-            <input value={form.companyOrOrg} onChange={(e) => setForm({ ...form, companyOrOrg: e.target.value })} className={inputClass} />
+            <input
+              value={form.companyOrOrg}
+              onChange={(e) => setForm({ ...form, companyOrOrg: e.target.value })}
+              className={inputClass}
+            />
           </Labeled>
           <Labeled title="Location">
-            <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className={inputClass} />
+            <input
+              value={form.location}
+              onChange={(e) => setForm({ ...form, location: e.target.value })}
+              className={inputClass}
+            />
           </Labeled>
         </div>
         <Labeled title="Website">
-          <input value={form.websiteUrl} onChange={(e) => setForm({ ...form, websiteUrl: e.target.value })} className={inputClass} />
+          <input
+            value={form.websiteUrl}
+            onChange={(e) => setForm({ ...form, websiteUrl: e.target.value })}
+            className={inputClass}
+          />
         </Labeled>
         <Labeled title="Bio">
-          <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={6} className={textareaClass} />
+          <textarea
+            value={form.bio}
+            onChange={(e) => setForm({ ...form, bio: e.target.value })}
+            rows={6}
+            className={textareaClass}
+          />
         </Labeled>
-        <TokenPicker title="Roles" tags={tags.filter((tag) => tag.tagType === "role")} values={form.roles} onChange={(roles) => setForm({ ...form, roles })} />
-        <TokenPicker title="Domains" tags={tags.filter((tag) => tag.tagType === "domain")} values={form.domains} onChange={(domains) => setForm({ ...form, domains })} />
-        <TokenPicker title="Keywords" tags={tags.filter((tag) => tag.tagType === "keyword")} values={form.keywords} onChange={(keywords) => setForm({ ...form, keywords })} />
 
-        {/* Links editor */}
-        <div className="space-y-4">
-          <p className="text-[11px] uppercase tracking-[0.32em] text-muted">Links</p>
+        <TokenPicker
+          title="Roles"
+          tags={tags.filter((tag) => tag.tagType === "role")}
+          values={form.roles}
+          onChange={(roles) => setForm({ ...form, roles })}
+        />
+        <TokenPicker
+          title="Domains"
+          tags={tags.filter((tag) => tag.tagType === "domain")}
+          values={form.domains}
+          onChange={(domains) => setForm({ ...form, domains })}
+        />
+        <TokenPicker
+          title="Keywords"
+          tags={tags.filter((tag) => tag.tagType === "keyword")}
+          values={form.keywords}
+          onChange={(keywords) => setForm({ ...form, keywords })}
+        />
+
+        <TagHelp />
+
+        <div className="space-y-3">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">Links</p>
           {form.links.map((link, index) => (
             <div key={index} className="flex items-center gap-2">
               <select
                 value={link.linkType}
                 onChange={(e) => {
                   const nextLinks = [...form.links];
-                  nextLinks[index] = { ...link, linkType: e.target.value as "website" | "linkedin" | "github" | "x" | "other" };
+                  nextLinks[index] = {
+                    ...link,
+                    linkType: e.target.value as
+                      | "website"
+                      | "linkedin"
+                      | "github"
+                      | "x"
+                      | "other"
+                  };
                   setForm({ ...form, links: nextLinks });
                 }}
-                className="h-11 w-28 rounded-lg border border-line/60 bg-paper px-2 text-sm text-ink outline-none"
+                className="h-10 w-28 border border-ink/15 bg-paper px-2 text-sm text-ink outline-none"
               >
                 <option value="website">Website</option>
                 <option value="linkedin">LinkedIn</option>
@@ -159,13 +212,15 @@ export function AdminMemberEditor({
                   nextLinks[index] = { ...link, url: e.target.value };
                   setForm({ ...form, links: nextLinks });
                 }}
-                placeholder="https://..."
+                placeholder="https://…"
                 className={inputClass}
               />
               <button
                 type="button"
-                onClick={() => setForm({ ...form, links: form.links.filter((_, i) => i !== index) })}
-                className="shrink-0 text-sm text-red-400 hover:text-red-300"
+                onClick={() =>
+                  setForm({ ...form, links: form.links.filter((_, i) => i !== index) })
+                }
+                className="shrink-0 text-sm text-red-500 transition hover:text-red-400"
               >
                 ✕
               </button>
@@ -174,9 +229,12 @@ export function AdminMemberEditor({
           <button
             type="button"
             onClick={() =>
-              setForm({ ...form, links: [...form.links, { linkType: "website", label: "", url: "" }] })
+              setForm({
+                ...form,
+                links: [...form.links, { linkType: "website", label: "", url: "" }]
+              })
             }
-            className="rounded-lg border border-dashed border-line/60 px-4 py-2 text-xs text-muted hover:border-accent/40 hover:text-ink transition"
+            className="border border-dashed border-ink/20 px-3 py-1.5 text-xs text-muted transition hover:border-ink/50 hover:text-ink"
           >
             + Add link
           </button>
@@ -186,7 +244,7 @@ export function AdminMemberEditor({
           <select
             value={form.memberType}
             onChange={(e) => setForm({ ...form, memberType: e.target.value as MemberType })}
-            className="h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none"
+            className="h-10 w-full border border-ink/15 bg-paper px-3.5 text-sm text-ink outline-none"
           >
             <option value="partner">Partner</option>
             <option value="member">Member</option>
@@ -202,10 +260,13 @@ export function AdminMemberEditor({
               min={0}
               value={form.cohort ?? ""}
               onChange={(e) =>
-                setForm({ ...form, cohort: e.target.value !== "" ? parseInt(e.target.value, 10) : null })
+                setForm({
+                  ...form,
+                  cohort: e.target.value !== "" ? parseInt(e.target.value, 10) : null
+                })
               }
               placeholder="e.g. 1"
-              className="h-11 w-24 rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20"
+              className="h-10 w-24 border border-ink/15 bg-paper px-3.5 text-sm text-ink outline-none transition focus:border-accent focus:ring-1 focus:ring-accent/25"
             />
           </Labeled>
         )}
@@ -220,7 +281,8 @@ export function AdminMemberEditor({
           Publish this profile
         </label>
       </div>
-      <div className="mt-8 flex flex-col gap-4 border-t border-line/30 pt-5 md:flex-row md:items-center md:justify-between">
+
+      <div className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
           <p className="text-sm text-muted">{status.message ?? ""}</p>
         </div>
@@ -229,26 +291,26 @@ export function AdminMemberEditor({
             <button
               type="button"
               onClick={() => setDeleteConfirm(true)}
-              className="rounded-xl border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
+              className="border border-red-500/40 px-3.5 py-2 text-sm text-red-500 transition hover:bg-red-500/10"
             >
               Delete
             </button>
           )}
           {selectedMember && deleteConfirm && (
             <>
-              <span className="text-sm text-red-400">Are you sure?</span>
+              <span className="text-sm text-red-500">Are you sure?</span>
               <button
                 type="button"
                 onClick={handleDelete}
                 disabled={status.kind === "loading"}
-                className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700 disabled:opacity-50"
+                className="border border-red-600 bg-red-600 px-3.5 py-2 text-sm text-white transition hover:bg-red-700 disabled:opacity-50"
               >
                 Confirm delete
               </button>
               <button
                 type="button"
                 onClick={() => setDeleteConfirm(false)}
-                className="text-sm text-muted hover:text-ink transition"
+                className="text-sm text-muted transition hover:text-ink"
               >
                 Cancel
               </button>
@@ -257,9 +319,9 @@ export function AdminMemberEditor({
           <button
             type="submit"
             disabled={status.kind === "loading"}
-            className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
+            className="btn-primary text-sm disabled:opacity-50"
           >
-            {status.kind === "loading" ? "Saving..." : "Save member"}
+            {status.kind === "loading" ? "Saving…" : "Save member"}
           </button>
         </div>
       </div>
@@ -267,10 +329,29 @@ export function AdminMemberEditor({
   );
 }
 
+function TagHelp() {
+  return (
+    <div className="border border-ink/10 bg-panel/40 p-4 text-xs leading-6 text-muted">
+      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
+        Tag conventions
+      </p>
+      <p className="mt-2">
+        Use the <span className="font-mono text-ink">hackathon-winner</span>{" "}
+        keyword tag to mark hackathon prize winners, and{" "}
+        <span className="font-mono text-ink">priority-next-cohort</span> to
+        flag candidates who get priority review for the next batch. No new
+        columns required.
+      </p>
+    </div>
+  );
+}
+
 function Labeled({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <label className="block space-y-3">
-      <span className="text-[11px] uppercase tracking-[0.32em] text-muted">{title}</span>
+    <label className="block space-y-2">
+      <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+        {title}
+      </span>
       {children}
     </label>
   );
@@ -288,9 +369,9 @@ function TokenPicker({
   onChange: (values: string[]) => void;
 }) {
   return (
-    <div className="space-y-4">
-      <p className="text-[11px] uppercase tracking-[0.32em] text-muted">{title}</p>
-      <div className="flex flex-wrap gap-2">
+    <div className="space-y-3">
+      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">{title}</p>
+      <div className="flex flex-wrap gap-1.5">
         {tags.map((tag) => {
           const isActive = values.includes(tag.slug);
           return (
@@ -298,12 +379,16 @@ function TokenPicker({
               key={tag.id}
               type="button"
               onClick={() =>
-                onChange(isActive ? values.filter((value) => value !== tag.slug) : [...values, tag.slug])
+                onChange(
+                  isActive
+                    ? values.filter((value) => value !== tag.slug)
+                    : [...values, tag.slug]
+                )
               }
-              className={`rounded-full border px-4 py-2 text-sm transition ${
+              className={`border px-2.5 py-1 text-xs transition ${
                 isActive
-                  ? "border-accent/50 bg-accent/12 text-accent"
-                  : "border-line/80 bg-paper/70 text-muted hover:border-accent/40 hover:text-ink"
+                  ? "border-accent bg-accent/10 text-accent"
+                  : "border-ink/15 text-ink/70 hover:border-ink/40 hover:text-ink"
               }`}
             >
               {tag.name}
@@ -316,7 +401,7 @@ function TokenPicker({
 }
 
 const inputClass =
-  "h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20";
+  "h-10 w-full border border-ink/15 bg-paper px-3.5 text-sm text-ink outline-none transition focus:border-accent focus:ring-1 focus:ring-accent/25";
 
 const textareaClass =
-  "w-full rounded-lg border border-line/60 bg-paper px-4 py-3 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20";
+  "w-full border border-ink/15 bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition focus:border-accent focus:ring-1 focus:ring-accent/25";

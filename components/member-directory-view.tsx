@@ -31,69 +31,77 @@ export function MemberDirectoryView({ members }: { members: DirectoryMember[] })
 
   return (
     <div>
-      {/* Tab bar */}
-      <div className="mb-6 flex gap-2">
-        <button
-          onClick={() => { setTab("partners"); setSearch(""); }}
-          className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-            tab === "partners"
-              ? "bg-accent/15 text-accent"
-              : "text-muted hover:text-ink"
-          }`}
-        >
-          Partners ({partners.length})
-        </button>
-        <button
-          onClick={() => { setTab("members"); setSearch(""); }}
-          className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-            tab === "members"
-              ? "bg-accent/15 text-accent"
-              : "text-muted hover:text-ink"
-          }`}
-        >
-          Members ({regularMembers.length})
-        </button>
-        <button
-          onClick={() => { setTab("alumni"); setSearch(""); }}
-          className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p className="eyebrow-accent">Directory</p>
+          <h1 className="mt-3 font-display text-4xl text-ink">The network.</h1>
+        </div>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={
             tab === "alumni"
-              ? "bg-accent/15 text-accent"
-              : "text-muted hover:text-ink"
-          }`}
-        >
-          Alumni ({allAlumni.length})
-        </button>
+              ? "Search alumni…"
+              : tab === "members"
+              ? "Search members…"
+              : "Search partners…"
+          }
+          className="h-10 w-full max-w-xs border border-ink/15 bg-paper px-3.5 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-accent focus:ring-1 focus:ring-accent/25"
+        />
       </div>
 
-      <input
-        type="text"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder={
-          tab === "alumni"
-            ? "Search alumni…"
-            : tab === "members"
-            ? "Search members…"
-            : "Search partners…"
-        }
-        className="mb-8 h-10 w-full max-w-sm rounded-lg border border-line/40 bg-paper px-4 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent/40 focus:ring-1 focus:ring-accent/15"
-      />
+      {/* Tab bar */}
+      <div className="mt-8 flex items-end gap-8 border-b border-ink/10">
+        {(
+          [
+            { id: "partners" as Tab, label: "Partners", count: partners.length },
+            { id: "members" as Tab, label: "Members", count: regularMembers.length },
+            { id: "alumni" as Tab, label: "Alumni", count: allAlumni.length }
+          ]
+        ).map((t) => {
+          const isActive = tab === t.id;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => {
+                setTab(t.id);
+                setSearch("");
+              }}
+              className={`relative pb-3 text-sm transition ${
+                isActive ? "text-ink" : "text-muted hover:text-ink"
+              }`}
+            >
+              {t.label}{" "}
+              <span className="font-mono text-xs text-muted/80">
+                ({t.count})
+              </span>
+              {isActive ? (
+                <span className="absolute inset-x-0 -bottom-[1px] h-[2px] bg-accent" />
+              ) : null}
+            </button>
+          );
+        })}
+      </div>
 
-      {tab === "alumni" ? (
-        <AlumniTab
-          advisors={search ? alumniAdvisors.filter((m) => matchesSearch(m, q)) : alumniAdvisors}
-          network={search ? alumniNetwork.filter((m) => matchesSearch(m, q)) : alumniNetwork}
-        />
-      ) : tab === "partners" ? (
-        <PartnersByCohort
-          partners={search ? partners.filter((m) => matchesSearch(m, q)) : partners}
-        />
-      ) : (
-        <MemberGrid
-          members={search ? regularMembers.filter((m) => matchesSearch(m, q)) : regularMembers}
-          emptyLabel="No members found."
-        />
-      )}
+      <div className="mt-8">
+        {tab === "alumni" ? (
+          <AlumniTab
+            advisors={search ? alumniAdvisors.filter((m) => matchesSearch(m, q)) : alumniAdvisors}
+            network={search ? alumniNetwork.filter((m) => matchesSearch(m, q)) : alumniNetwork}
+          />
+        ) : tab === "partners" ? (
+          <PartnersByCohort
+            partners={search ? partners.filter((m) => matchesSearch(m, q)) : partners}
+          />
+        ) : (
+          <MemberGrid
+            members={search ? regularMembers.filter((m) => matchesSearch(m, q)) : regularMembers}
+            emptyLabel="No members found."
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -103,7 +111,6 @@ function PartnersByCohort({ partners }: { partners: DirectoryMember[] }) {
     return <p className="text-sm text-muted">No partners found.</p>;
   }
 
-  // Group by cohort number; null/undefined cohort goes to "Uncategorized"
   const cohortMap = new Map<number | null, DirectoryMember[]>();
   for (const p of partners) {
     const key = p.cohort ?? null;
@@ -112,7 +119,6 @@ function PartnersByCohort({ partners }: { partners: DirectoryMember[] }) {
     cohortMap.set(key, list);
   }
 
-  // Sort cohorts numerically (non-null first, then null at the end)
   const sortedCohorts = [...cohortMap.entries()].sort((a, b) => {
     if (a[0] === null && b[0] === null) return 0;
     if (a[0] === null) return 1;
@@ -120,30 +126,35 @@ function PartnersByCohort({ partners }: { partners: DirectoryMember[] }) {
     return a[0] - b[0];
   });
 
-  // If there's only one cohort group, don't show the heading
   if (sortedCohorts.length === 1) {
-    return (
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {sortedCohorts[0][1].map((member) => (
-          <DirectoryCard key={member.id} member={member} />
-        ))}
-      </div>
-    );
+    return <PartnerGrid members={sortedCohorts[0][1]} />;
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       {sortedCohorts.map(([cohort, cohortMembers]) => (
         <section key={cohort ?? "none"}>
-          <h3 className="mb-4 text-xs font-medium uppercase tracking-[0.32em] text-accent">
-            {cohort === 0 ? "Founding Operators" : cohort != null ? `Cohort ${cohort}` : "Other"}
-          </h3>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {cohortMembers.map((member) => (
-              <DirectoryCard key={member.id} member={member} />
-            ))}
+          <p className="eyebrow-accent">
+            {cohort === 0
+              ? "Founding Operators"
+              : cohort != null
+              ? `Cohort ${cohort}`
+              : "Other"}
+          </p>
+          <div className="mt-4">
+            <PartnerGrid members={cohortMembers} />
           </div>
         </section>
+      ))}
+    </div>
+  );
+}
+
+function PartnerGrid({ members }: { members: DirectoryMember[] }) {
+  return (
+    <div className="grid gap-px overflow-hidden border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
+      {members.map((member) => (
+        <DirectoryCard key={member.id} member={member} />
       ))}
     </div>
   );
@@ -154,7 +165,7 @@ function MemberGrid({ members, emptyLabel }: { members: DirectoryMember[]; empty
     return <p className="text-sm text-muted">{emptyLabel}</p>;
   }
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-px overflow-hidden border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
       {members.map((member) => (
         <DirectoryCard key={member.id} member={member} />
       ))}
@@ -173,73 +184,83 @@ function AlumniTab({
     return <p className="text-sm text-muted">No alumni found.</p>;
   }
   return (
-    <div className="space-y-10">
-      {advisors.length > 0 && (
+    <div className="space-y-12">
+      {advisors.length > 0 ? (
         <section>
-          <h3 className="mb-4 text-xs font-medium uppercase tracking-[0.32em] text-accent">
-            Advisors
-          </h3>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {advisors.map((member) => (
-              <DirectoryCard key={member.id} member={member} />
-            ))}
+          <p className="eyebrow-accent">Advisors</p>
+          <div className="mt-4">
+            <MemberGrid members={advisors} emptyLabel="No advisors found." />
           </div>
         </section>
-      )}
-      {network.length > 0 && (
+      ) : null}
+      {network.length > 0 ? (
         <section>
-          <h3 className="mb-4 text-xs font-medium uppercase tracking-[0.32em] text-accent">
-            Network
-          </h3>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {network.map((member) => (
-              <DirectoryCard key={member.id} member={member} />
-            ))}
+          <p className="eyebrow-accent">Network</p>
+          <div className="mt-4">
+            <MemberGrid members={network} emptyLabel="No network alumni found." />
           </div>
         </section>
-      )}
+      ) : null}
     </div>
   );
 }
 
 function DirectoryCard({ member }: { member: DirectoryMember }) {
   return (
-    <div className="rounded-xl border border-line/40 bg-panel/60 p-5 transition hover:border-accent/30 hover:shadow-gold-sm">
-      <h3 className="text-lg font-semibold text-ink">{member.fullName}</h3>
-      {member.headline && (
-        <p className="mt-1 text-sm text-muted">{member.headline}</p>
-      )}
-      {member.bio && (
-        <p className="mt-3 text-sm leading-relaxed text-muted/80 line-clamp-3">
+    <article className="flex flex-col gap-4 bg-paper p-6">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="eyebrow-accent">
+          {member.roles[0]?.name ?? typeLabel(member.memberType)}
+        </p>
+        {member.cohort != null ? (
+          <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted">
+            Cohort {member.cohort}
+          </span>
+        ) : null}
+      </div>
+
+      <div>
+        <h3 className="font-display text-xl leading-tight text-ink">
+          {member.fullName}
+        </h3>
+        {member.headline ? (
+          <p className="mt-1 text-sm text-muted">{member.headline}</p>
+        ) : null}
+      </div>
+
+      {member.companyOrOrg ? (
+        <p className="text-sm font-medium text-ink">{member.companyOrOrg}</p>
+      ) : null}
+
+      {member.bio ? (
+        <p className="text-sm leading-relaxed text-ink/75 line-clamp-4">
           {member.bio}
         </p>
-      )}
+      ) : null}
 
-      {/* Tags */}
-      {(member.roles.length > 0 || member.domains.length > 0) && (
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {member.roles.map((tag) => (
+      {(member.roles.length > 0 || member.domains.length > 0) ? (
+        <div className="flex flex-wrap gap-1.5">
+          {member.roles.slice(0, 3).map((tag) => (
             <span
               key={tag.id}
-              className="rounded-md border border-line/30 px-2 py-0.5 text-[11px] text-muted"
+              className="border border-ink/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-ink/70"
             >
               {tag.name}
             </span>
           ))}
-          {member.domains.map((tag) => (
+          {member.domains.slice(0, 3).map((tag) => (
             <span
               key={tag.id}
-              className="rounded-md border border-accent/20 bg-accent/5 px-2 py-0.5 text-[11px] text-accent"
+              className="border border-accent/60 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent"
             >
               {tag.name}
             </span>
           ))}
         </div>
-      )}
+      ) : null}
 
-      {/* Contact links */}
-      <div className="mt-4 flex items-center gap-3 border-t border-line/20 pt-3">
-        {member.email && (
+      <div className="mt-auto flex items-center gap-3 border-t border-ink/10 pt-4">
+        {member.email ? (
           <a
             href={`mailto:${member.email}`}
             className="text-muted transition hover:text-accent"
@@ -250,7 +271,7 @@ function DirectoryCard({ member }: { member: DirectoryMember }) {
               <polyline points="22,7 12,13 2,7" />
             </svg>
           </a>
-        )}
+        ) : null}
         {member.links.map((link) => (
           <a
             key={link.id ?? link.url}
@@ -263,21 +284,35 @@ function DirectoryCard({ member }: { member: DirectoryMember }) {
             <LinkIcon type={link.linkType} />
           </a>
         ))}
-        {member.websiteUrl &&
-          !member.links.some((l) => l.linkType === "website") && (
-            <a
-              href={member.websiteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted transition hover:text-accent"
-              title="Website"
-            >
-              <LinkIcon type="website" />
-            </a>
-          )}
+        {member.websiteUrl && !member.links.some((l) => l.linkType === "website") ? (
+          <a
+            href={member.websiteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted transition hover:text-accent"
+            title="Website"
+          >
+            <LinkIcon type="website" />
+          </a>
+        ) : null}
       </div>
-    </div>
+    </article>
   );
+}
+
+function typeLabel(t: DirectoryMember["memberType"]) {
+  switch (t) {
+    case "partner":
+      return "Partner";
+    case "member":
+      return "Member";
+    case "alumni_advisor":
+      return "Advisor";
+    case "alumni_network":
+      return "Alumni";
+    default:
+      return "Member";
+  }
 }
 
 function LinkIcon({ type }: { type: string }) {

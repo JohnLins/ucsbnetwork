@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { ucsbAffiliationOptions } from "@/lib/constants/options";
-import type { ApplicationInput, Tag } from "@/lib/types";
+import type { ApplicationInput } from "@/lib/types";
 
 type SubmissionState =
   | { status: "idle" }
@@ -17,10 +17,10 @@ type UploadState =
   | { status: "uploaded"; path: string; name: string }
   | { status: "error"; message: string };
 
-export function ApplicationForm({ tags }: { tags: Tag[] }) {
+export function ApplicationForm() {
   const [submission, setSubmission] = useState<SubmissionState>({ status: "idle" });
   const [upload, setUpload] = useState<UploadState>({ status: "idle" });
-  const [form, setForm] = useState<ApplicationInput>({
+  const [form, setForm] = useState<ApplicationInput>(() => ({
     fullName: "",
     email: "",
     phone: "",
@@ -42,7 +42,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
     consentToPublishSelectedProfileFields: true,
     formStartedAt: Date.now(),
     honeypot: ""
-  });
+  }));
 
   // April 10, 2026 11:59 PM PDT = April 11, 2026 06:59:00 UTC
   const DEADLINE = new Date("2026-04-11T06:59:00Z");
@@ -181,8 +181,11 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
         <div className="text-center">
-          <p className="text-2xl font-medium text-ink">Applications closed.</p>
-          <p className="mt-2 text-sm text-muted">
+          <p className="eyebrow-accent">Closed</p>
+          <p className="mt-4 font-display text-3xl text-ink">
+            Applications closed.
+          </p>
+          <p className="mt-3 text-sm text-muted">
             Applications for the first cohort closed on April 10, 2026.
           </p>
         </div>
@@ -194,8 +197,11 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
         <div className="text-center">
-          <p className="text-2xl font-medium text-ink">Received.</p>
-          <p className="mt-2 text-sm text-muted">We&apos;ll be in touch.</p>
+          <p className="eyebrow-accent">Received</p>
+          <p className="mt-4 font-display text-3xl text-ink">
+            Thanks for applying.
+          </p>
+          <p className="mt-3 text-sm text-muted">We&apos;ll be in touch.</p>
         </div>
       </div>
     );
@@ -203,12 +209,11 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
 
   return (
     <div>
-      <p className="mb-6 text-sm font-medium tracking-wide text-accent">
-        Applications for the first cohort close April 10.
+      <p className="eyebrow-accent">
+        Applications for Cohort 1 close April 10
       </p>
-      <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Apply.</h2>
 
-      <form className="mt-10 space-y-5" onSubmit={handleSubmit}>
+      <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
         <input
           type="text"
           value={form.honeypot}
@@ -315,17 +320,17 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
         </Field>
 
         <div className="space-y-1.5">
-          <span className="text-xs font-medium text-muted">
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
             Additional context upload (resume, portfolio, one-pager)
           </span>
           {upload.status === "idle" || upload.status === "error" ? (
-            <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-line/60 bg-paper px-4 py-5 text-sm text-muted transition hover:border-accent/40 hover:text-ink">
+            <label className="flex cursor-pointer items-center justify-center gap-2 border border-dashed border-ink/20 bg-paper px-4 py-5 text-sm text-muted transition hover:border-ink/50 hover:text-ink">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" />
               </svg>
-              <span>Choose a file (PDF, PNG, JPG — max 10 MB)</span>
+              <span>Choose a file (PDF, PNG, JPG; max 10 MB)</span>
               <input
                 type="file"
                 accept=".pdf,.png,.jpg,.jpeg"
@@ -334,7 +339,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
               />
             </label>
           ) : upload.status === "uploading" ? (
-            <div className="flex items-center gap-2 rounded-lg border border-line/40 bg-paper px-4 py-3 text-sm text-muted">
+            <div className="flex items-center gap-2 border border-ink/15 bg-paper px-4 py-3 text-sm text-muted">
               <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -342,7 +347,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
               Uploading…
             </div>
           ) : (
-            <div className="flex items-center justify-between rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-sm">
+            <div className="flex items-center justify-between border border-accent/40 bg-accent/5 px-4 py-3 text-sm">
               <span className="truncate text-ink">{upload.name}</span>
               <button
                 type="button"
@@ -354,7 +359,7 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
             </div>
           )}
           {upload.status === "error" && (
-            <p className="text-xs text-red-400">{upload.message}</p>
+            <p className="text-xs text-red-500">{upload.message}</p>
           )}
         </div>
 
@@ -387,9 +392,9 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
         </div>
 
         {submission.status === "error" && (
-          <div className="rounded-lg border border-red-400/30 bg-red-400/5 px-4 py-3">
+          <div className="border border-red-500/30 bg-red-500/5 px-4 py-3">
             {submission.fieldErrors ? (
-              <ul className="space-y-1 text-sm text-red-400">
+              <ul className="space-y-1 text-sm text-red-500">
                 {Object.values(submission.fieldErrors).map((msg) => (
                   <li key={msg} className="flex items-start gap-2">
                     <span className="mt-0.5 shrink-0">•</span>
@@ -398,18 +403,18 @@ export function ApplicationForm({ tags }: { tags: Tag[] }) {
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-red-400">{submission.message}</p>
+              <p className="text-sm text-red-500">{submission.message}</p>
             )}
           </div>
         )}
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 pt-2">
           <button
             type="submit"
             disabled={submission.status === "loading"}
-            className="rounded-xl bg-accent px-6 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
+            className="btn-primary text-sm disabled:opacity-50"
           >
-            {submission.status === "loading" ? "Submitting…" : "Submit"}
+            {submission.status === "loading" ? "Submitting…" : "Submit application"}
           </button>
         </div>
       </form>
@@ -426,7 +431,9 @@ function countWords(text: string) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block space-y-1.5">
-      <span className="text-xs font-medium text-muted">{label}</span>
+      <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+        {label}
+      </span>
       {children}
     </label>
   );
@@ -448,8 +455,10 @@ function WordCountField({
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between">
-        <span className="text-xs font-medium text-muted">{label}</span>
-        <span className={`text-[11px] tabular-nums ${isOver ? "text-red-400" : "text-muted/60"}`}>
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+          {label}
+        </span>
+        <span className={`font-mono text-[11px] tabular-nums ${isOver ? "text-red-500" : "text-muted/60"}`}>
           {words}/{maxWords} words
         </span>
       </div>
@@ -459,7 +468,7 @@ function WordCountField({
 }
 
 const inputClass =
-  "h-10 w-full rounded-lg border border-line/40 bg-paper px-3.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent/40 focus:ring-1 focus:ring-accent/15";
+  "h-10 w-full border border-ink/15 bg-paper px-3.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent focus:ring-1 focus:ring-accent/25";
 
 const textareaClass =
-  "w-full rounded-lg border border-line/40 bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent/40 focus:ring-1 focus:ring-accent/15";
+  "w-full border border-ink/15 bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/50 focus:border-accent focus:ring-1 focus:ring-accent/25";

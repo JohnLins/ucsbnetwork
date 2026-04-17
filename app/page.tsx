@@ -1,231 +1,270 @@
 import Image from "next/image";
+import Link from "next/link";
 
-import { ApplicationForm } from "@/components/application-form";
-import { KeyboardNav } from "@/components/keyboard-nav";
-import { Reveal } from "@/components/motion";
-import { OrbDivider } from "@/components/orb-divider";
-import { ScrollExpansionHero } from "@/components/ui/scroll-expansion-hero";
-import { getPublicTags } from "@/lib/data/public";
+import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { COHORT_1_STARTUPS } from "@/lib/data/cohort";
+
+const CURRENT_COHORT = 1;
 
 export default async function HomePage() {
-  const tags = await getPublicTags();
 
   return (
-    <div className="bg-paper text-ink">
-      <KeyboardNav />
-
-      {/* ── Scroll-expansion hero with globe ── */}
-      <ScrollExpansionHero>
-        {/* Everything below is revealed after globe fully expands */}
-
-        {/* ── About ── */}
-        <section
-          id="about"
-          data-section
-          className="flex min-h-[100dvh] items-center justify-center px-6"
-        >
-          <Reveal className="mx-auto max-w-xl text-center">
-            <OrbDivider className="mb-10" />
-            <p className="text-lg leading-relaxed text-ink sm:text-xl">
-              A curated network of UCSB founders, builders, and engineers.
+    <MarketingShell
+      announcement={{
+        label: "Spring 2026 Cohort is shipping. Demo Day coming soon.",
+        href: "/demo-day",
+        ctaLabel: "See what\u2019s coming"
+      }}
+    >
+      {/* ── Hero ── */}
+      <section className="border-b border-ink/10">
+        <div className="mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-[1.2fr_1fr] lg:px-8 lg:py-28">
+          <div>
+            <p className="eyebrow-accent">Santa Barbara &middot; Est. 2026</p>
+            <h1 className="mt-6 font-display text-display-xl tracking-tightest text-ink">
+              The UCSB<br />accelerator.
+            </h1>
+            <p className="mt-8 max-w-xl text-lg leading-relaxed text-ink/80">
+              An 8-week program for UCSB founders. Each startup is matched with
+              a dedicated mentor for weekly office hours, and the program ends
+              with a Demo Day in front of VCs and operators.
             </p>
-            <p className="mt-4 text-lg leading-relaxed text-muted sm:text-xl">
-              This spring, we&rsquo;re running an 8-week sprint. Weekly
-              office hours with operators, feedback sessions, and a Demo Day
-              in front of VCs and founders.
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Link href="/apply" className="btn-primary">
+                Apply to the next cohort
+              </Link>
+              <Link href="/program" className="btn-secondary">
+                Read the program
+              </Link>
+            </div>
+            <p className="mt-6 text-sm text-muted">
+              Advised by alumni at Meta, NASA, YC, ByteDance, and more.
             </p>
-            <p className="mt-8 text-sm text-muted/70">
-              Advised by alumni at Meta, NASA, YC, ByteDance, & more
-            </p>
-
-            <div className="mt-8 flex items-center justify-center gap-10">
-              <div className="flex flex-col items-center gap-2">
-                <span className="text-[10px] uppercase tracking-[0.2em] text-muted/40">
-                  General Sponsor
-                </span>
-                <Image
-                  src="/mindfort-logo.jpeg"
-                  alt="Mindfort AI"
-                  width={100}
-                  height={28}
-                  className="rounded-sm object-contain"
-                />
-              </div>
-              <div className="h-10 w-px bg-line/10" />
-              <div className="flex flex-col items-center gap-2">
-                <span className="text-[10px] uppercase tracking-[0.2em] text-muted/40">
-                  Build Partner
-                </span>
-                <Image
-                  src="/cursor-logo.png"
-                  alt="Cursor"
-                  width={100}
-                  height={28}
-                  className="object-contain"
-                />
-              </div>
-            </div>
-          </Reveal>
-        </section>
-
-        {/* ── Sprint at a glance ── */}
-        <section className="border-t border-line/10 px-6 py-16">
-          <Reveal className="mx-auto max-w-3xl">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div className="rounded-lg border border-accent/20 px-5 py-4 text-center">
-                <p className="text-lg font-semibold text-ink">8 Weeks</p>
-                <p className="mt-1 text-xs text-muted">of focused building</p>
-              </div>
-              <div className="rounded-lg border border-accent/20 px-5 py-4 text-center">
-                <p className="text-lg font-semibold text-ink">Office Hours</p>
-                <p className="mt-1 text-xs text-muted">weekly with operators</p>
-              </div>
-              <div className="rounded-lg border border-accent/20 px-5 py-4 text-center">
-                <p className="text-lg font-semibold text-ink">Feedback</p>
-                <p className="mt-1 text-xs text-muted">sessions every week</p>
-              </div>
-              <div className="rounded-lg border border-accent/20 px-5 py-4 text-center">
-                <p className="text-lg font-semibold text-ink">Demo Day</p>
-                <p className="mt-1 text-xs text-muted">pitch to VCs & founders</p>
-              </div>
-            </div>
-          </Reveal>
-        </section>
-
-        {/* ── Spring Sprint ── */}
-        <section
-          id="sprint"
-          data-section
-          className="flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
-        >
-          <div className="mx-auto w-full max-w-2xl">
-            <Reveal>
-              <span className="text-[10px] uppercase tracking-[0.3em] text-accent">
-                Spring 2026
-              </span>
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-                Spring Sprint.
-              </h2>
-              <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted">
-                8 weeks of building, shipping, and getting real feedback,
-                culminating in a Demo Day where you pitch what you&rsquo;ve built
-                to VCs, operators, and founders.
-              </p>
-            </Reveal>
-            <div className="mt-16 space-y-0">
-              <Reveal direction="left">
-                <div className="py-8">
-                  <EventRow num="01" title="Weekly Office Hours" desc="1-on-1 and small-group sessions with operators who've scaled products, raised rounds, and hired teams." />
-                </div>
-              </Reveal>
-              <Reveal direction="left">
-                <div className="border-t border-line/20 py-8">
-                  <EventRow num="02" title="Feedback Sessions" desc="Present your progress each week. Get honest, structured feedback from peers, mentors, and past founders." />
-                </div>
-              </Reveal>
-              <Reveal direction="left">
-                <div className="border-t border-line/20 py-8">
-                  <EventRow num="03" title="Build Together" desc="Co-work sessions, build nights, and a curated cohort of serious builders pushing each other forward." />
-                </div>
-              </Reveal>
-              <Reveal direction="left">
-                <div className="border-t border-line/20 py-8">
-                  <EventRow num="04" title="$250+ in AI Credits & Cursor Pro" desc="Every sprint member gets AI credits and Cursor Pro to build faster." />
-                </div>
-              </Reveal>
-              <Reveal direction="left">
-                <div className="border-t border-line/20 py-8">
-                  <EventRow num="05" title="Demo Day" desc="The sprint ends with a Demo Day. Pitch in front of VCs, operators, and the broader UCSB founder network." />
-                </div>
-              </Reveal>
-            </div>
           </div>
-        </section>
 
-        {/* ── For VCs & Partners ── */}
-        <section
-          id="network"
-          data-section
-          className="flex min-h-[100dvh] items-center justify-center border-t border-line/10 px-6"
-        >
-          <div className="mx-auto w-full max-w-2xl">
-            <Reveal>
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                For VCs & operators.
-              </h2>
-              <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted">
-                Demo Day is the culmination of our 8-week sprint. Join as a
-                mentor during the program or attend Demo Day to see what
-                UCSB&rsquo;s best builders are shipping.
-              </p>
-            </Reveal>
-            <div className="mt-16 space-y-0">
-              <Reveal direction="left">
-                <div className="py-8">
-                  <EventRow num="01" title="Demo Day Access" desc="See curated pitches from a vetted cohort of UCSB builders after 8 weeks of focused development." />
-                </div>
-              </Reveal>
-              <Reveal direction="left">
-                <div className="border-t border-line/20 py-8">
-                  <EventRow num="02" title="Office Hours & Mentorship" desc="Run office hours during the sprint. Shape what's being built and build relationships early." />
-                </div>
-              </Reveal>
-              <Reveal direction="left">
-                <div className="border-t border-line/20 py-8">
-                  <EventRow num="03" title="Warm Intros & Deal Flow" desc="Direct access to founders through the member directory and network." />
-                </div>
-              </Reveal>
+          <aside className="relative border-l border-ink/10 lg:pl-10">
+            <p className="eyebrow">Cohort 1 &middot; Spring 2026</p>
+            <div className="mt-8 grid grid-cols-3 gap-y-8 gap-x-6">
+              <Stat num="8" label="Weeks of focused building" />
+              <Stat num="6" label="Startups in the cohort" />
+              <Stat num="1" label="Demo Day to VCs" />
             </div>
-            <Reveal>
-              <p className="mt-12 text-sm text-muted">
-                Want to mentor or attend Demo Day?{" "}
-                <a href="mailto:hursh@ucsb.network" className="text-accent hover:underline">
-                  hursh@ucsb.network
-                </a>
-              </p>
-            </Reveal>
+            <hr className="hr-hairline mt-10" />
+            <p className="mt-6 text-sm text-muted">
+              Partnered with{" "}
+              <span className="text-ink">Cursor</span> and{" "}
+              <span className="text-ink">Mindfort AI</span>. Credits, tooling,
+              and introductions throughout the program.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      {/* ── What we do ── */}
+      <section className="border-b border-ink/10">
+        <div className="mx-auto max-w-5xl px-6 py-20 lg:px-8 lg:py-28">
+          <p className="eyebrow-accent">What we do</p>
+          <h2 className="mt-4 max-w-3xl font-display text-display-md text-ink">
+            Eight weeks to go from idea to Demo Day.
+          </h2>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink/80">
+            A focused, in-person program in Santa Barbara built around a
+            dedicated mentor for every startup, weekly office hours, and a Demo
+            Day that puts you in the room with the right people.
+          </p>
+
+          <div className="mt-16">
+            <ProgramRow
+              n="01"
+              title="Dedicated mentor, weekly office hours"
+              desc="Every startup is matched with one mentor for the full program: YC founders, exited operators, and alumni. You meet 1:1 every week."
+            />
+            <ProgramRow
+              n="02"
+              title="Mid-program hackathon"
+              desc="A weekend hackathon for the cohort and a handful of outside UCSB builders. Credits for winners and for every participant."
+              link={{ href: "/hackathon", label: "Hackathon details" }}
+            />
+            <ProgramRow
+              n="03"
+              title="Build credits and tools"
+              desc="Cursor Pro, AI credits, and infra from our partners so you can spend the time shipping."
+            />
+            <ProgramRow
+              n="04"
+              title="Demo Day"
+              desc="The program ends with a Demo Day. Pitch what you built to VCs, operators, and the broader UCSB founder network."
+              link={{ href: "/demo-day", label: "About Demo Day" }}
+            />
           </div>
-        </section>
 
-        {/* ── Apply ── */}
-        <section
-          id="apply"
-          data-section
-          className="flex min-h-[100dvh] items-start justify-center border-t border-line/10 px-6 py-24"
-        >
-          <Reveal className="mx-auto w-full max-w-2xl">
-            <ApplicationForm tags={tags} />
-          </Reveal>
-        </section>
+          <div className="mt-16 flex flex-wrap items-center gap-x-10 gap-y-4 border-t border-ink/10 pt-8">
+            <span className="eyebrow">Partnered with</span>
+            <PartnerInline src="/mindfort-logo.jpeg" alt="Mindfort AI" />
+            <PartnerInline src="/cursor-logo.png" alt="Cursor" />
+          </div>
+        </div>
+      </section>
 
-        <footer className="border-t border-line/10 px-6 py-8 text-center text-xs text-muted">
-          <span className="text-ink">ucsb</span>
-          <span className="mx-1.5 inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
-          <span className="text-muted">network</span>
-        </footer>
-      </ScrollExpansionHero>
+      {/* ── Batch preview ── */}
+      <section className="border-b border-ink/10">
+        <div className="mx-auto max-w-6xl px-6 py-20 lg:px-8 lg:py-24">
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <p className="eyebrow-accent">Cohort {CURRENT_COHORT}</p>
+              <h2 className="mt-4 font-display text-display-sm text-ink">
+                What the cohort is building.
+              </h2>
+            </div>
+            <Link href="/batch" className="link-editorial text-sm">
+              See the full batch &rarr;
+            </Link>
+          </div>
+
+          <div className="mt-12 grid gap-px overflow-hidden border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
+            {COHORT_1_STARTUPS.map((s) => (
+              <div key={s.category} className="bg-paper p-6">
+                <p className="eyebrow-accent">{s.category}</p>
+                <p className="mt-4 font-display text-xl leading-snug text-ink">
+                  {s.building}
+                </p>
+                <p className="mt-3 text-sm text-muted">{s.founders}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── For VCs & operators ── */}
+      <section className="border-b border-ink/10 bg-navy text-paper">
+        <div className="mx-auto max-w-5xl px-6 py-20 lg:px-8 lg:py-24">
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
+            For VCs &amp; operators
+          </p>
+          <h2 className="mt-4 max-w-3xl font-display text-display-sm">
+            First look at UCSB&rsquo;s best founders.
+          </h2>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-paper/80">
+            Demo Day is the culmination of eight weeks of focused work. If you
+            invest in pre-seed and seed, or want to meet the UCSB builders
+            shipping right now, we want you there.
+          </p>
+
+          <div className="mt-12 grid gap-10 md:grid-cols-3">
+            <PartnerBlock
+              title="Demo Day access"
+              desc="Curated pitches from a vetted cohort. See the teams and the traction before anyone else."
+            />
+            <PartnerBlock
+              title="Mentor a team"
+              desc="Take on a startup for the program. Weekly office hours, early relationships, direct access."
+            />
+            <PartnerBlock
+              title="Warm intros"
+              desc="Direct access to founders through the member directory and our network."
+            />
+          </div>
+
+          <div className="mt-12 flex items-center gap-4">
+            <a
+              href="mailto:hursh@ucsb.network"
+              className="btn-primary text-sm"
+            >
+              Get in touch
+            </a>
+            <Link
+              href="/demo-day"
+              className="text-sm text-paper underline decoration-accent underline-offset-4 transition hover:text-accent"
+            >
+              Demo Day details
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Apply CTA ── */}
+      <section>
+        <div className="mx-auto max-w-4xl px-6 py-24 text-center lg:px-8">
+          <p className="eyebrow-accent">Apply</p>
+          <h2 className="mt-4 font-display text-display-md text-ink">
+            Cohort 2 applications open soon.
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-ink/80">
+            If you&rsquo;re a UCSB founder or builder with something to show,
+            tell us what you&rsquo;re working on.
+          </p>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <Link href="/apply" className="btn-primary">
+              Apply now
+            </Link>
+            <Link href="/faq" className="btn-secondary">
+              Read the FAQ
+            </Link>
+          </div>
+        </div>
+      </section>
+    </MarketingShell>
+  );
+}
+
+function Stat({ num, label }: { num: string; label: string }) {
+  return (
+    <div>
+      <p className="font-display text-4xl leading-none text-ink">{num}</p>
+      <p className="mt-2 text-sm leading-snug text-muted">{label}</p>
     </div>
   );
 }
 
-/* ---------- helper components ---------- */
-
-function EventRow({
-  num,
+function ProgramRow({
+  n,
   title,
-  desc
+  desc,
+  link
 }: {
-  num: string;
+  n: string;
   title: string;
   desc: string;
+  link?: { href: string; label: string };
 }) {
   return (
-    <div className="flex items-baseline gap-6">
-      <span className="font-mono text-xs text-accent/60">{num}</span>
+    <div className="grid grid-cols-[3rem_1fr] gap-6 border-t border-ink/10 py-8 first:border-t-0 md:grid-cols-[4rem_1fr] md:gap-10">
+      <span className="font-mono text-sm tabular-nums text-accent">{n}</span>
       <div>
-        <h3 className="text-lg font-medium text-ink">{title}</h3>
-        <p className="mt-1.5 text-sm text-muted">{desc}</p>
+        <h3 className="font-display text-2xl text-ink">{title}</h3>
+        <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink/80">
+          {desc}
+        </p>
+        {link ? (
+          <Link
+            href={link.href}
+            className="link-editorial mt-4 inline-block text-sm"
+          >
+            {link.label} &rarr;
+          </Link>
+        ) : null}
       </div>
+    </div>
+  );
+}
+
+function PartnerInline({ src, alt }: { src: string; alt: string }) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={110}
+      height={28}
+      className="h-7 w-auto object-contain opacity-80"
+    />
+  );
+}
+
+function PartnerBlock({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div>
+      <h3 className="font-display text-xl text-paper">{title}</h3>
+      <p className="mt-3 text-sm leading-relaxed text-paper/75">{desc}</p>
     </div>
   );
 }

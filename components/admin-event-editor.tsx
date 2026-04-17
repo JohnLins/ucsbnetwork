@@ -26,11 +26,9 @@ const MEMBER_TYPE_OPTIONS: { value: MemberType; label: string }[] = [
 ];
 
 const inputClass =
-  "h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20";
+  "h-10 w-full border border-ink/15 bg-paper px-3.5 text-sm text-ink outline-none transition focus:border-accent focus:ring-1 focus:ring-accent/25";
 const textareaClass =
-  "w-full rounded-lg border border-line/60 bg-paper px-4 py-3 text-sm text-ink outline-none transition focus:border-accent/50 focus:ring-1 focus:ring-accent/20";
-const selectClass =
-  "h-11 w-full rounded-lg border border-line/60 bg-paper px-4 text-sm text-ink outline-none";
+  "w-full border border-ink/15 bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition focus:border-accent focus:ring-1 focus:ring-accent/25";
 
 function toLocalDatetime(isoStr: string): string {
   const d = new Date(isoStr);
@@ -105,7 +103,7 @@ export function AdminEventEditor({
   async function handleDelete() {
     if (!event) return;
 
-    setStatus({ kind: "loading", message: "Deleting..." });
+    setStatus({ kind: "loading", message: "Deleting…" });
 
     try {
       const response = await fetch(`/api/admin/events/${event.id}`, {
@@ -153,43 +151,37 @@ export function AdminEventEditor({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl border border-line/40 bg-panel/60 p-6">
-      <div className="space-y-2 border-b border-line/30 pb-5">
-        <p className="text-xs font-medium text-muted">
+    <form onSubmit={handleSubmit} className="border border-ink/10 bg-paper">
+      <div className="border-b border-ink/10 p-6">
+        <p className="eyebrow-accent">
           {event ? "Edit event" : "Create event"}
         </p>
-        <h2 className="text-2xl font-semibold tracking-tight text-ink">
+        <h2 className="mt-3 font-display text-3xl leading-tight text-ink">
           {event ? event.title : "New event"}
         </h2>
       </div>
 
-      <div className="mt-8 space-y-6">
-        {/* Title */}
-        <div className="space-y-1.5">
-          <label className="text-[11px] uppercase tracking-[0.32em] text-muted">Title</label>
+      <div className="space-y-5 border-b border-ink/10 p-6">
+        <Labeled title="Title">
           <input
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             className={inputClass}
             required
           />
-        </div>
+        </Labeled>
 
-        {/* Description */}
-        <div className="space-y-1.5">
-          <label className="text-[11px] uppercase tracking-[0.32em] text-muted">Description</label>
+        <Labeled title="Description">
           <textarea
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             rows={4}
             className={textareaClass}
           />
-        </div>
+        </Labeled>
 
-        {/* Date & location */}
         <div className="grid gap-5 md:grid-cols-2">
-          <div className="space-y-1.5">
-            <label className="text-[11px] uppercase tracking-[0.32em] text-muted">Event date</label>
+          <Labeled title="Event date">
             <input
               type="datetime-local"
               value={form.eventDate}
@@ -197,39 +189,34 @@ export function AdminEventEditor({
               className={inputClass}
               required
             />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-[11px] uppercase tracking-[0.32em] text-muted">End date (optional)</label>
+          </Labeled>
+          <Labeled title="End date (optional)">
             <input
               type="datetime-local"
               value={form.endDate}
               onChange={(e) => setForm({ ...form, endDate: e.target.value })}
               className={inputClass}
             />
-          </div>
+          </Labeled>
         </div>
 
-        <div className="space-y-1.5">
-          <label className="text-[11px] uppercase tracking-[0.32em] text-muted">Location</label>
+        <Labeled title="Location">
           <input
             value={form.location}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
             className={inputClass}
           />
-        </div>
+        </Labeled>
 
-        {/* Sponsor & image */}
         <div className="grid gap-5 md:grid-cols-2">
-          <div className="space-y-1.5">
-            <label className="text-[11px] uppercase tracking-[0.32em] text-muted">Sponsor</label>
+          <Labeled title="Sponsor">
             <input
               value={form.sponsor}
               onChange={(e) => setForm({ ...form, sponsor: e.target.value })}
               className={inputClass}
             />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-[11px] uppercase tracking-[0.32em] text-muted">Max capacity</label>
+          </Labeled>
+          <Labeled title="Max capacity">
             <input
               type="number"
               value={form.maxCapacity}
@@ -237,43 +224,42 @@ export function AdminEventEditor({
               className={inputClass}
               min={1}
             />
-          </div>
+          </Labeled>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
-          <div className="space-y-1.5">
-            <label className="text-[11px] uppercase tracking-[0.32em] text-muted">Banner image URL</label>
+          <Labeled title="Banner image URL">
             <input
               value={form.imageUrl}
               onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
               className={inputClass}
               placeholder="/cursor.png"
             />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-[11px] uppercase tracking-[0.32em] text-muted">External link</label>
+          </Labeled>
+          <Labeled title="External link">
             <input
               value={form.externalUrl}
               onChange={(e) => setForm({ ...form, externalUrl: e.target.value })}
               className={inputClass}
-              placeholder="https://..."
+              placeholder="https://…"
             />
-          </div>
+          </Labeled>
         </div>
 
-        {/* Visibility */}
-        <div className="space-y-2">
-          <p className="text-[11px] uppercase tracking-[0.32em] text-muted">Who can see this event</p>
+        <div className="space-y-3">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+            Who can see this event
+          </p>
           <div className="flex flex-wrap gap-2">
             {VISIBILITY_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
                 onClick={() => setForm({ ...form, visibility: opt.value })}
-                className={`rounded-lg border px-4 py-2 text-sm font-medium transition ${
+                className={`border px-3.5 py-1.5 text-sm transition ${
                   form.visibility === opt.value
-                    ? "border-accent/50 bg-accent/15 text-accent"
-                    : "border-line/60 text-muted hover:border-accent/30 hover:text-ink"
+                    ? "border-accent bg-accent text-[#0b0e14]"
+                    : "border-ink/15 text-ink hover:border-ink/40"
                 }`}
               >
                 {opt.label}
@@ -282,19 +268,18 @@ export function AdminEventEditor({
           </div>
         </div>
 
-        {/* RSVP mode */}
-        <div className="space-y-2">
-          <p className="text-[11px] uppercase tracking-[0.32em] text-muted">RSVP mode</p>
+        <div className="space-y-3">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">RSVP mode</p>
           <div className="flex flex-wrap gap-2">
             {RSVP_MODE_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
                 onClick={() => setForm({ ...form, rsvpMode: opt.value })}
-                className={`rounded-lg border px-4 py-2 text-sm font-medium transition ${
+                className={`border px-3.5 py-1.5 text-sm transition ${
                   form.rsvpMode === opt.value
-                    ? "border-accent/50 bg-accent/15 text-accent"
-                    : "border-line/60 text-muted hover:border-accent/30 hover:text-ink"
+                    ? "border-accent bg-accent text-[#0b0e14]"
+                    : "border-ink/15 text-ink hover:border-ink/40"
                 }`}
               >
                 {opt.label}
@@ -303,20 +288,21 @@ export function AdminEventEditor({
           </div>
         </div>
 
-        {/* RSVP open to */}
         {form.rsvpMode === "open" && (
-          <div className="space-y-2">
-            <p className="text-[11px] uppercase tracking-[0.32em] text-muted">RSVP open to</p>
+          <div className="space-y-3">
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+              RSVP open to
+            </p>
             <div className="flex flex-wrap gap-2">
               {MEMBER_TYPE_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => toggleRsvpOpenTo(opt.value)}
-                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition ${
+                  className={`border px-3.5 py-1.5 text-sm transition ${
                     form.rsvpOpenTo.includes(opt.value)
-                      ? "border-accent/50 bg-accent/15 text-accent"
-                      : "border-line/60 text-muted hover:border-accent/30 hover:text-ink"
+                      ? "border-accent bg-accent/10 text-accent"
+                      : "border-ink/15 text-ink hover:border-ink/40"
                   }`}
                 >
                   {opt.label}
@@ -327,16 +313,15 @@ export function AdminEventEditor({
         )}
       </div>
 
-      {/* RSVPs viewer */}
       {event && (
-        <div className="mt-8 border-t border-line/30 pt-5">
-          <div className="flex items-center gap-3">
-            <p className="text-[11px] uppercase tracking-[0.32em] text-muted">RSVPs</p>
+        <div className="border-b border-ink/10 p-6">
+          <div className="flex items-center gap-4">
+            <p className="eyebrow">RSVPs</p>
             <button
               type="button"
               onClick={loadRsvps}
               disabled={loadingRsvps}
-              className="text-xs text-accent hover:underline disabled:opacity-50"
+              className="text-xs text-accent transition hover:opacity-80 disabled:opacity-50"
             >
               {loadingRsvps ? "Loading…" : rsvps ? "Refresh" : "Load RSVPs"}
             </button>
@@ -346,15 +331,15 @@ export function AdminEventEditor({
               {rsvps.length === 0 ? (
                 <p className="text-sm text-muted">No RSVPs yet.</p>
               ) : (
-                <div className="space-y-2">
+                <div className="divide-y divide-ink/10 border-y border-ink/10">
                   {rsvps.map((rsvp) => (
                     <div
                       key={rsvp.id}
-                      className="flex items-center justify-between rounded-lg border border-line/40 bg-paper/60 px-4 py-2.5 text-sm"
+                      className="flex items-center justify-between px-0 py-3 text-sm"
                     >
                       <div>
                         <span className="font-medium text-ink">{rsvp.memberName}</span>
-                        <span className="ml-2 text-xs text-muted">
+                        <span className="ml-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
                           {rsvp.memberType === "partner"
                             ? "Partner"
                             : rsvp.memberType === "member"
@@ -365,15 +350,19 @@ export function AdminEventEditor({
                         </span>
                       </div>
                       <span
-                        className={`rounded-md px-2 py-0.5 text-xs font-medium ${
+                        className={`border px-2 py-0.5 text-[10px] uppercase tracking-wide ${
                           rsvp.status === "going"
-                            ? "bg-green-500/15 text-green-400"
+                            ? "border-accent/50 bg-accent/10 text-accent"
                             : rsvp.status === "maybe"
-                            ? "bg-yellow-500/15 text-yellow-400"
-                            : "bg-red-500/15 text-red-400"
+                            ? "border-ink/20 text-ink/70"
+                            : "border-red-500/30 text-red-500"
                         }`}
                       >
-                        {rsvp.status === "going" ? "Going" : rsvp.status === "maybe" ? "Maybe" : "Not Going"}
+                        {rsvp.status === "going"
+                          ? "Going"
+                          : rsvp.status === "maybe"
+                          ? "Maybe"
+                          : "Not Going"}
                       </span>
                     </div>
                   ))}
@@ -384,34 +373,33 @@ export function AdminEventEditor({
         </div>
       )}
 
-      {/* Actions */}
-      <div className="mt-8 flex flex-col gap-4 border-t border-line/30 pt-5 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
         <p className="text-sm text-muted">{status.message ?? ""}</p>
         <div className="flex items-center gap-3">
           {event && !deleteConfirm && (
             <button
               type="button"
               onClick={() => setDeleteConfirm(true)}
-              className="rounded-xl border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
+              className="border border-red-500/40 px-3.5 py-2 text-sm text-red-500 transition hover:bg-red-500/10"
             >
               Delete
             </button>
           )}
           {event && deleteConfirm && (
             <>
-              <span className="text-sm text-red-400">Are you sure?</span>
+              <span className="text-sm text-red-500">Are you sure?</span>
               <button
                 type="button"
                 onClick={handleDelete}
                 disabled={status.kind === "loading"}
-                className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700 disabled:opacity-50"
+                className="border border-red-600 bg-red-600 px-3.5 py-2 text-sm text-white transition hover:bg-red-700 disabled:opacity-50"
               >
                 Confirm delete
               </button>
               <button
                 type="button"
                 onClick={() => setDeleteConfirm(false)}
-                className="text-sm text-muted hover:text-ink transition"
+                className="text-sm text-muted transition hover:text-ink"
               >
                 Cancel
               </button>
@@ -420,12 +408,23 @@ export function AdminEventEditor({
           <button
             type="submit"
             disabled={status.kind === "loading"}
-            className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
+            className="btn-primary text-sm disabled:opacity-50"
           >
             {status.kind === "loading" ? "Saving…" : "Save event"}
           </button>
         </div>
       </div>
     </form>
+  );
+}
+
+function Labeled({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <label className="block space-y-2">
+      <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+        {title}
+      </span>
+      {children}
+    </label>
   );
 }

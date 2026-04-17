@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+const NAV = [
+  { href: "/admin/applications?tab=students", match: "/admin/applications", label: "Applications" },
+  { href: "/admin/members?tab=members", match: "/admin/members", label: "Members" },
+  { href: "/admin/events", match: "/admin/events", label: "Events" },
+  { href: "/admin/hackathon", match: "/admin/hackathon", label: "Hackathon" }
+];
 
 export function AdminShell({
   title,
@@ -13,6 +20,7 @@ export function AdminShell({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -21,38 +29,68 @@ export function AdminShell({
   }
 
   return (
-    <div className="min-h-screen bg-paper">
-      <header className="border-b border-line/70">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <div>
-            <p className="text-xs uppercase tracking-[0.38em] text-accent">{eyebrow}</p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">{title}</h1>
+    <div className="min-h-screen bg-paper text-ink">
+      {/* Top bar: wordmark + nav + logout */}
+      <header className="border-b border-ink/10 bg-paper/90 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:px-10">
+          <div className="flex items-center gap-8">
+            <Link href="/admin/applications" className="flex items-baseline gap-2">
+              <span className="font-display text-xl leading-none text-ink">ucsb</span>
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
+              <span className="text-sm font-medium tracking-wide text-ink">network</span>
+              <span className="ml-2 font-mono text-[10px] uppercase tracking-[0.26em] text-accent">
+                Admin
+              </span>
+            </Link>
+            <nav className="hidden items-center gap-6 md:flex">
+              {NAV.map((item) => {
+                const isActive = pathname.startsWith(item.match);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`relative py-3 text-sm transition ${
+                      isActive ? "text-ink" : "text-muted hover:text-ink"
+                    }`}
+                  >
+                    {item.label}
+                    {isActive ? (
+                      <span className="absolute inset-x-0 -bottom-[1px] h-[2px] bg-accent" />
+                    ) : null}
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
-          <nav className="flex items-center gap-3 text-sm text-muted">
-            <Link href="/" className="transition hover:text-accent">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="text-xs text-muted transition hover:text-ink"
+            >
               Public site
-            </Link>
-            <Link href="/admin/applications?tab=students" className="transition hover:text-accent">
-              Applications
-            </Link>
-            <Link href="/admin/members?tab=members" className="transition hover:text-accent">
-              Members
-            </Link>
-            <Link href="/admin/members?tab=alumni" className="transition hover:text-accent">
-              Alumni
-            </Link>
-            <Link href="/admin/events" className="transition hover:text-accent">
-              Events
             </Link>
             <button
               onClick={handleLogout}
-              className="ml-2 rounded-lg border border-line/50 px-3 py-1.5 text-sm text-muted transition hover:border-accent/40 hover:text-ink"
+              className="border border-ink/15 px-3 py-1.5 text-xs text-ink transition hover:bg-ink hover:text-paper"
             >
               Logout
             </button>
-          </nav>
+          </div>
         </div>
       </header>
+
+      {/* Page header */}
+      <section className="border-b border-ink/10">
+        <div className="mx-auto flex max-w-7xl items-end justify-between gap-6 px-6 py-10 lg:px-10">
+          <div>
+            <p className="eyebrow-accent">{eyebrow}</p>
+            <h1 className="mt-3 font-display text-4xl leading-tight text-ink">
+              {title}
+            </h1>
+          </div>
+        </div>
+      </section>
+
       <main className="mx-auto max-w-7xl px-6 py-10 lg:px-10">{children}</main>
     </div>
   );
