@@ -41,10 +41,10 @@ export function AdminLoginForm() {
 
   return (
     <div>
-      <Link href="/" className="flex items-baseline gap-2">
+      <Link href="/" className="flex items-center gap-2 leading-none">
         <span className="font-display text-2xl leading-none text-ink">ucsb</span>
-        <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
-        <span className="text-base font-medium tracking-wide text-ink">network</span>
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
+        <span className="text-base font-medium leading-none tracking-wide text-ink">network</span>
       </Link>
 
       <div className="mt-10">
