@@ -12,29 +12,22 @@ export const metadata = {
 };
 
 export default function BatchPage() {
-  const accomplishmentCount = COHORT_1_STARTUPS.reduce(
-    (total, startup) =>
-      total +
-      startup.accomplishments.reduce((sum, founder) => sum + founder.items.length, 0),
-    0
-  );
-
   return (
     <MarketingShell>
       <section className="border-b border-ink/10">
         <div className="mx-auto max-w-6xl px-6 py-20 lg:px-8 lg:py-24">
           <p className="eyebrow-accent">Cohort {CURRENT_COHORT} &middot; Spring 2026</p>
-          <h1 className="mt-6 max-w-4xl font-display text-display-lg tracking-tightest text-ink">
-            Cohort 1 portfolio.
+          <h1 className="mt-6 flex max-w-4xl flex-wrap gap-x-4 font-display text-display-lg text-ink">
+            <span>Cohort</span>
+            <span>1</span>
+            <span>portfolio.</span>
           </h1>
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-ink/80">
-            Six startups in the first cohort, each led by builders with proof of
-            speed, technical depth, and competitive edge before Demo Day.
-          </p>
-          <div className="mt-12 grid max-w-3xl grid-cols-3 gap-8 max-sm:grid-cols-1">
-            <Stat num={String(COHORT_1_STARTUPS.length)} label="Startups" />
-            <Stat num={String(accomplishmentCount)} label="Founder proof points" />
-            <Stat num="8" label="Weeks of building" />
+          <div className="mt-12 inline-flex items-center gap-4 border-y border-ink/10 py-4">
+            <span className="font-display text-5xl leading-none text-ink">
+              {String(COHORT_1_STARTUPS.length).padStart(2, "0")}
+            </span>
+            <span className="h-10 w-px bg-accent" />
+            <span className="eyebrow text-ink">Startups</span>
           </div>
         </div>
       </section>
@@ -135,14 +128,5 @@ export default function BatchPage() {
         </div>
       </section>
     </MarketingShell>
-  );
-}
-
-function Stat({ num, label }: { num: string; label: string }) {
-  return (
-    <div>
-      <p className="font-display text-4xl leading-none text-ink">{num}</p>
-      <p className="mt-2 text-sm leading-snug text-muted">{label}</p>
-    </div>
   );
 }

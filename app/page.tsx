@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { MarketingShell } from "@/components/marketing/marketing-shell";
@@ -96,12 +95,6 @@ export default async function HomePage() {
               desc="The program ends with a Demo Day. Pitch what you built to VCs, operators, and the broader UCSB founder network."
               link={{ href: "/demo-day", label: "About Demo Day" }}
             />
-          </div>
-
-          <div className="mt-16 flex flex-wrap items-center gap-x-10 gap-y-4 border-t border-ink/10 pt-8">
-            <span className="eyebrow">Partnered with</span>
-            <PartnerInline src="/mindfort-logo.jpeg" alt="Mindfort AI" />
-            <PartnerInline src="/cursor-logo.png" alt="Cursor" />
           </div>
         </div>
       </section>
@@ -245,18 +238,6 @@ function ProgramRow({
         ) : null}
       </div>
     </div>
-  );
-}
-
-function PartnerInline({ src, alt }: { src: string; alt: string }) {
-  return (
-    <Image
-      src={src}
-      alt={alt}
-      width={110}
-      height={28}
-      className="h-7 w-auto object-contain opacity-80"
-    />
   );
 }
 
