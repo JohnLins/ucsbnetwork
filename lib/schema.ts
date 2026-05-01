@@ -96,6 +96,15 @@ export const hackathonSignupSchema = z.object({
   honeypot: z.string().optional()
 });
 
+export const officeHoursSignupSchema = z.object({
+  names: z.string().trim().min(2).max(500),
+  phone: z.string().trim().min(10).max(40),
+  relevantLinks: z.string().trim().max(4000).optional(),
+  project: z.string().trim().min(20).max(8000),
+  formStartedAt: z.number().int(),
+  honeypot: z.string().optional()
+});
+
 export const memberUpsertSchema = z.object({
   id: z.string().uuid().optional(),
   email: z

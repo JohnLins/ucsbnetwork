@@ -7,7 +7,8 @@ const NAV = [
   { href: "/admin/applications?tab=students", match: "/admin/applications", label: "Applications" },
   { href: "/admin/members?tab=members", match: "/admin/members", label: "Members" },
   { href: "/admin/events", match: "/admin/events", label: "Events" },
-  { href: "/admin/hackathon", match: "/admin/hackathon", label: "Hackathon" }
+  { href: "/admin/hackathon", match: "/admin/hackathon", label: "Hackathon" },
+  { href: "/admin/office-hours", match: "/admin/office-hours", label: "Office hours" }
 ];
 
 export function AdminShell({
