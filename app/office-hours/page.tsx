@@ -45,30 +45,43 @@ export default function OfficeHoursPage() {
           <h2 className="font-display text-2xl text-ink">
             Who you&apos;ll be talking to
           </h2>
-          <p className="mt-6 text-base leading-relaxed text-ink/80">
-            <a href={LINKEDIN_LEON} className="link-editorial" target="_blank" rel="noreferrer">
-              Leon Khoshnevis
-            </a>
-            {" "}
-            &amp;{" "}
-            <a href={LINKEDIN_HURSH} className="link-editorial" target="_blank" rel="noreferrer">
-              Hursh Shah
-            </a>
-            .
-          </p>
-          <p className="mt-4 text-base leading-relaxed text-ink/80">
-            I previously scaled ideas into impactful products with huge user
-            bases and consistent revenue, having had three years of experience
-            helping founders on campus. More info at{" "}
-            <a href={LINKEDIN_LEON} className="link-editorial" target="_blank" rel="noreferrer">
-              Leon&rsquo;s LinkedIn
-            </a>{" "}
-            and{" "}
-            <a href={LINKEDIN_HURSH} className="link-editorial" target="_blank" rel="noreferrer">
-              Hursh&rsquo;s LinkedIn
-            </a>
-            .
-          </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            <div className="border border-ink/10 p-6">
+              <p className="eyebrow text-ink">
+                <a
+                  href={LINKEDIN_LEON}
+                  className="link-editorial"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Leon Khoshnevis
+                </a>
+              </p>
+              <p className="mt-4 text-base leading-relaxed text-ink/80">
+                I previously scaled ideas into impactful products with huge
+                user bases and consistent revenue, having had three years of
+                experience helping founders on campus.
+              </p>
+            </div>
+            <div className="border border-ink/10 p-6">
+              <p className="eyebrow text-ink">
+                <a
+                  href={LINKEDIN_HURSH}
+                  className="link-editorial"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Hursh Shah
+                </a>
+              </p>
+              <p className="mt-4 text-base leading-relaxed text-ink/80">
+                I&apos;m the founder of Edviro and ucsb.network, previously
+                co-founded SkyGlass (AR for pilot pre-flight inspections),
+                wrote and presented my paper at NeurIPS 2024 GenAI4Health, and
+                was selected for OpenAI&apos;s ChatGPT Lab (1 of 30 students).
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
