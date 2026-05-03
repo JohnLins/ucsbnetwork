@@ -75,7 +75,7 @@ export default function OfficeHoursPage() {
                 </a>
               </p>
               <p className="mt-4 text-base leading-relaxed text-ink/80">
-                I&apos;m the founder of Edvirohello and ucsb.network, previously
+                I&apos;m the founder of Edviro and ucsb.network, previously
                 co-founded SkyGlass (AR for pilot pre-flight inspections),
                 wrote and presented my paper at NeurIPS 2024 GenAI4Health, and
                 was selected for OpenAI&apos;s ChatGPT Lab (1 of 30 students).
