@@ -1,3 +1,3 @@
 ## UCSB Network Repo
 
-Website for the accelerator @ UCSB
+Website for the accelerator @ UCSB.
