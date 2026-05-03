@@ -78,7 +78,7 @@ export default function OfficeHoursPage() {
                 I&apos;m the founder of Edviro and ucsb.network, previously
                 co-founded SkyGlass (AR for pilot pre-flight inspections),
                 wrote and presented my paper at NeurIPS 2024 GenAI4Health, and
-                was selected for OpenAI&apos;s ChatGPT Lab (1 of 30 students).
+                was selected for OpenAI&apos;s ChatGPT Lab (1 of 30 students). 
               </p>
             </div>
           </div>
