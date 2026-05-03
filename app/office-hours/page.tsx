@@ -59,7 +59,7 @@ export default function OfficeHoursPage() {
               </p>
               <p className="mt-4 text-base leading-relaxed text-ink/80">
                 I&apos;m the founder of Playa House, prev co-founded SBVenture,
-                and Correkt AI (multimodal AI search engine, 40K users), and led
+                and Correkt AI (multimodal AI search engine, 40K users), also led
                 Neuro research my 1st year @ UCSB.
               </p>
             </div>
