@@ -23,6 +23,11 @@ export default function OfficeHoursPage() {
             We&apos;re opening our exclusive in-batch office hours to anyone
             building anything at any stage at UCSB.
           </p>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink/80">
+            Every builder who meets with us gets{" "}
+            <span className="text-ink">$100 in free Cursor credits</span> to
+            keep shipping after the session.
+          </p>
         </div>
       </section>
 
