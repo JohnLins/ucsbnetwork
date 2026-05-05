@@ -4,11 +4,12 @@ import { OfficeHoursSignupForm } from "@/components/marketing/office-hours-signu
 export const metadata = {
   title: "Live Office Hours: ucsb.network",
   description:
-    "Open office hours for anyone building at UCSB. Meet ucsb.network directors for a recorded session and feedback."
+    "Open office hours for UCSB builders. Meet ucsb.network directors for a recorded session, feedback, and free Cursor credits when you attend."
 };
 
 const LINKEDIN_LEON = "https://www.linkedin.com/in/leonkhoshnevis/";
 const LINKEDIN_HURSH = "https://www.linkedin.com/in/hursh-shah/";
+const CURSOR = "https://cursor.com";
 
 export default function OfficeHoursPage() {
   return (
@@ -23,10 +24,17 @@ export default function OfficeHoursPage() {
             We&apos;re opening our exclusive in-batch office hours to anyone
             building anything at any stage at UCSB.
           </p>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink/80">
-            Every builder who meets with us gets{" "}
-            <span className="text-ink">$100 in free Cursor credits</span> to
-            keep shipping after the session.
+          <p className="mt-6 max-w-sm border border-ink/10 bg-panel/50 px-4 py-3 text-sm leading-snug text-ink">
+            Free{" "}
+            <a
+              href={CURSOR}
+              className="link-editorial"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Cursor
+            </a>{" "}
+            credits included afterwards.
           </p>
         </div>
       </section>
@@ -83,7 +91,7 @@ export default function OfficeHoursPage() {
                 I&apos;m the founder of Edviro and ucsb.network, previously
                 co-founded SkyGlass (AR for pilot pre-flight inspections),
                 wrote and presented my paper at NeurIPS 2024 GenAI4Health, and
-                was selected for OpenAI&apos;s ChatGPT Lab (1 of 30 students). 
+                was selected for OpenAI&apos;s ChatGPT Lab (1 of 30 students).{" "}
               </p>
             </div>
           </div>

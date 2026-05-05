@@ -23,7 +23,7 @@ export function SiteFooter() {
               { href: "/program", label: "What you get" },
               { href: "/batch", label: "Current batch" },
               { href: "/demo-day", label: "Demo Day" },
-              { href: "/office-hours", label: "Office hours" },
+              { href: "/officehours", label: "Office hours" },
               { href: "/hackathon", label: "Hackathon" }
             ]}
           />

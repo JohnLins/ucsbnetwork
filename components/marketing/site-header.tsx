@@ -8,7 +8,7 @@ const NAV = [
   { href: "/program", label: "Program" },
   { href: "/batch", label: "Batch" },
   { href: "/demo-day", label: "Demo Day" },
-  { href: "/office-hours", label: "Office Hours" },
+  { href: "/officehours", label: "Office Hours" },
   { href: "/hackathon", label: "Hackathon" },
   { href: "/faq", label: "FAQ" }
 ];
