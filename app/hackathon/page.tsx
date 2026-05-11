@@ -6,7 +6,7 @@ import { MarketingShell } from "@/components/marketing/marketing-shell";
 export const metadata = {
   title: "Hackathon: ucsb.network",
   description:
-    "May 23rd, 2026 \u2022 10am\u201310pm \u2022 Loma Pelona Center. A 12-hour hackathon for the cohort plus a handful of outside UCSB builders. Compete for a grand prize of $1,000 in any AI credits."
+    "May 23rd, 2026 \u2022 10am\u201310pm \u2022 Loma Pelona Center. A 12-hour hackathon for the cohort plus a handful of outside UCSB builders. Grand prize of $1,000 in any AI credits, plus $250 in AI credits for every participant."
 };
 
 const PRIZES = [
@@ -14,6 +14,11 @@ const PRIZES = [
     tag: "Grand prize",
     title: "$1,000 in any AI credits",
     desc: "The winning team picks the stack: $1,000 in credits at the AI provider of their choice."
+  },
+  {
+    tag: "Every participant",
+    title: "$250 in AI credits",
+    desc: "Everyone who ships a project gets $250 in AI credits. Show up, build something, leave with resources to keep going."
   },
   {
     tag: "Outside winners",
@@ -47,8 +52,9 @@ export default function HackathonPage() {
             </h1>
             <p className="mt-8 max-w-xl text-lg leading-relaxed text-ink/80">
               A 12-hour hackathon for the cohort plus a handful of outside
-              UCSB builders. One day, one product, live judging. Compete for
-              a grand prize of $1,000 in any AI credits.
+              UCSB builders. One day, one product, live judging. $1,000 in
+              any AI credits for the winner; $250 in AI credits for every
+              participant.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <Link href="#signup" className="btn-primary">
@@ -76,7 +82,7 @@ export default function HackathonPage() {
               </li>
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-xs text-accent">04</span>
-                <span>Grand prize: $1,000 in any AI credits.</span>
+                <span>$1,000 in any AI credits to the winner; $250 to everyone who ships.</span>
               </li>
             </ul>
           </aside>
@@ -88,9 +94,9 @@ export default function HackathonPage() {
         <div className="mx-auto max-w-6xl px-6 py-20 lg:px-8">
           <p className="eyebrow-accent">Prizes</p>
           <h2 className="mt-4 max-w-2xl font-display text-display-md text-ink">
-            $1,000 in any AI credits to the winner.
+            AI credits for the winner, AI credits for everyone.
           </h2>
-          <div className="mt-14 grid gap-px overflow-hidden border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-14 grid gap-px overflow-hidden border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-4">
             {PRIZES.map((p) => (
               <div key={p.title} className="bg-paper p-8">
                 <p className="eyebrow-accent">{p.tag}</p>
@@ -163,7 +169,7 @@ export default function HackathonPage() {
       <section>
         <div className="mx-auto max-w-3xl px-6 py-20 text-center lg:px-8">
           <h2 className="font-display text-display-md text-ink">
-            One day, one product, $1,000 in AI credits.
+            One day, one product, AI credits for everyone.
           </h2>
           <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-ink/80">
             May 23rd, 2026 at the Loma Pelona Center. Sign up above if
