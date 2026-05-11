@@ -6,19 +6,14 @@ import { MarketingShell } from "@/components/marketing/marketing-shell";
 export const metadata = {
   title: "Hackathon: ucsb.network",
   description:
-    "A weekend hackathon mid-program for the cohort plus a handful of outside UCSB builders. $1,000 in credits for the winner; $250 in credits for every participant."
+    "May 23rd, 2026 \u2022 10am\u201310pm \u2022 Loma Pelona Center. A 12-hour hackathon for the cohort plus a handful of outside UCSB builders. Compete for a grand prize of $1,000 in any AI credits."
 };
 
 const PRIZES = [
   {
     tag: "Grand prize",
-    title: "$1,000 in credits",
-    desc: "The winning team walks away with $1,000 in build credits across our partner stack: compute, AI, and tooling."
-  },
-  {
-    tag: "Every participant",
-    title: "$250 in credits",
-    desc: "Everyone who ships a project gets $250 in credits. Show up, build something, leave with resources to keep going."
+    title: "$1,000 in any AI credits",
+    desc: "The winning team picks the stack: $1,000 in credits at the AI provider of their choice."
   },
   {
     tag: "Outside winners",
@@ -27,15 +22,15 @@ const PRIZES = [
   },
   {
     tag: "Partner tools",
-    title: "Cursor Pro, AI credits",
-    desc: "A bundle of Cursor Pro, AI credits, and a stack discount across our partners for the full weekend."
+    title: "Cursor Pro & more",
+    desc: "Cursor Pro, partner AI credits, and a stack discount across our partners for hackathon participants."
   }
 ];
 
 const RULES = [
   "Teams of up to four. Solo entries are welcome.",
   "Build what you want, but be specific about the user and the problem.",
-  "All core code written during the hackathon weekend. Boilerplate is fine.",
+  "All core code written during the 12-hour event. Boilerplate is fine.",
   "Judging on product quality, traction, and the quality of your demo.",
   "Cohort partners automatically qualify. Outside builders are picked from the signup list."
 ];
@@ -46,14 +41,14 @@ export default function HackathonPage() {
       <section className="border-b border-ink/10">
         <div className="mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-[1.3fr_1fr] lg:px-8 lg:py-28">
           <div>
-            <p className="eyebrow-accent">Mid-program weekend</p>
+            <p className="eyebrow-accent">May 23rd, 2026 • 10am–10pm • Loma Pelona Center</p>
             <h1 className="mt-6 font-display text-display-xl tracking-tightest text-ink">
               The<br />hackathon.
             </h1>
             <p className="mt-8 max-w-xl text-lg leading-relaxed text-ink/80">
-              A weekend hackathon for the cohort plus a handful of outside
-              UCSB builders. 48 hours, one product, live judging. $1,000 in
-              credits for the winner; $250 in credits for every participant.
+              A 12-hour hackathon for the cohort plus a handful of outside
+              UCSB builders. One day, one product, live judging. Compete for
+              a grand prize of $1,000 in any AI credits.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <Link href="#signup" className="btn-primary">
@@ -69,19 +64,19 @@ export default function HackathonPage() {
             <ul className="mt-6 space-y-5 text-sm leading-relaxed text-ink/80">
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-xs text-accent">01</span>
-                <span>48 hours of building, in person.</span>
+                <span>Saturday, May 23rd, 2026 — 10am to 10pm.</span>
               </li>
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-xs text-accent">02</span>
-                <span>Live judging with operators and VCs.</span>
+                <span>Loma Pelona Center, UCSB. In person, all day.</span>
               </li>
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-xs text-accent">03</span>
-                <span>Winners announced Sunday night.</span>
+                <span>Live judging with operators and VCs. Winners announced that night.</span>
               </li>
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-xs text-accent">04</span>
-                <span>$1,000 in credits to the winner; $250 to everyone who ships.</span>
+                <span>Grand prize: $1,000 in any AI credits.</span>
               </li>
             </ul>
           </aside>
@@ -93,9 +88,9 @@ export default function HackathonPage() {
         <div className="mx-auto max-w-6xl px-6 py-20 lg:px-8">
           <p className="eyebrow-accent">Prizes</p>
           <h2 className="mt-4 max-w-2xl font-display text-display-md text-ink">
-            Credits for winners, credits for everyone.
+            $1,000 in any AI credits to the winner.
           </h2>
-          <div className="mt-14 grid gap-px overflow-hidden border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid gap-px overflow-hidden border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
             {PRIZES.map((p) => (
               <div key={p.title} className="bg-paper p-8">
                 <p className="eyebrow-accent">{p.tag}</p>
@@ -168,10 +163,11 @@ export default function HackathonPage() {
       <section>
         <div className="mx-auto max-w-3xl px-6 py-20 text-center lg:px-8">
           <h2 className="font-display text-display-md text-ink">
-            A weekend, a product, some credits.
+            One day, one product, $1,000 in AI credits.
           </h2>
           <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-ink/80">
-            Sign up above if you&rsquo;re outside the cohort and want in.
+            May 23rd, 2026 at the Loma Pelona Center. Sign up above if
+            you&rsquo;re outside the cohort and want in.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link href="/apply" className="btn-primary">
