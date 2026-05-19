@@ -46,7 +46,7 @@ export default function HackathonPage() {
       <section className="border-b border-ink/10">
         <div className="mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-[1.3fr_1fr] lg:px-8 lg:py-28">
           <div>
-            <p className="eyebrow-accent">May 23rd, 2026 • 9am–9pm • Loma Pelona Center</p>
+            <p className="eyebrow-accent">May 23rd, 2026 • 9am - 9pm • Loma Pelona Center</p>
             <h1 className="mt-6 font-display text-display-xl tracking-tightest text-ink">
               The<br />hackathon.
             </h1>
@@ -66,11 +66,11 @@ export default function HackathonPage() {
             </div>
           </div>
           <aside className="lg:border-l lg:border-ink/10 lg:pl-10">
-            <p className="eyebrow">The deal</p>
+            <p className="eyebrow">Details</p>
             <ul className="mt-6 space-y-5 text-sm leading-relaxed text-ink/80">
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-xs text-accent">01</span>
-                <span>Saturday, May 23rd, 2026 — 10am to 10pm.</span>
+                <span>Saturday, May 23rd, 2026 - 9am to 9pm.</span>
               </li>
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-xs text-accent">02</span>
