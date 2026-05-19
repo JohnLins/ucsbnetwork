@@ -6,7 +6,7 @@ import { MarketingShell } from "@/components/marketing/marketing-shell";
 export const metadata = {
   title: "Hackathon: ucsb.network",
   description:
-    "May 23rd, 2026 \u2022 10am\u201310pm \u2022 Loma Pelona Center. A 12-hour hackathon for the cohort plus a handful of outside UCSB builders. Grand prize of $1,000 in any AI credits, plus $250 in AI credits for every participant."
+    "May 23rd, 2026 \u2022 9am\u20139pm \u2022 Loma Pelona Center. A 12-hour hackathon for the cohort plus a handful of outside UCSB builders. Grand prize of $1,000 in any AI credits, plus $250 in AI credits for every participant."
 };
 
 const PRIZES = [
@@ -46,7 +46,7 @@ export default function HackathonPage() {
       <section className="border-b border-ink/10">
         <div className="mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-[1.3fr_1fr] lg:px-8 lg:py-28">
           <div>
-            <p className="eyebrow-accent">May 23rd, 2026 • 10am–10pm • Loma Pelona Center</p>
+            <p className="eyebrow-accent">May 23rd, 2026 • 9am–9pm • Loma Pelona Center</p>
             <h1 className="mt-6 font-display text-display-xl tracking-tightest text-ink">
               The<br />hackathon.
             </h1>
