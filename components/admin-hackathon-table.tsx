@@ -22,13 +22,24 @@ function escapeCsvField(value: string | null | undefined): string {
 }
 
 function buildCsv(signups: HackathonSignup[]): string {
-  const headers = ["created_at", "name", "email", "school", "link", "pitch"];
+  const headers = [
+    "created_at",
+    "name",
+    "email",
+    "school",
+    "team_status",
+    "teammates",
+    "link",
+    "pitch"
+  ];
   const rows = signups.map((s) =>
     [
       s.createdAt,
       escapeCsvField(s.name),
       escapeCsvField(s.email),
       escapeCsvField(s.school),
+      escapeCsvField(s.teamStatus),
+      escapeCsvField(s.teammates),
       escapeCsvField(s.link),
       escapeCsvField(s.pitch)
     ].join(",")
@@ -48,6 +59,7 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
         s.name.toLowerCase().includes(q) ||
         s.email.toLowerCase().includes(q) ||
         (s.school ?? "").toLowerCase().includes(q) ||
+        (s.teammates ?? "").toLowerCase().includes(q) ||
         s.pitch.toLowerCase().includes(q)
     );
   }, [query, signups]);
@@ -105,6 +117,7 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
                 <Th>Name</Th>
                 <Th>Email</Th>
                 <Th>School</Th>
+                <Th>Team</Th>
                 <Th>Link</Th>
                 <Th>Pitch</Th>
               </tr>
@@ -132,6 +145,24 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
                     </Td>
                     <Td>
                       <span className="text-ink/80">{s.school ?? "—"}</span>
+                    </Td>
+                    <Td>
+                      <div className="flex flex-col gap-1">
+                        <span
+                          className={`inline-flex w-fit border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] ${
+                            s.teamStatus === "team"
+                              ? "border-accent/40 bg-accent/10 text-accent"
+                              : "border-line/60 bg-panel/60 text-muted"
+                          }`}
+                        >
+                          {s.teamStatus === "team" ? "Team" : "Solo"}
+                        </span>
+                        {s.teammates ? (
+                          <span className="whitespace-pre-line text-xs text-ink/80">
+                            {s.teammates}
+                          </span>
+                        ) : null}
+                      </div>
                     </Td>
                     <Td>
                       {s.link ? (

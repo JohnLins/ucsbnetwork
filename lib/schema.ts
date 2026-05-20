@@ -86,15 +86,32 @@ export const adminReviewSchema = z.object({
   })
 });
 
-export const hackathonSignupSchema = z.object({
-  name: z.string().trim().min(2).max(120),
-  email: z.string().trim().email().max(200),
-  school: z.string().trim().max(120).optional(),
-  pitch: z.string().trim().min(10).max(2000),
-  link: optionalUrlSchema,
-  formStartedAt: z.number().int(),
-  honeypot: z.string().optional()
-});
+export const hackathonSignupSchema = z
+  .object({
+    name: z.string().trim().min(2).max(120),
+    email: z.string().trim().email().max(200),
+    school: z.string().trim().max(120).optional(),
+    pitch: z.string().trim().min(10).max(2000),
+    link: optionalUrlSchema,
+    teamStatus: z.enum(["solo", "team"]),
+    teammates: z
+      .string()
+      .trim()
+      .max(1000)
+      .optional()
+      .transform((value) => (value?.length ? value : undefined)),
+    formStartedAt: z.number().int(),
+    honeypot: z.string().optional()
+  })
+  .superRefine((value, ctx) => {
+    if (value.teamStatus === "team" && !value.teammates) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["teammates"],
+        message: "List your teammates or switch to solo."
+      });
+    }
+  });
 
 export const officeHoursSignupSchema = z.object({
   names: z.string().trim().min(2).max(500),

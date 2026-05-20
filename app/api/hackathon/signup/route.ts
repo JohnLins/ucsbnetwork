@@ -62,6 +62,8 @@ export async function POST(request: Request) {
       school: payload.school ?? null,
       pitch: payload.pitch,
       link: payload.link ?? null,
+      team_status: payload.teamStatus,
+      teammates: payload.teamStatus === "team" ? payload.teammates ?? null : null,
       ip_hash: ipHash,
       email_hash: emailHash
     });

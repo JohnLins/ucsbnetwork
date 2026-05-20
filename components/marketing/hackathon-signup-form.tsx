@@ -8,12 +8,16 @@ type SubmissionState =
   | { status: "success" }
   | { status: "error"; message: string };
 
+type TeamStatus = "solo" | "team";
+
 type FormState = {
   name: string;
   email: string;
   school: string;
   pitch: string;
   link: string;
+  teamStatus: TeamStatus;
+  teammates: string;
   formStartedAt: number;
   honeypot: string;
 };
@@ -30,6 +34,8 @@ export function HackathonSignupForm() {
     school: "UCSB",
     pitch: "",
     link: "",
+    teamStatus: "solo",
+    teammates: "",
     formStartedAt: Date.now(),
     honeypot: ""
   }));
@@ -61,6 +67,14 @@ export function HackathonSignupForm() {
       return;
     }
 
+    if (form.teamStatus === "team" && !form.teammates.trim()) {
+      setState({
+        status: "error",
+        message: "List your teammates or switch to solo."
+      });
+      return;
+    }
+
     setState({ status: "loading" });
 
     try {
@@ -88,6 +102,8 @@ export function HackathonSignupForm() {
         school: "UCSB",
         pitch: "",
         link: "",
+        teamStatus: "solo",
+        teammates: "",
         formStartedAt: Date.now(),
         honeypot: ""
       });
@@ -150,6 +166,43 @@ export function HackathonSignupForm() {
         />
       </Field>
 
+      <div className="space-y-2.5">
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+          Team *
+        </span>
+        <div className="grid grid-cols-2 gap-px overflow-hidden border border-ink/15 bg-ink/10">
+          <TeamOption
+            label="Solo"
+            description="Just me."
+            selected={form.teamStatus === "solo"}
+            onSelect={() => update("teamStatus", "solo")}
+          />
+          <TeamOption
+            label="With a team"
+            description="Up to four total, including you."
+            selected={form.teamStatus === "team"}
+            onSelect={() => update("teamStatus", "team")}
+          />
+        </div>
+        {form.teamStatus === "team" ? (
+          <div className="space-y-1.5 pt-2">
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+              Teammates *
+            </span>
+            <textarea
+              value={form.teammates}
+              onChange={(e) => update("teammates", e.target.value)}
+              rows={3}
+              className={textareaClass}
+              placeholder={"One per line: name + email or link.\nJane Doe \u2014 jane@ucsb.edu\nJohn Smith \u2014 github.com/jsmith"}
+            />
+            <p className="font-mono text-[11px] text-muted">
+              Not everyone needs to sign up separately. We&rsquo;ll follow up with the address above.
+            </p>
+          </div>
+        ) : null}
+      </div>
+
       <div className="space-y-1.5">
         <div className="flex items-baseline justify-between">
           <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
@@ -206,6 +259,41 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       </span>
       {children}
     </label>
+  );
+}
+
+function TeamOption({
+  label,
+  description,
+  selected,
+  onSelect
+}: {
+  label: string;
+  description: string;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={selected}
+      className={`flex flex-col items-start gap-1 p-4 text-left transition ${
+        selected
+          ? "bg-accent/10 text-ink"
+          : "bg-paper text-ink/80 hover:bg-panel/60"
+      }`}
+    >
+      <span
+        className={`font-mono text-[11px] uppercase tracking-[0.22em] ${
+          selected ? "text-accent" : "text-muted"
+        }`}
+      >
+        {selected ? "Selected" : "Choose"}
+      </span>
+      <span className="font-display text-base text-ink">{label}</span>
+      <span className="text-xs leading-relaxed text-ink/70">{description}</span>
+    </button>
   );
 }
 
