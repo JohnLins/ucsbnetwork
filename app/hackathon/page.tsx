@@ -6,7 +6,7 @@ import { MarketingShell } from "@/components/marketing/marketing-shell";
 export const metadata = {
   title: "Hackathon: ucsb.network",
   description:
-    "May 23rd, 2026 \u2022 9am\u20139pm \u2022 Loma Pelona Center. A 12-hour hackathon for the cohort plus a handful of outside UCSB builders. Grand prize of $1,000 in any AI credits, plus $250 in AI credits for every participant."
+    "May 23rd, 2026 \u2022 9am\u20139pm \u2022 Loma Pelona Center. A 12-hour hackathon for the cohort plus a handful of outside UCSB builders. Grand prize of $1,000 in any AI credits, plus $100 in AI credits for every participant."
 };
 
 const PRIZES = [
@@ -17,8 +17,8 @@ const PRIZES = [
   },
   {
     tag: "Every participant",
-    title: "$250 in AI credits",
-    desc: "Everyone who ships a project gets $250 in AI credits. Show up, build something, leave with resources to keep going."
+    title: "$100 in AI credits",
+    desc: "Everyone who ships a project gets $100 in AI credits. Show up, build something, leave with resources to keep going."
   },
   {
     tag: "Outside winners",
@@ -55,7 +55,7 @@ export default function HackathonPage() {
             <p className="mt-8 max-w-xl text-lg leading-relaxed text-ink/80">
               A 12-hour hackathon for the cohort plus a handful of outside
               UCSB builders. One day, one product, live judging. $1,000 in
-              any AI credits for the winner; $250 in AI credits for every
+              any AI credits for the winner; $100 in AI credits for every
               participant.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -92,7 +92,7 @@ export default function HackathonPage() {
               </li>
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-xs text-accent">04</span>
-                <span>$1,000 in any AI credits to the winner; $250 to everyone who ships.</span>
+                <span>$1,000 in any AI credits to the winner; $100 to everyone who ships.</span>
               </li>
             </ul>
           </aside>

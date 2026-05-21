@@ -22,7 +22,7 @@ const TIMELINE = [
   {
     weeks: "Week 4",
     title: "Hackathon weekend",
-    desc: "A mid-program weekend for the cohort plus a handful of outside UCSB builders. $1,000 in credits for the winner; $250 in credits for everyone who ships."
+    desc: "A mid-program weekend for the cohort plus a handful of outside UCSB builders. $1,000 in credits for the winner; $100 in credits for everyone who ships."
   },
   {
     weeks: "Weeks 5\u20137",
@@ -51,7 +51,7 @@ const BENEFITS = [
   },
   {
     title: "Hackathon credits",
-    desc: "$1,000 in credits for the winner; $250 in credits for everyone who participates."
+    desc: "$1,000 in credits for the winner; $100 in credits for everyone who participates."
   },
   {
     title: "Demo Day audience",

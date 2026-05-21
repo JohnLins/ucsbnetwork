@@ -33,7 +33,7 @@ function getCopy(variant: RejectionVariant, firstName: string) {
           "",
           "Thanks for applying to the ucsb.network cohort. We're not able to offer you a spot this time.",
           "",
-          "That said, you can clearly build, and we think you might be a good fit for our hackathon. A weekend in person with the cohort and a handful of other UCSB builders we pick by hand. $1,000 in credits for the winner; $250 in credits for everyone who enters.",
+          "That said, you can clearly build, and we think you might be a good fit for our hackathon. A weekend in person with the cohort and a handful of other UCSB builders we pick by hand. $1,000 in credits for the winner; $100 in credits for everyone who enters.",
           "",
           `Apply here: ${hackathonUrl}`
         ]

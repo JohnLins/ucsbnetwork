@@ -61,7 +61,7 @@ const GROUPS: FaqGroup[] = [
       },
       {
         q: "What do winners get?",
-        a: "$1,000 in credits across our partner stack. Every participant who ships also gets $250 in credits."
+        a: "$1,000 in credits across our partner stack. Every participant who ships also gets $100 in credits."
       },
       {
         q: "How do I sign up if I am not in the cohort?",
