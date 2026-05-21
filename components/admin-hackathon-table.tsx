@@ -1,8 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
-import type { HackathonSignup } from "@/lib/data/hackathon";
+import type {
+  HackathonReviewStatus,
+  HackathonSignup
+} from "@/lib/data/hackathon";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -29,6 +33,8 @@ function buildCsv(signups: HackathonSignup[]): string {
     "school",
     "team_status",
     "teammates",
+    "status",
+    "reviewed_at",
     "link",
     "pitch"
   ];
@@ -40,6 +46,8 @@ function buildCsv(signups: HackathonSignup[]): string {
       escapeCsvField(s.school),
       escapeCsvField(s.teamStatus),
       escapeCsvField(s.teammates),
+      escapeCsvField(s.status),
+      escapeCsvField(s.reviewedAt),
       escapeCsvField(s.link),
       escapeCsvField(s.pitch)
     ].join(",")
@@ -47,22 +55,53 @@ function buildCsv(signups: HackathonSignup[]): string {
   return [headers.join(","), ...rows].join("\n");
 }
 
-export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] }) {
+type Decision = "accept" | "reject";
+type StatusFilter = "all" | "pending" | "accepted" | "rejected";
+
+type ReviewState =
+  | { kind: "idle" }
+  | { kind: "open"; signupId: string; decision: Decision; note: string }
+  | { kind: "submitting"; signupId: string; decision: Decision }
+  | {
+      kind: "result";
+      signupId: string;
+      ok: boolean;
+      message: string;
+    };
+
+export function HackathonSignupsTable({
+  signups
+}: {
+  signups: HackathonSignup[];
+}) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [review, setReview] = useState<ReviewState>({ kind: "idle" });
+
+  const counts = useMemo(() => {
+    return {
+      pending: signups.filter((s) => s.status === "pending").length,
+      accepted: signups.filter((s) => s.status === "accepted").length,
+      rejected: signups.filter((s) => s.status === "rejected").length
+    };
+  }, [signups]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return signups;
-    return signups.filter(
-      (s) =>
+    return signups.filter((s) => {
+      if (statusFilter !== "all" && s.status !== statusFilter) return false;
+      if (!q) return true;
+      return (
         s.name.toLowerCase().includes(q) ||
         s.email.toLowerCase().includes(q) ||
         (s.school ?? "").toLowerCase().includes(q) ||
         (s.teammates ?? "").toLowerCase().includes(q) ||
         s.pitch.toLowerCase().includes(q)
-    );
-  }, [query, signups]);
+      );
+    });
+  }, [query, statusFilter, signups]);
 
   function downloadCsv() {
     const csv = buildCsv(filtered);
@@ -77,13 +116,111 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
     URL.revokeObjectURL(url);
   }
 
+  function openReview(signupId: string, decision: Decision) {
+    setReview({ kind: "open", signupId, decision, note: "" });
+  }
+
+  function closeReview() {
+    setReview({ kind: "idle" });
+  }
+
+  async function submitReview(signup: HackathonSignup, decision: Decision, note: string) {
+    setReview({ kind: "submitting", signupId: signup.id, decision });
+    try {
+      const response = await fetch("/api/admin/hackathon/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          signupId: signup.id,
+          decision,
+          personalNote: note.trim() || undefined
+        })
+      });
+      const data = (await response.json().catch(() => null)) as {
+        ok?: boolean;
+        warnings?: string[];
+        error?: string;
+      } | null;
+
+      if (!response.ok || !data?.ok) {
+        setReview({
+          kind: "result",
+          signupId: signup.id,
+          ok: false,
+          message: data?.error ?? "Unable to save review."
+        });
+        return;
+      }
+
+      const verb = decision === "accept" ? "Accepted" : "Rejected";
+      const warningSuffix = data.warnings && data.warnings.length > 0
+        ? ` (warnings: ${data.warnings.join("; ")})`
+        : "";
+      setReview({
+        kind: "result",
+        signupId: signup.id,
+        ok: true,
+        message: `${verb} ${signup.name}. Email sent.${warningSuffix}`
+      });
+      router.refresh();
+    } catch (error) {
+      setReview({
+        kind: "result",
+        signupId: signup.id,
+        ok: false,
+        message: error instanceof Error ? error.message : "Network error."
+      });
+    }
+  }
+
+  const banner =
+    review.kind === "result" ? (
+      <div
+        className={`mb-6 border p-3 text-sm ${
+          review.ok
+            ? "border-accent/40 bg-accent/10 text-ink"
+            : "border-red-500/30 bg-red-500/5 text-red-500"
+        }`}
+      >
+        <div className="flex items-start justify-between gap-4">
+          <span>{review.message}</span>
+          <button
+            type="button"
+            onClick={() => setReview({ kind: "idle" })}
+            className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted hover:text-ink"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+    ) : null;
+
   return (
     <div>
+      {banner}
+
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-baseline gap-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted">
-            {filtered.length} / {signups.length} signups
-          </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <FilterChip
+            label={`All (${signups.length})`}
+            active={statusFilter === "all"}
+            onClick={() => setStatusFilter("all")}
+          />
+          <FilterChip
+            label={`Pending (${counts.pending})`}
+            active={statusFilter === "pending"}
+            onClick={() => setStatusFilter("pending")}
+          />
+          <FilterChip
+            label={`Accepted (${counts.accepted})`}
+            active={statusFilter === "accepted"}
+            onClick={() => setStatusFilter("accepted")}
+          />
+          <FilterChip
+            label={`Rejected (${counts.rejected})`}
+            active={statusFilter === "rejected"}
+            onClick={() => setStatusFilter("rejected")}
+          />
         </div>
         <div className="flex items-center gap-3">
           <input
@@ -106,7 +243,7 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
 
       {filtered.length === 0 ? (
         <div className="border border-line/40 bg-panel/60 p-8 text-sm text-muted">
-          No signups yet.
+          No signups match.
         </div>
       ) : (
         <div className="overflow-hidden border border-line/40">
@@ -118,13 +255,18 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
                 <Th>Email</Th>
                 <Th>School</Th>
                 <Th>Team</Th>
-                <Th>Link</Th>
+                <Th>Status</Th>
                 <Th>Pitch</Th>
+                <Th>Action</Th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line/40">
               {filtered.map((s) => {
                 const isOpen = expanded === s.id;
+                const isReviewOpen =
+                  review.kind === "open" && review.signupId === s.id;
+                const isSubmitting =
+                  review.kind === "submitting" && review.signupId === s.id;
                 return (
                   <tr key={s.id} className="align-top hover:bg-panel/40">
                     <Td>
@@ -133,7 +275,19 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
                       </span>
                     </Td>
                     <Td>
-                      <span className="font-medium text-ink">{s.name}</span>
+                      <div className="flex flex-col gap-1">
+                        <span className="font-medium text-ink">{s.name}</span>
+                        {s.link ? (
+                          <a
+                            href={s.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-accent underline underline-offset-2 hover:opacity-80"
+                          >
+                            link &rarr;
+                          </a>
+                        ) : null}
+                      </div>
                     </Td>
                     <Td>
                       <a
@@ -165,18 +319,12 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
                       </div>
                     </Td>
                     <Td>
-                      {s.link ? (
-                        <a
-                          href={s.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-accent underline underline-offset-2 hover:opacity-80"
-                        >
-                          Open &rarr;
-                        </a>
-                      ) : (
-                        <span className="text-muted">—</span>
-                      )}
+                      <StatusPill status={s.status} />
+                      {s.reviewedAt ? (
+                        <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+                          {formatDate(s.reviewedAt)}
+                        </span>
+                      ) : null}
                     </Td>
                     <Td>
                       <button
@@ -189,6 +337,46 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
                         </span>
                       </button>
                     </Td>
+                    <Td>
+                      {isReviewOpen && review.kind === "open" ? (
+                        <ReviewForm
+                          decision={review.decision}
+                          note={review.note}
+                          onNoteChange={(value) =>
+                            setReview({ ...review, note: value })
+                          }
+                          onSubmit={() => submitReview(s, review.decision, review.note)}
+                          onCancel={closeReview}
+                        />
+                      ) : isSubmitting ? (
+                        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+                          Sending…
+                        </span>
+                      ) : (
+                        <div className="flex flex-col gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => openReview(s.id, "accept")}
+                            disabled={s.status === "accepted"}
+                            className="border border-accent/60 bg-accent/10 px-3 py-1 text-xs font-medium text-ink transition hover:bg-accent/20 disabled:opacity-40"
+                          >
+                            {s.status === "accepted"
+                              ? "Accepted"
+                              : "Accept & email"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => openReview(s.id, "reject")}
+                            disabled={s.status === "rejected"}
+                            className="border border-line/60 bg-panel/60 px-3 py-1 text-xs font-medium text-ink/80 transition hover:bg-panel disabled:opacity-40"
+                          >
+                            {s.status === "rejected"
+                              ? "Rejected"
+                              : "Reject & email"}
+                          </button>
+                        </div>
+                      )}
+                    </Td>
                   </tr>
                 );
               })}
@@ -197,6 +385,94 @@ export function HackathonSignupsTable({ signups }: { signups: HackathonSignup[] 
         </div>
       )}
     </div>
+  );
+}
+
+function ReviewForm({
+  decision,
+  note,
+  onNoteChange,
+  onSubmit,
+  onCancel
+}: {
+  decision: Decision;
+  note: string;
+  onNoteChange: (value: string) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+}) {
+  const label = decision === "accept" ? "Send acceptance" : "Send rejection";
+  const primaryClass =
+    decision === "accept"
+      ? "border-accent/60 bg-accent/20 text-ink hover:bg-accent/30"
+      : "border-red-500/40 bg-red-500/10 text-red-500 hover:bg-red-500/20";
+
+  return (
+    <div className="flex w-64 flex-col gap-2">
+      <textarea
+        value={note}
+        onChange={(e) => onNoteChange(e.target.value)}
+        rows={3}
+        placeholder="Optional personal note appended to the email"
+        className="w-full border border-line/40 bg-paper px-2.5 py-2 text-xs text-ink outline-none transition placeholder:text-muted/60 focus:border-accent/60 focus:ring-1 focus:ring-accent/20"
+      />
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onSubmit}
+          className={`flex-1 border px-3 py-1 text-xs font-medium transition ${primaryClass}`}
+        >
+          {label}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="border border-line/40 bg-paper px-3 py-1 text-xs text-muted hover:text-ink"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function FilterChip({
+  label,
+  active,
+  onClick
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] transition ${
+        active
+          ? "border-accent/60 bg-accent/10 text-ink"
+          : "border-line/40 bg-paper text-muted hover:text-ink"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
+function StatusPill({ status }: { status: HackathonReviewStatus }) {
+  const styles =
+    status === "accepted"
+      ? "border-accent/50 bg-accent/15 text-ink"
+      : status === "rejected"
+        ? "border-red-500/30 bg-red-500/10 text-red-500"
+        : "border-line/60 bg-panel/60 text-muted";
+  return (
+    <span
+      className={`inline-flex w-fit border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] ${styles}`}
+    >
+      {status}
+    </span>
   );
 }
 

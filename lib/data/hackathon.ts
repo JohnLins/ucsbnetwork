@@ -2,6 +2,8 @@ import { getSupabaseServiceClient } from "@/lib/supabase/service";
 
 export type HackathonTeamStatus = "solo" | "team";
 
+export type HackathonReviewStatus = "pending" | "accepted" | "rejected";
+
 export type HackathonSignup = {
   id: string;
   name: string;
@@ -11,6 +13,10 @@ export type HackathonSignup = {
   link: string | null;
   teamStatus: HackathonTeamStatus;
   teammates: string | null;
+  status: HackathonReviewStatus;
+  reviewedAt: string | null;
+  reviewedByAdminEmail: string | null;
+  reviewNotes: string | null;
   createdAt: string;
 };
 
@@ -18,6 +24,13 @@ function mapSignup(row: Record<string, unknown>): HackathonSignup {
   const rawTeamStatus = String(row.team_status ?? "solo");
   const teamStatus: HackathonTeamStatus =
     rawTeamStatus === "team" ? "team" : "solo";
+
+  const rawStatus = String(row.status ?? "pending");
+  const status: HackathonReviewStatus =
+    rawStatus === "accepted" || rawStatus === "rejected"
+      ? rawStatus
+      : "pending";
+
   return {
     id: String(row.id),
     name: String(row.name ?? ""),
@@ -27,6 +40,12 @@ function mapSignup(row: Record<string, unknown>): HackathonSignup {
     link: row.link ? String(row.link) : null,
     teamStatus,
     teammates: row.teammates ? String(row.teammates) : null,
+    status,
+    reviewedAt: row.reviewed_at ? String(row.reviewed_at) : null,
+    reviewedByAdminEmail: row.reviewed_by_admin_email
+      ? String(row.reviewed_by_admin_email)
+      : null,
+    reviewNotes: row.review_notes ? String(row.review_notes) : null,
     createdAt: String(row.created_at ?? "")
   };
 }
@@ -37,7 +56,9 @@ export async function getHackathonSignups(): Promise<HackathonSignup[]> {
 
   const { data, error } = await supabase
     .from("hackathon_signups")
-    .select("id, name, email, school, pitch, link, team_status, teammates, created_at")
+    .select(
+      "id, name, email, school, pitch, link, team_status, teammates, status, reviewed_at, reviewed_by_admin_email, review_notes, created_at"
+    )
     .order("created_at", { ascending: false });
 
   if (error) {

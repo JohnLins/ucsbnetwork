@@ -113,6 +113,13 @@ export const hackathonSignupSchema = z
     }
   });
 
+export const hackathonAdminReviewSchema = z.object({
+  signupId: z.string().uuid(),
+  decision: z.enum(["accept", "reject"]),
+  reviewNotes: z.string().trim().max(2000).optional(),
+  personalNote: z.string().trim().max(2000).optional()
+});
+
 export const officeHoursSignupSchema = z.object({
   names: z.string().trim().min(2).max(500),
   phone: z.string().trim().min(10).max(40),

@@ -40,6 +40,8 @@ const RULES = [
   "Cohort partners automatically qualify. Outside builders are picked from the signup list."
 ];
 
+const LUMA_URL = "https://luma.com/md6em7ed";
+
 export default function HackathonPage() {
   return (
     <MarketingShell>
@@ -57,7 +59,15 @@ export default function HackathonPage() {
               participant.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link href="#signup" className="btn-primary">
+              <a
+                href={LUMA_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                Register on Luma
+              </a>
+              <Link href="#signup" className="btn-secondary">
                 Sign up (outside builders)
               </Link>
               <Link href="#prizes" className="btn-secondary">
@@ -149,6 +159,21 @@ export default function HackathonPage() {
                 Spots for non-cohort builders are limited and we pick by hand.
                 Tell us a little about you and what you&rsquo;d build.
               </p>
+              <div className="mt-8 border border-ink/10 bg-paper p-5">
+                <p className="eyebrow-accent">Also on Luma</p>
+                <p className="mt-3 text-sm leading-relaxed text-ink/80">
+                  Already know you&rsquo;re coming? RSVP on the Luma event so
+                  you get day-of updates.
+                </p>
+                <a
+                  href={LUMA_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex link-editorial text-sm"
+                >
+                  Register on Luma &rarr;
+                </a>
+              </div>
               <p className="mt-6 text-sm leading-relaxed text-muted">
                 In the current cohort? You&rsquo;re already in. The hackathon
                 is part of the program and will show up in your{" "}
@@ -176,7 +201,15 @@ export default function HackathonPage() {
             you&rsquo;re outside the cohort and want in.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/apply" className="btn-primary">
+            <a
+              href={LUMA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+            >
+              Register on Luma
+            </a>
+            <Link href="/apply" className="btn-secondary">
               Apply to the cohort
             </Link>
             <Link href="/program" className="btn-secondary">
