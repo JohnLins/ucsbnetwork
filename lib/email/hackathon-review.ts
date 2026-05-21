@@ -56,7 +56,7 @@ export async function sendHackathonAcceptanceEmail({
     "Details:",
     "• 9am-9pm at the Loma Pelona Center, UCSB",
     "• 12-hour build, live judging that night",
-    "• $1,000 in AI credits for the winner; $250 for everyone who ships",
+    "• $1,000 in AI credits for the winner; $100 for everyone who ships",
     "",
     teamLine,
     "",
