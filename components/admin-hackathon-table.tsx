@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import type {
@@ -58,16 +58,15 @@ function buildCsv(signups: HackathonSignup[]): string {
 type Decision = "accept" | "reject";
 type StatusFilter = "all" | "pending" | "accepted" | "rejected";
 
-type ReviewState =
-  | { kind: "idle" }
-  | { kind: "open"; signupId: string; decision: Decision; note: string }
-  | { kind: "submitting"; signupId: string; decision: Decision }
-  | {
-      kind: "result";
-      signupId: string;
-      ok: boolean;
-      message: string;
-    };
+type ReviewModal = {
+  signup: HackathonSignup;
+  decision: Decision;
+};
+
+type FlashMessage = {
+  ok: boolean;
+  message: string;
+};
 
 export function HackathonSignupsTable({
   signups
@@ -78,7 +77,9 @@ export function HackathonSignupsTable({
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [review, setReview] = useState<ReviewState>({ kind: "idle" });
+  const [modal, setModal] = useState<ReviewModal | null>(null);
+  const [submittingId, setSubmittingId] = useState<string | null>(null);
+  const [flash, setFlash] = useState<FlashMessage | null>(null);
 
   const counts = useMemo(() => {
     return {
@@ -116,16 +117,8 @@ export function HackathonSignupsTable({
     URL.revokeObjectURL(url);
   }
 
-  function openReview(signupId: string, decision: Decision) {
-    setReview({ kind: "open", signupId, decision, note: "" });
-  }
-
-  function closeReview() {
-    setReview({ kind: "idle" });
-  }
-
   async function submitReview(signup: HackathonSignup, decision: Decision, note: string) {
-    setReview({ kind: "submitting", signupId: signup.id, decision });
+    setSubmittingId(signup.id);
     try {
       const response = await fetch("/api/admin/hackathon/review", {
         method: "POST",
@@ -143,9 +136,7 @@ export function HackathonSignupsTable({
       } | null;
 
       if (!response.ok || !data?.ok) {
-        setReview({
-          kind: "result",
-          signupId: signup.id,
+        setFlash({
           ok: false,
           message: data?.error ?? "Unable to save review."
         });
@@ -153,51 +144,48 @@ export function HackathonSignupsTable({
       }
 
       const verb = decision === "accept" ? "Accepted" : "Rejected";
-      const warningSuffix = data.warnings && data.warnings.length > 0
-        ? ` (warnings: ${data.warnings.join("; ")})`
-        : "";
-      setReview({
-        kind: "result",
-        signupId: signup.id,
+      const warningSuffix =
+        data.warnings && data.warnings.length > 0
+          ? ` (warnings: ${data.warnings.join("; ")})`
+          : "";
+      setFlash({
         ok: true,
         message: `${verb} ${signup.name}. Email sent.${warningSuffix}`
       });
+      setModal(null);
       router.refresh();
     } catch (error) {
-      setReview({
-        kind: "result",
-        signupId: signup.id,
+      setFlash({
         ok: false,
         message: error instanceof Error ? error.message : "Network error."
       });
+    } finally {
+      setSubmittingId(null);
     }
   }
 
-  const banner =
-    review.kind === "result" ? (
-      <div
-        className={`mb-6 border p-3 text-sm ${
-          review.ok
-            ? "border-accent/40 bg-accent/10 text-ink"
-            : "border-red-500/30 bg-red-500/5 text-red-500"
-        }`}
-      >
-        <div className="flex items-start justify-between gap-4">
-          <span>{review.message}</span>
-          <button
-            type="button"
-            onClick={() => setReview({ kind: "idle" })}
-            className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted hover:text-ink"
-          >
-            Dismiss
-          </button>
-        </div>
-      </div>
-    ) : null;
-
   return (
     <div>
-      {banner}
+      {flash ? (
+        <div
+          className={`mb-6 border p-3 text-sm ${
+            flash.ok
+              ? "border-accent/40 bg-accent/10 text-ink"
+              : "border-red-500/30 bg-red-500/5 text-red-500"
+          }`}
+        >
+          <div className="flex items-start justify-between gap-4">
+            <span>{flash.message}</span>
+            <button
+              type="button"
+              onClick={() => setFlash(null)}
+              className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted hover:text-ink"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-2">
@@ -246,8 +234,8 @@ export function HackathonSignupsTable({
           No signups match.
         </div>
       ) : (
-        <div className="overflow-hidden border border-line/40">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto border border-line/40">
+          <table className="w-full min-w-[1100px] text-sm">
             <thead className="bg-panel/70">
               <tr className="text-left">
                 <Th>Date</Th>
@@ -257,16 +245,13 @@ export function HackathonSignupsTable({
                 <Th>Team</Th>
                 <Th>Status</Th>
                 <Th>Pitch</Th>
-                <Th>Action</Th>
+                <Th className="w-44">Action</Th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line/40">
               {filtered.map((s) => {
                 const isOpen = expanded === s.id;
-                const isReviewOpen =
-                  review.kind === "open" && review.signupId === s.id;
-                const isSubmitting =
-                  review.kind === "submitting" && review.signupId === s.id;
+                const isSubmitting = submittingId === s.id;
                 return (
                   <tr key={s.id} className="align-top hover:bg-panel/40">
                     <Td>
@@ -338,17 +323,7 @@ export function HackathonSignupsTable({
                       </button>
                     </Td>
                     <Td>
-                      {isReviewOpen && review.kind === "open" ? (
-                        <ReviewForm
-                          decision={review.decision}
-                          note={review.note}
-                          onNoteChange={(value) =>
-                            setReview({ ...review, note: value })
-                          }
-                          onSubmit={() => submitReview(s, review.decision, review.note)}
-                          onCancel={closeReview}
-                        />
-                      ) : isSubmitting ? (
+                      {isSubmitting ? (
                         <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
                           Sending…
                         </span>
@@ -356,23 +331,23 @@ export function HackathonSignupsTable({
                         <div className="flex flex-col gap-1.5">
                           <button
                             type="button"
-                            onClick={() => openReview(s.id, "accept")}
+                            onClick={() =>
+                              setModal({ signup: s, decision: "accept" })
+                            }
                             disabled={s.status === "accepted"}
                             className="border border-accent/60 bg-accent/10 px-3 py-1 text-xs font-medium text-ink transition hover:bg-accent/20 disabled:opacity-40"
                           >
-                            {s.status === "accepted"
-                              ? "Accepted"
-                              : "Accept & email"}
+                            {s.status === "accepted" ? "Accepted" : "Accept"}
                           </button>
                           <button
                             type="button"
-                            onClick={() => openReview(s.id, "reject")}
+                            onClick={() =>
+                              setModal({ signup: s, decision: "reject" })
+                            }
                             disabled={s.status === "rejected"}
                             className="border border-line/60 bg-panel/60 px-3 py-1 text-xs font-medium text-ink/80 transition hover:bg-panel disabled:opacity-40"
                           >
-                            {s.status === "rejected"
-                              ? "Rejected"
-                              : "Reject & email"}
+                            {s.status === "rejected" ? "Rejected" : "Reject"}
                           </button>
                         </div>
                       )}
@@ -384,54 +359,154 @@ export function HackathonSignupsTable({
           </table>
         </div>
       )}
+
+      {modal ? (
+        <ReviewModalView
+          signup={modal.signup}
+          decision={modal.decision}
+          submitting={submittingId === modal.signup.id}
+          onClose={() => setModal(null)}
+          onSubmit={(note) => submitReview(modal.signup, modal.decision, note)}
+        />
+      ) : null}
     </div>
   );
 }
 
-function ReviewForm({
+function ReviewModalView({
+  signup,
   decision,
-  note,
-  onNoteChange,
-  onSubmit,
-  onCancel
+  submitting,
+  onClose,
+  onSubmit
 }: {
+  signup: HackathonSignup;
   decision: Decision;
-  note: string;
-  onNoteChange: (value: string) => void;
-  onSubmit: () => void;
-  onCancel: () => void;
+  submitting: boolean;
+  onClose: () => void;
+  onSubmit: (note: string) => void;
 }) {
-  const label = decision === "accept" ? "Send acceptance" : "Send rejection";
-  const primaryClass =
-    decision === "accept"
-      ? "border-accent/60 bg-accent/20 text-ink hover:bg-accent/30"
-      : "border-red-500/40 bg-red-500/10 text-red-500 hover:bg-red-500/20";
+  const [note, setNote] = useState("");
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape" && !submitting) onClose();
+    }
+    document.addEventListener("keydown", onKeyDown);
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onClose, submitting]);
+
+  const isAccept = decision === "accept";
+  const title = isAccept
+    ? `Accept ${signup.name}?`
+    : `Reject ${signup.name}?`;
+  const submitLabel = isAccept ? "Accept & send email" : "Reject & send email";
+  const submitClass = isAccept
+    ? "border-accent/60 bg-accent/20 text-ink hover:bg-accent/30"
+    : "border-red-500/40 bg-red-500/10 text-red-500 hover:bg-red-500/20";
+  const description = isAccept
+    ? "Sends the hackathon acceptance email with the Luma RSVP link."
+    : "Sends the hackathon rejection email. They can apply again next time.";
 
   return (
-    <div className="flex w-64 flex-col gap-2">
-      <textarea
-        value={note}
-        onChange={(e) => onNoteChange(e.target.value)}
-        rows={3}
-        placeholder="Optional personal note appended to the email"
-        className="w-full border border-line/40 bg-paper px-2.5 py-2 text-xs text-ink outline-none transition placeholder:text-muted/60 focus:border-accent/60 focus:ring-1 focus:ring-accent/20"
-      />
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={onSubmit}
-          className={`flex-1 border px-3 py-1 text-xs font-medium transition ${primaryClass}`}
-        >
-          {label}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="border border-line/40 bg-paper px-3 py-1 text-xs text-muted hover:text-ink"
-        >
-          Cancel
-        </button>
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/40 px-4 py-10"
+      onClick={() => {
+        if (!submitting) onClose();
+      }}
+    >
+      <div
+        className="w-full max-w-lg border border-line/40 bg-paper p-6 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-muted">
+              {isAccept ? "Acceptance" : "Rejection"}
+            </p>
+            <h2 className="mt-2 font-display text-2xl text-ink">{title}</h2>
+            <p className="mt-2 text-sm text-muted">{description}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={submitting}
+            className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted hover:text-ink disabled:opacity-50"
+          >
+            Close
+          </button>
+        </div>
+
+        <dl className="mt-5 space-y-3 border-t border-line/40 pt-5 text-sm">
+          <ModalRow label="Email" value={signup.email} />
+          <ModalRow label="School" value={signup.school ?? "—"} />
+          <ModalRow
+            label="Team"
+            value={
+              signup.teamStatus === "team"
+                ? signup.teammates
+                  ? `Team:\n${signup.teammates}`
+                  : "Team (no teammates listed)"
+                : "Solo"
+            }
+          />
+          <ModalRow label="Pitch" value={signup.pitch} />
+        </dl>
+
+        <div className="mt-5 space-y-1.5">
+          <label
+            htmlFor="hackathon-review-note"
+            className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted"
+          >
+            Personal note (optional)
+          </label>
+          <textarea
+            id="hackathon-review-note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            rows={3}
+            placeholder="Appended to the email before the sign-off."
+            className="w-full border border-line/40 bg-paper px-3 py-2 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-accent/60 focus:ring-1 focus:ring-accent/20"
+          />
+        </div>
+
+        <div className="mt-6 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={submitting}
+            className="border border-line/40 bg-paper px-4 py-2 text-sm text-muted transition hover:text-ink disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => onSubmit(note)}
+            disabled={submitting}
+            className={`border px-4 py-2 text-sm font-medium transition disabled:opacity-50 ${submitClass}`}
+          >
+            {submitting ? "Sending…" : submitLabel}
+          </button>
+        </div>
       </div>
+    </div>
+  );
+}
+
+function ModalRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[5.5rem_1fr] gap-3">
+      <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+        {label}
+      </dt>
+      <dd className="whitespace-pre-line text-sm text-ink/90">{value}</dd>
     </div>
   );
 }
@@ -476,9 +551,19 @@ function StatusPill({ status }: { status: HackathonReviewStatus }) {
   );
 }
 
-function Th({ children }: { children: React.ReactNode }) {
+function Th({
+  children,
+  className
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <th className="border-b border-line/40 px-4 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.24em] text-muted">
+    <th
+      className={`border-b border-line/40 px-4 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.24em] text-muted ${
+        className ?? ""
+      }`}
+    >
       {children}
     </th>
   );
