@@ -45,6 +45,25 @@ const LUMA_URL = "https://luma.com/md6em7ed";
 export default function HackathonPage() {
   return (
     <MarketingShell>
+      <section className="border-b border-ink/10 bg-accent/10">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-baseline gap-x-3 gap-y-1 px-6 py-3 lg:px-8">
+          <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-accent">
+            Update
+          </span>
+          <p className="text-sm text-ink/85">
+            Acceptances and rejections are going out now. If you signed up and
+            didn&rsquo;t hear back, email{" "}
+            <a
+              href="mailto:hurshshah@ucsb.edu"
+              className="underline decoration-accent underline-offset-2 hover:text-accent"
+            >
+              hurshshah@ucsb.edu
+            </a>
+            .
+          </p>
+        </div>
+      </section>
+
       <section className="border-b border-ink/10">
         <div className="mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-[1.3fr_1fr] lg:px-8 lg:py-28">
           <div>
