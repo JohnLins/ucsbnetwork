@@ -36,7 +36,7 @@ const HEADSHOTS: Record<string, StaticImageData> = {
 const DIRECTORS = [
   {
     name: "Hursh Shah",
-    role: "Director",
+    role: "Founder & Director",
     href: "https://www.linkedin.com/in/hursh-shah/",
     image: hurshHeadshot,
     bio: "Founder of Edviro and ucsb.network, previously co-founded SkyGlass, presented at NeurIPS 2024 GenAI4Health, and selected for OpenAI's ChatGPT Lab as 1 of 30 students.",
@@ -75,7 +75,6 @@ export default function BatchPage() {
   return (
     <MarketingShell>
       <section className="relative isolate overflow-hidden border-b border-ink/10 bg-navy text-paper">
-        <div className="absolute left-1/2 top-0 -z-10 h-80 w-80 -translate-x-1/2 rounded-full bg-accent/20 blur-3xl" />
         <div className="absolute bottom-0 right-0 -z-10 h-96 w-96 translate-x-1/3 translate-y-1/3 rounded-full bg-paper/10 blur-3xl" />
         <div className="mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
           <div>
@@ -173,13 +172,10 @@ export default function BatchPage() {
       <section className="border-b border-ink/10 bg-panel/55">
         <div className="mx-auto max-w-6xl px-6 py-20 lg:px-8 lg:py-24">
           <p className="eyebrow-accent">Directors</p>
-          <div className="mt-4 grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+          <div className="mt-4">
             <h2 className="font-display text-display-md text-ink">
               Hursh Shah and Leon Khoshnevis.
             </h2>
-            <p className="max-w-2xl text-base leading-relaxed text-ink/75">
-              Directors of ucsb.network.
-            </p>
           </div>
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
             {DIRECTORS.map((director) => (
@@ -336,13 +332,13 @@ function DirectorCard({
 }) {
   return (
     <article className="grid overflow-hidden border border-ink/10 bg-paper shadow-subtle sm:grid-cols-[0.85fr_1fr]">
-      <div className="relative min-h-[320px] border-b border-ink/10 sm:border-b-0 sm:border-r">
+      <div className="relative min-h-[320px] border-b border-ink/10 bg-panel sm:border-b-0 sm:border-r">
         <Image
           src={director.image}
           alt={`${director.name} headshot`}
           fill
           sizes="(min-width: 1024px) 25vw, 90vw"
-          className="object-cover"
+          className="object-contain"
         />
       </div>
       <div className="flex flex-col justify-between p-6 sm:p-8">
