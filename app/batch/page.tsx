@@ -36,7 +36,7 @@ const HEADSHOTS: Record<string, StaticImageData> = {
 const DIRECTORS = [
   {
     name: "Hursh Shah",
-    role: "Founder & Director",
+    role: "Director",
     href: "https://www.linkedin.com/in/hursh-shah/",
     image: hurshHeadshot,
     bio: "Founder of Edviro and ucsb.network, previously co-founded SkyGlass, presented at NeurIPS 2024 GenAI4Health, and selected for OpenAI's ChatGPT Lab as 1 of 30 students.",
