@@ -18,8 +18,7 @@ const CURRENT_COHORT = 1;
 
 export const metadata = {
   title: `Portfolio: Cohort ${CURRENT_COHORT} / ucsb.network`,
-  description:
-    "The investor portfolio for the current ucsb.network accelerator cohort."
+  description: "Cohort 1 portfolio for ucsb.network."
 };
 
 const HEADSHOTS: Record<string, StaticImageData> = {
@@ -54,9 +53,9 @@ const DIRECTORS = [
 ];
 
 const PORTFOLIO_METRICS = [
-  { value: "06", label: "Startups in Cohort 1" },
-  { value: "08", label: "Weeks to Demo Day" },
-  { value: "VC", label: "Investor-facing showcase" }
+  { value: "06", label: "Startups" },
+  { value: "08", label: "Weeks" },
+  { value: "01", label: "Cohort" }
 ];
 
 function splitFounders(founders: string) {
@@ -81,25 +80,23 @@ export default function BatchPage() {
         <div className="mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
-              Cohort {CURRENT_COHORT} &middot; Investor portfolio
+              Spring 2026
             </p>
             <h1 className="mt-6 max-w-4xl font-display text-display-xl tracking-tightest">
-              UCSB founders with unfair velocity.
+              Cohort {CURRENT_COHORT} portfolio.
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-paper/80">
-              A first look at the builders in the ucsb.network accelerator:
-              technical founders across bio ML, AI infrastructure, real estate,
-              legal, hardware, and sales tech.
+              The first ucsb.network accelerator cohort.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <Link href="/demo-day" className="btn-primary">
-                Request Demo Day access
+                Demo Day
               </Link>
               <a
                 href="mailto:hursh@ucsb.network?subject=ucsb.network%20portfolio"
                 className="border border-paper/70 px-5 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-navy"
               >
-                Reach the directors
+                Contact
               </a>
             </div>
           </div>
@@ -131,8 +128,7 @@ export default function BatchPage() {
                 Spring 2026
               </p>
               <p className="mt-3 text-sm leading-relaxed text-paper/75">
-                Curated for investors and operators looking for the next UCSB
-                companies before Demo Day.
+                Six companies from the first ucsb.network cohort.
               </p>
             </div>
           </aside>
@@ -156,13 +152,13 @@ export default function BatchPage() {
         <div className="mx-auto max-w-6xl px-6 py-20 lg:px-8 lg:py-24">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="eyebrow-accent">The portfolio</p>
+              <p className="eyebrow-accent">Portfolio</p>
               <h2 className="mt-4 max-w-3xl font-display text-display-md text-ink">
-                Six companies, one concentrated founder network.
+                Companies.
               </h2>
             </div>
             <Link href="/demo-day" className="link-editorial text-sm">
-              Demo Day details &rarr;
+              Demo Day &rarr;
             </Link>
           </div>
 
@@ -179,12 +175,10 @@ export default function BatchPage() {
           <p className="eyebrow-accent">Directors</p>
           <div className="mt-4 grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
             <h2 className="font-display text-display-md text-ink">
-              Built by founders who know the room.
+              Hursh Shah and Leon Khoshnevis.
             </h2>
             <p className="max-w-2xl text-base leading-relaxed text-ink/75">
-              Hursh and Leon run the founder-facing side of ucsb.network:
-              sourcing builders, pressure-testing companies, and helping the
-              cohort turn work into investor conversations.
+              Directors of ucsb.network.
             </p>
           </div>
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
@@ -198,21 +192,20 @@ export default function BatchPage() {
       <section>
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1fr_0.8fr] lg:px-8 lg:py-24">
           <div>
-            <p className="eyebrow-accent">For investors</p>
+            <p className="eyebrow-accent">Demo Day</p>
             <h2 className="mt-4 max-w-3xl font-display text-display-md text-ink">
-              Meet the cohort before the market does.
+              See the cohort pitch.
             </h2>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink/80">
-              Demo Day is the formal showcase. Reach out for the portfolio,
-              warm intros, or to mentor a team before they pitch.
+              Reach out for Demo Day details or founder introductions.
             </p>
           </div>
           <div className="flex flex-col justify-center gap-4 border border-ink/10 bg-panel/50 p-6 sm:p-8">
             <Link href="/demo-day" className="btn-primary text-center">
-              Request Demo Day access
+              Demo Day
             </Link>
             <a href="mailto:hursh@ucsb.network" className="btn-secondary text-center">
-              Invest &amp; mentor
+              Contact
             </a>
           </div>
         </div>

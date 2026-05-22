@@ -21,7 +21,7 @@ export function SiteFooter() {
             heading="Program"
             links={[
               { href: "/program", label: "What you get" },
-              { href: "/batch", label: "Investor portfolio" },
+              { href: "/batch", label: "Cohort 1 portfolio" },
               { href: "/demo-day", label: "Demo Day" },
               { href: "/officehours", label: "Office hours" },
               { href: "/hackathon", label: "Hackathon" }
