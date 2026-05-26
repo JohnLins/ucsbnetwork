@@ -13,6 +13,8 @@ import nagHeadshot from "../../headshotsforsite/Nag.avif";
 import quinnHeadshot from "../../headshotsforsite/Quinn.png";
 import stantonHeadshot from "../../headshotsforsite/Stanton.png";
 import viktorHeadshot from "../../headshotsforsite/Viktor.png";
+import johnHeadshot from "../../headshotsforsite/John.png";
+import yasenHeadshot from "../../headshotsforsite/Yasen.png";
 
 const CURRENT_COHORT = 1;
 
@@ -30,7 +32,10 @@ const HEADSHOTS: Record<string, StaticImageData> = {
   Nag: nagHeadshot,
   Quinn: quinnHeadshot,
   Stanton: stantonHeadshot,
-  Viktor: viktorHeadshot
+  Viktor: viktorHeadshot,
+  John: johnHeadshot,
+  "John Lins": johnHeadshot,
+  Yasen: yasenHeadshot
 };
 
 const DIRECTORS = [
@@ -102,7 +107,7 @@ export default function BatchPage() {
 
           <aside className="relative">
             <div className="grid grid-cols-3 gap-3 sm:gap-4">
-              {["Hursh", "Leon", "Kay", "Stanton", "Arthur", "Joaquin", "Quinn", "Nag", "Viktor"].map(
+              {["Hursh", "Leon", "Kay", "Stanton", "Arthur", "Joaquin", "Quinn", "Nag", "Viktor", "Yasen", "John Lins"].map(
                 (name, i) => (
                   <div
                     key={name}

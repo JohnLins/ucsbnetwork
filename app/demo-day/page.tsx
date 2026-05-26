@@ -7,8 +7,10 @@ import type { EventRecord } from "@/lib/types";
 export const metadata = {
   title: "Demo Day: ucsb.network",
   description:
-    "Demo Day is the culmination of the ucsb.network accelerator. See the next one."
+    "Demo Day is the culmination of the ucsb.network accelerator. Request an invite on Luma."
 };
+
+const DEMO_DAY_LUMA_URL = "https://luma.com/phddo44l";
 
 function formatDateTime(iso: string) {
   const d = new Date(iso);
@@ -55,10 +57,12 @@ export default async function DemoDayPage() {
               warm intros.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link href="#next" className="btn-primary">
-                See the next Demo Day
-              </Link>
-              <a href="mailto:hursh@ucsb.network" className="btn-secondary">
+              <a
+                href={DEMO_DAY_LUMA_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-primary"
+              >
                 Request an invite
               </a>
             </div>
@@ -206,7 +210,9 @@ function UpcomingDemoDayBlock({ event }: { event: EventRecord }) {
           the room, tell us a bit about yourself.
         </p>
         <a
-          href={`mailto:hursh@ucsb.network?subject=Demo%20Day%20invite%3A%20${encodeURIComponent(event.title)}`}
+          href={DEMO_DAY_LUMA_URL}
+          target="_blank"
+          rel="noreferrer"
           className="btn-primary mt-6 w-full text-sm"
         >
           Request an invite
