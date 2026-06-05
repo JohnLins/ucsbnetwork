@@ -15,6 +15,7 @@ import stantonHeadshot from "../../headshotsforsite/Stanton.png";
 import viktorHeadshot from "../../headshotsforsite/Viktor.png";
 import johnHeadshot from "../../headshotsforsite/John.png";
 import yasenHeadshot from "../../headshotsforsite/Yasen.png";
+import tanujHeadshot from "../../headshotsforsite/Tanuj.png";
 
 const CURRENT_COHORT = 1;
 
@@ -38,7 +39,7 @@ const HEADSHOTS: Record<string, StaticImageData> = {
   Yasen: yasenHeadshot
 };
 
-const DIRECTORS = [
+const TEAM = [
   {
     name: "Hursh Shah",
     role: "Director",
@@ -54,6 +55,14 @@ const DIRECTORS = [
     image: leonHeadshot,
     bio: "Founder of Playa House, previously co-founded SBVenture and Correkt AI, a multimodal AI search engine with 40K users, and led neuro research his first year at UCSB.",
     proof: ["Playa House founder", "40K users", "Neuro research"]
+  },
+  {
+    name: "Tanuj Siripurapu",
+    role: "Lead",
+    href: "https://www.linkedin.com/in/tanuj-siripurapu-747b58217/",
+    image: tanujHeadshot,
+    bio: "Programming since 9 y/o, Scaled an agency to $20K in highschool, Co-founder of Edviro & build lead of ucsb.network",
+    proof: ["Edviro co-founder", "$20K agency (HS)", "ucsb.network build lead"]
   }
 ];
 
@@ -176,16 +185,12 @@ export default function BatchPage() {
 
       <section className="border-b border-ink/10 bg-panel/55">
         <div className="mx-auto max-w-6xl px-6 py-20 lg:px-8 lg:py-24">
-          <p className="eyebrow-accent">Directors</p>
-          <div className="mt-4">
-            <h2 className="font-display text-display-md text-ink">
-              Hursh Shah and Leon Khoshnevis.
-            </h2>
-          </div>
-          <div className="mt-12 grid gap-6 lg:grid-cols-2">
-            {DIRECTORS.map((director) => (
-              <DirectorCard key={director.name} director={director} />
-            ))}
+          <div className="overflow-hidden border border-ink/10 bg-paper shadow-subtle">
+            <div className="grid divide-y divide-ink/10 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+              {TEAM.map((member) => (
+                <TeamMemberCard key={member.name} member={member} />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -330,35 +335,31 @@ function FounderPortrait({ name }: { name: string }) {
   );
 }
 
-function DirectorCard({
-  director
-}: {
-  director: (typeof DIRECTORS)[number];
-}) {
+function TeamMemberCard({ member }: { member: (typeof TEAM)[number] }) {
   return (
-    <article className="grid overflow-hidden border border-ink/10 bg-paper shadow-subtle sm:grid-cols-[0.85fr_1fr]">
-      <div className="relative min-h-[320px] border-b border-ink/10 bg-panel sm:border-b-0 sm:border-r">
+    <article className="flex flex-col">
+      <div className="relative aspect-[4/5] border-b border-ink/10 bg-panel">
         <Image
-          src={director.image}
-          alt={`${director.name} headshot`}
+          src={member.image}
+          alt={`${member.name} headshot`}
           fill
-          sizes="(min-width: 1024px) 25vw, 90vw"
+          sizes="(min-width: 1024px) 20vw, 90vw"
           className="object-contain"
         />
       </div>
-      <div className="flex flex-col justify-between p-6 sm:p-8">
+      <div className="flex flex-1 flex-col justify-between p-6 sm:p-8">
         <div>
-          <p className="eyebrow-accent">{director.role}</p>
+          <p className="eyebrow-accent">{member.role}</p>
           <h3 className="mt-4 font-display text-display-sm text-ink">
-            {director.name}
+            {member.name}
           </h3>
           <p className="mt-5 text-base leading-relaxed text-ink/80">
-            {director.bio}
+            {member.bio}
           </p>
         </div>
         <div className="mt-8">
           <div className="flex flex-wrap gap-2">
-            {director.proof.map((item) => (
+            {member.proof.map((item) => (
               <span
                 key={item}
                 className="border border-ink/10 bg-panel px-3 py-1.5 text-xs text-ink/75"
@@ -368,7 +369,7 @@ function DirectorCard({
             ))}
           </div>
           <a
-            href={director.href}
+            href={member.href}
             target="_blank"
             rel="noreferrer"
             className="link-editorial mt-6 inline-block text-sm"
