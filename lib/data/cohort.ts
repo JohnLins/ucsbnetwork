@@ -122,18 +122,18 @@ export const COHORT_1_STARTUPS: CohortStartup[] = [
   {
     category: "Sales tech",
     company: "Repclose",
-    website: "https://repclose.com/",
-    building: "Deep research agents for lead generation.",
+    website: "https://fizzbase.com/",
+    building: "People discovery against your ICP",
     founders: "John Lins",
     mission:
-      "Repclose replaces shallow lead databases with agents that research a company, understand its ICP, and surface prospects worth an AE's time.",
+      "Fizzbase is a people-discovery tool that uses RAG and agentic search to identify individuals matching your ideal customer profile.",
     accomplishments: [
       {
         name: "John",
         items: [
           "Published two first-author AI for physical science papers in affiliation with Lawrence Livermore National Laboratory.",
           "Built and pretrained a transformer-like foundation model from scratch.",
-          "Built and scaled Coralflavor to 23K signed-in users and $900 MRR in three months."
+          "Built revenue agents for event sponsorships, securing $13K for its first event."
         ]
       }
     ]
