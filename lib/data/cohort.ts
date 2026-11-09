@@ -121,7 +121,7 @@ export const COHORT_1_STARTUPS: CohortStartup[] = [
   },
   {
     category: "Sales tech",
-    company: "Repclose",
+    company: "Fizzbase",
     website: "https://fizzbase.com/",
     building: "People discovery against your ICP",
     founders: "John Lins",
